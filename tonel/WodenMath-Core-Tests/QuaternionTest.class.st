@@ -3,7 +3,7 @@ A QuaternionTest is a test class for testing the behavior of Quaternion
 "
 Class {
 	#name : #QuaternionTest,
-	#superclass : #TestCase,
+	#superclass : #WodenMathTestCase,
 	#category : #'WodenMath-Core-Tests-Complex'
 }
 

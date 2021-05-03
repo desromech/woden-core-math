@@ -100,6 +100,16 @@ Vector2 >> initialize [
 	y := 0.
 ]
 
+{ #category : #testing }
+Vector2 >> isOnes [
+	^ x = 1 and: [ y = 1 ]
+]
+
+{ #category : #testing }
+Vector2 >> isZeros [
+	^ x = 0 and: [ y = 0 ]
+]
+
 { #category : #printing }
 Vector2 >> printOn: aStream [
 	aStream nextPut: $(; nextPutAll: self class name;

@@ -3,7 +3,7 @@ A Vector2Test is a test class for testing the behavior of Vector2
 "
 Class {
 	#name : #Vector2Test,
-	#superclass : #TestCase,
+	#superclass : #WodenMathTestCase,
 	#category : #'WodenMath-Core-Tests-LinearAlgebra'
 }
 
@@ -169,6 +169,8 @@ Vector2Test >> testNotEquals [
 { #category : #tests }
 Vector2Test >> testOnes [
 	self assert: Vector2 ones equals: (Vector2 x: 1 y: 1).
+	self deny: Vector2 zeros isOnes.
+	self assert: Vector2 ones isOnes.
 ]
 
 { #category : #tests }
@@ -181,4 +183,6 @@ Vector2Test >> testSubtraction [
 { #category : #tests }
 Vector2Test >> testZeros [
 	self assert: Vector2 zeros equals: (Vector2 x: 0 y: 0).
+	self assert: Vector2 zeros isZeros.
+	self deny: Vector2 ones isZeros.
 ]

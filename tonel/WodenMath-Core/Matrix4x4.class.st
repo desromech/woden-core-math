@@ -854,6 +854,15 @@ Matrix4x4 >> thirdRow: row [
 	m34 := coercedRow w.
 ]
 
+{ #category : #'as yet unclassified' }
+Matrix4x4 >> topLeft3x3 [
+	^ Matrix3x3 basicNew
+		m11: m11; m12: m12; m13: m13;
+		m21: m21; m22: m22; m23: m23;
+		m31: m31; m32: m32; m33: m33;
+		yourself
+]
+
 { #category : #accessing }
 Matrix4x4 >> transpose [
 	^ self class basicNew

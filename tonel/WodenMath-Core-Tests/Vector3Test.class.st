@@ -3,7 +3,7 @@ A Vector3Test is a test class for testing the behavior of Vector3
 "
 Class {
 	#name : #Vector3Test,
-	#superclass : #TestCase,
+	#superclass : #WodenMathTestCase,
 	#category : #'WodenMath-Core-Tests-LinearAlgebra'
 }
 
@@ -108,8 +108,22 @@ Vector3Test >> testNotEquals [
 ]
 
 { #category : #tests }
+Vector3Test >> testOnes [
+	self assert: Vector3 ones equals: (Vector3 x: 1 y: 1 z: 1).
+	self deny: Vector3 zeros isOnes.
+	self assert: Vector3 ones isOnes.
+]
+
+{ #category : #tests }
 Vector3Test >> testSubtraction [
 	self assert: (Vector3 x: 0 y: 0 z: 0) - (Vector3 x: 0 y: 0 z: 0) equals: (Vector3 x: 0 y: 0 z: 0).
 	self assert: (Vector3 x: 1 y: 2 z: 3) - (Vector3 x: 0 y: 0 z: 0) equals: (Vector3 x: 1 y: 2 z: 3).
 	self assert: (Vector3 x: 1 y: 2 z: 3) - (Vector3 x: 4 y: 6 z: 8) equals: (Vector3 x: -3 y: -4 z: -5).
+]
+
+{ #category : #tests }
+Vector3Test >> testZeros [
+	self assert: Vector3 zeros equals: (Vector3 x: 0 y: 0 z: 0).
+	self assert: Vector3 zeros isZeros.
+	self deny: Vector3 ones isZeros.
 ]

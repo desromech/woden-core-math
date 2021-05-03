@@ -3,7 +3,7 @@ A ComplexTest is a test class for testing the behavior of Complex
 "
 Class {
 	#name : #ComplexTest,
-	#superclass : #TestCase,
+	#superclass : #WodenMathTestCase,
 	#category : #'WodenMath-Core-Tests-Complex'
 }
 

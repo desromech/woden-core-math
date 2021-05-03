@@ -3,7 +3,7 @@ A Matrix3x3Test is a test class for testing the behavior of Matrix3x3
 "
 Class {
 	#name : #Matrix3x3Test,
-	#superclass : #TestCase,
+	#superclass : #WodenMathTestCase,
 	#category : #'WodenMath-Core-Tests-LinearAlgebra'
 }
 

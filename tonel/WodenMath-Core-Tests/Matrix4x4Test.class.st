@@ -3,7 +3,7 @@ A Matrix4x4Test is a test class for testing the behavior of Matrix4x4
 "
 Class {
 	#name : #Matrix4x4Test,
-	#superclass : #TestCase,
+	#superclass : #WodenMathTestCase,
 	#category : #'WodenMath-Core-Tests-LinearAlgebra'
 }
 

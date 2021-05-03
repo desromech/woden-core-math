@@ -88,6 +88,16 @@ Vector4 >> hash [
 	^ ((x hash hashMultiply + y hash) hashMultiply + z hash) hashMultiply hash
 ]
 
+{ #category : #testing }
+Vector4 >> isOnes [
+	^ x = 1 and: [ y = 1 and: [ z = 1 and: [ w = 1 ] ] ]
+]
+
+{ #category : #testing }
+Vector4 >> isZeros [
+	^ x = 0 and: [ y = 0 and: [ z = 0 and: [ w = 0 ] ] ]
+]
+
 { #category : #arithmetic }
 Vector4 >> minorAt: index [
 	index = 1 ifTrue: [ ^ Vector3 x: y y: z z: w ].
@@ -141,6 +151,11 @@ Vector4 >> x [
 Vector4 >> x: anObject [
 
 	x := anObject
+]
+
+{ #category : #accessing }
+Vector4 >> xyz [
+	^ Vector3 x: x y: y z: z
 ]
 
 { #category : #accessing }

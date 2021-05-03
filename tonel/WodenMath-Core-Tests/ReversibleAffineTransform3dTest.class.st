@@ -3,7 +3,7 @@ A ReversibleAffineTransform3dTest is a test class for testing the behavior of Re
 "
 Class {
 	#name : #ReversibleAffineTransform3dTest,
-	#superclass : #TestCase,
+	#superclass : #WodenMathTestCase,
 	#category : #'WodenMath-Core-Tests-Transform'
 }
 

@@ -3,7 +3,7 @@ A Vector4Test is a test class for testing the behavior of Vector4
 "
 Class {
 	#name : #Vector4Test,
-	#superclass : #TestCase,
+	#superclass : #WodenMathTestCase,
 	#category : #'WodenMath-Core-Tests-LinearAlgebra'
 }
 
@@ -97,8 +97,22 @@ Vector4Test >> testNotEquals [
 ]
 
 { #category : #tests }
+Vector4Test >> testOnes [
+	self assert: Vector4 ones equals: (Vector4 x: 1 y: 1 z: 1 w: 1).
+	self deny: Vector4 zeros isOnes.
+	self assert: Vector4 ones isOnes.
+]
+
+{ #category : #tests }
 Vector4Test >> testSubtraction [
 	self assert: (Vector4 x: 0 y: 0 z: 0 w: 0) - (Vector4 x: 0 y: 0 z: 0 w: 0) equals: (Vector4 x: 0 y: 0 z: 0 w: 0).
 	self assert: (Vector4 x: 1 y: 2 z: 3 w: 4) - (Vector4 x: 0 y: 0 z: 0 w: 0) equals: (Vector4 x: 1 y: 2 z: 3 w: 4).
 	self assert: (Vector4 x: 1 y: 2 z: 3 w: 4) - (Vector4 x: 10 y: 12 z: 14 w: 20) equals: (Vector4 x: -9 y: -10 z: -11 w: -16).
+]
+
+{ #category : #tests }
+Vector4Test >> testZeros [
+	self assert: Vector4 zeros equals: (Vector4 x: 0 y: 0 z: 0 w: 0).
+	self assert: Vector4 zeros isZeros.
+	self deny: Vector4 ones isZeros.
 ]

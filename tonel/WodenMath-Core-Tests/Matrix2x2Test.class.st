@@ -3,7 +3,7 @@ A Matrix2x2Test is a test class for testing the behavior of Matrix2x2
 "
 Class {
 	#name : #Matrix2x2Test,
-	#superclass : #TestCase,
+	#superclass : #WodenMathTestCase,
 	#category : #'WodenMath-Core-Tests-LinearAlgebra'
 }
 
