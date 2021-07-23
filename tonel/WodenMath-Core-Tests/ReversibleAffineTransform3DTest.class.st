@@ -2,15 +2,15 @@
 A ReversibleAffineTransform3dTest is a test class for testing the behavior of ReversibleAffineTransform3d
 "
 Class {
-	#name : #ReversibleAffineTransform3dTest,
+	#name : #ReversibleAffineTransform3DTest,
 	#superclass : #WodenMathTestCase,
 	#category : #'WodenMath-Core-Tests-Transform'
 }
 
 { #category : #tests }
-ReversibleAffineTransform3dTest >> testIdentity [
+ReversibleAffineTransform3DTest >> testIdentity [
 	| transform |
-	transform := ReversibleAffineTransform3d identity.
+	transform := ReversibleAffineTransform3D identity.
 	self assert: transform matrix4 equals: Matrix4x4 identity.
 	self assert: transform matrix equals: Matrix3x3 identity.
 	self assert: transform translation equals: Vector3 zeros.
@@ -23,9 +23,9 @@ ReversibleAffineTransform3dTest >> testIdentity [
 ]
 
 { #category : #tests }
-ReversibleAffineTransform3dTest >> testSetIdentity [
+ReversibleAffineTransform3DTest >> testSetIdentity [
 	| transform |
-	transform := ReversibleAffineTransform3d new setIdentity; yourself.
+	transform := ReversibleAffineTransform3D new setIdentity; yourself.
 	self assert: transform matrix4 equals: Matrix4x4 identity.
 	self assert: transform translation equals: Vector3 zeros.
 
