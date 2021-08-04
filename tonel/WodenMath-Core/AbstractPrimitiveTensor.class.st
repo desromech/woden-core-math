@@ -7,9 +7,19 @@ Class {
 	#category : #'WodenMath-Core-LinearAlgebra'
 }
 
+{ #category : #constants }
+AbstractPrimitiveTensor class >> infinity [
+	^ self withAll: Float infinity
+]
+
 { #category : #testing }
 AbstractPrimitiveTensor class >> isAbstract [
 	^ self == AbstractPrimitiveTensor
+]
+
+{ #category : #constants }
+AbstractPrimitiveTensor class >> negativeInfinity [
+	^ self withAll: Float negativeInfinity
 ]
 
 { #category : #'accessing structure variables' }

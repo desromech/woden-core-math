@@ -16,3 +16,13 @@ DecomposedTransform3DTest >> testNew [
 	self assert: transform rotation equals: Quaternion one.
 	self assert: transform translation equals: Vector3 zeros.
 ]
+
+{ #category : #tests }
+DecomposedTransform3DTest >> testSetIdentity [
+	| transform |
+	transform := DecomposedTransform3D new setIdentity.
+	self assert: transform isIdentity.
+	self assert: transform scale equals: Vector3 ones.
+	self assert: transform rotation equals: Quaternion one.
+	self assert: transform translation equals: Vector3 zeros.
+]

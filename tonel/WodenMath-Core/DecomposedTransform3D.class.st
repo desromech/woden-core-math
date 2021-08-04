@@ -19,9 +19,7 @@ DecomposedTransform3D >> asDecomposedTransform3D [
 
 { #category : #initialization }
 DecomposedTransform3D >> initialize [
-	scale := Vector3 ones.
-	rotation := Quaternion identity.
-	translation := Vector3 zeros.
+	self setIdentity.
 ]
 
 { #category : #testing }
@@ -51,6 +49,13 @@ DecomposedTransform3D >> scale [
 DecomposedTransform3D >> scale: anObject [
 
 	scale := anObject
+]
+
+{ #category : #initialization }
+DecomposedTransform3D >> setIdentity [
+	scale := Vector3 ones.
+	rotation := Quaternion identity.
+	translation := Vector3 zeros.
 ]
 
 { #category : #accessing }
