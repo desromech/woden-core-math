@@ -33,6 +33,11 @@ ReversibleAffineTransform3D class >> identity [
 	^ self basicNew setIdentity; yourself
 ]
 
+{ #category : #'instance creation' }
+ReversibleAffineTransform3D class >> translation: aTranslation [
+	^ self basicNew setIdentity; translation: aTranslation; yourself
+]
+
 { #category : #comparing }
 ReversibleAffineTransform3D >> = other [
 	^ self class == other class and: [
@@ -139,4 +144,10 @@ ReversibleAffineTransform3D >> setOrthonormalMatrix: newMatrix translation: newT
 ReversibleAffineTransform3D >> translation [
 
 	^ translation
+]
+
+{ #category : #accessing }
+ReversibleAffineTransform3D >> translation: newTranslation [
+	translation := newTranslation shallowCopy.
+	inverseTranslation := inverseMatrix * translation negated.
 ]
