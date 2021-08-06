@@ -596,6 +596,16 @@ Matrix3x3 >> thirdRow: row [
 	m33 := coercedRow z.
 ]
 
+{ #category : #arithmetic }
+Matrix3x3 >> transformPosition3: position [
+	^ self * position
+]
+
+{ #category : #arithmetic }
+Matrix3x3 >> transformVector3: vector [
+	^ self * vector
+]
+
 { #category : #accessing }
 Matrix3x3 >> transpose [
 	^ self class basicNew

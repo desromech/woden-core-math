@@ -745,7 +745,7 @@ Matrix4x4 >> multiplyWithMatrix: other [
 Matrix4x4 >> postMultiplyVector: vector [
 	| coercedVector |
 	coercedVector := vector asVector4.
-	^ self class rowType
+	^ Vector4
 		x: (self firstColumn dot: coercedVector)
 		y: (self secondColumn dot: coercedVector)
 		z: (self thirdColumn dot: coercedVector)
@@ -756,8 +756,11 @@ Matrix4x4 >> postMultiplyVector: vector [
 Matrix4x4 >> preMultiplyVector: vector [
 	| coercedVector |
 	coercedVector := vector asVector4.
-	^ (self firstColumn * coercedVector x) + (self secondColumn * coercedVector y)
-	+ (self thirdColumn * coercedVector z) + (self fourthColumn * coercedVector w)
+	^ Vector4
+		x: (m11 * coercedVector x) + (m12 * coercedVector y) + (m13 * coercedVector z) + (m14 * coercedVector w)
+		y: (m21 * coercedVector x) + (m22 * coercedVector y) + (m23 * coercedVector z) + (m24 * coercedVector w)
+		z: (m31 * coercedVector x) + (m32 * coercedVector y) + (m33 * coercedVector z) + (m34 * coercedVector w)
+		w: (m41 * coercedVector x) + (m42 * coercedVector y) + (m43 * coercedVector z) + (m44 * coercedVector w)
 ]
 
 { #category : #printing }
@@ -845,6 +848,22 @@ Matrix4x4 >> topLeft3x3 [
 		m21: m21; m22: m22; m23: m23;
 		m31: m31; m32: m32; m33: m33;
 		yourself
+]
+
+{ #category : #arithmetic }
+Matrix4x4 >> transformPosition3: position [
+	^ Vector3
+		x: (m11 * position x) + (m12 * position y) + (m13 * position x) + m14
+		y: (m21 * position x) + (m22 * position y) + (m23 * position x) + m24
+		z: (m31 * position x) + (m32 * position y) + (m33 * position x) + m34
+]
+
+{ #category : #arithmetic }
+Matrix4x4 >> transformVector3: vector [
+	^ Vector3
+		x: (m11 * vector x) + (m12 * vector y) + (m13 * vector x)
+		y: (m21 * vector x) + (m22 * vector y) + (m23 * vector x)
+		z: (m31 * vector x) + (m32 * vector y) + (m33 * vector x)
 ]
 
 { #category : #accessing }
