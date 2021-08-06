@@ -58,16 +58,10 @@ Matrix4x4 class >> columns: columns [
 ]
 
 { #category : #'special matrices' }
-Matrix4x4 class >> frustumLeft: left right: right bottom: bottom top: top
-	near: near far: far invertedY: invertedY [
-	| yAxisFactor |
-	yAxisFactor := invertedY
-		ifTrue: [Vector4 ones negated]
-		ifFalse: [Vector4 ones].
-
+Matrix4x4 class >> frustumLeft: left right: right bottom: bottom top: top near: near far: far [
 	^ self rows: {
 		Vector4 x: 2*near /(right - left) y: 0 z: (right + left) / (right - left) w: 0.
-		(Vector4 x: 0 y: 2*near /(top - bottom) z: (top + bottom) / (top - bottom) w: 0) * yAxisFactor.
+		Vector4 x: 0 y: 2*near /(top - bottom) z: (top + bottom) / (top - bottom) w: 0.
 		Vector4 x: 0 y: 0 z: far negated / (far - near) w: near*far negated / (far - near).
 		Vector4 x: 0 y: 0 z: -1 w: 0
 	}
@@ -102,66 +96,56 @@ Matrix4x4 class >> mat3: mat3 translation: translation [
 
 { #category : #'special matrices' }
 Matrix4x4 class >> orthoLeft: left right: right bottom: bottom top: top
-	near: near far: far invertedY: invertedY [
-	| yAxisFactor |
-	yAxisFactor := invertedY
-		ifTrue: [Vector4 ones negated]
-		ifFalse: [Vector4 ones].
-
+	near: near far: far [
 	^ self rows: {
 		Vector4 x: 2 /(right - left) y: 0 z: 0 w: ((right + left) / (right - left)) negated.
-		(Vector4 x: 0 y: 2 /(top - bottom) z: 0 w: ((top + bottom) / (top - bottom)) negated) * yAxisFactor.
+		Vector4 x: 0 y: 2 /(top - bottom) z: 0 w: ((top + bottom) / (top - bottom)) negated.
 		Vector4 x: 0 y: 0 z: -1 / (far - near) w: near / (far - near) negated.
 		Vector4 x: 0 y: 0 z: 0 w: 1
 	}
 ]
 
 { #category : #'special matrices' }
-Matrix4x4 class >> perspectiveFovY: fovy aspect: aspect near: near far: far invertedY: invertedY [
+Matrix4x4 class >> perspectiveFovY: fovy aspect: aspect near: near far: far [
 	| fovyRad top right |
 	fovyRad := fovy degreesToRadians * 0.5.
 	top := near * fovyRad tan.
 	right := top * aspect.
-	^ self frustumLeft: right negated right: right bottom: top negated top: top near: near far: far invertedY: invertedY
+	^ self frustumLeft: right negated right: right bottom: top negated top: top near: near far: far
 ]
 
 { #category : #'special matrices' }
-Matrix4x4 class >> reverseDepthFrustumLeft: left right: right bottom: bottom top: top near: near far: far invertedY: invertedY [
-	| yAxisFactor |
-	yAxisFactor := invertedY
-		ifTrue: [Vector4 ones negated]
-		ifFalse: [Vector4 ones].
+Matrix4x4 class >> projectionInvertYMatrix [
+	^ self basicNew setIdentity; m22: -1.0; yourself
+]
 
+{ #category : #'special matrices' }
+Matrix4x4 class >> reverseDepthFrustumLeft: left right: right bottom: bottom top: top near: near far: far [
 	^ self rows: {
 		Vector4 x: 2*near /(right - left) y: 0 z: (right + left) / (right - left) w: 0.
-		(Vector4 x: 0 y: 2*near /(top - bottom) z: (top + bottom) / (top - bottom) w: 0) * yAxisFactor.
+		Vector4 x: 0 y: 2*near /(top - bottom) z: (top + bottom) / (top - bottom) w: 0.
 		Vector4 x: 0 y: 0 z: near / (far - near) w: near*far / (far - near).
 		Vector4 x: 0 y: 0 z: -1 w: 0
 	}
 ]
 
 { #category : #'special matrices' }
-Matrix4x4 class >> reverseDepthOrthoLeft: left right: right bottom: bottom top: top near: near far: far invertedY: invertedY [
-	| yAxisFactor |
-	yAxisFactor := invertedY
-		ifTrue: [Vector4 ones negated]
-		ifFalse: [Vector4 ones].
-
+Matrix4x4 class >> reverseDepthOrthoLeft: left right: right bottom: bottom top: top near: near far: far [
 	^ self rows: {
 		Vector4 x: 2 /(right - left) y: 0 z: 0 w: ((right + left) / (right - left)) negated.
-		(Vector4 x: 0 y: 2 /(top - bottom) z: 0 w: ((top + bottom) / (top - bottom)) negated) * yAxisFactor.
+		Vector4 x: 0 y: 2 /(top - bottom) z: 0 w: ((top + bottom) / (top - bottom)) negated.
 		Vector4 x: 0 y: 0 z: 1 / (far - near) w: far / (far - near).
 		Vector4 x: 0 y: 0 z: 0 w: 1
 	}
 ]
 
 { #category : #'special matrices' }
-Matrix4x4 class >> reverseDepthPerspectiveFovY: fovy aspect: aspect near: near far: far invertedY: invertedY [
+Matrix4x4 class >> reverseDepthPerspectiveFovY: fovy aspect: aspect near: near far: far [
 	| fovyRad top right |
 	fovyRad := fovy degreesToRadians / 2.0.
 	top := near * fovyRad tan.
 	right := top * aspect.
-	^ self reverseDepthFrustumLeft: right negated right: right bottom: top negated top: top near: near far: far invertedY: invertedY
+	^ self reverseDepthFrustumLeft: right negated right: right bottom: top negated top: top near: near far: far
 ]
 
 { #category : #'special matrices' }
