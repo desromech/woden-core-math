@@ -17,6 +17,11 @@ DecomposedTransform3D >> asDecomposedTransform3D [
 	^ self
 ]
 
+{ #category : #converting }
+DecomposedTransform3D >> asReversibleAffineTransform [
+	^ ReversibleAffineTransform3D scale: scale rotation: rotation translation: translation
+]
+
 { #category : #initialization }
 DecomposedTransform3D >> initialize [
 	self setIdentity.

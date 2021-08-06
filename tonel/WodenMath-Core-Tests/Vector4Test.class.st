@@ -104,6 +104,15 @@ Vector4Test >> testOnes [
 ]
 
 { #category : #tests }
+Vector4Test >> testReciprocal [
+	self assert: (Vector4 x: 2 y: 3 z: 4 w: 5) reciprocal equals: (Vector4 x: 1/2 y: 1/3 z: 1/4 w: 1/5).
+	self should: [ (Vector4 x: 0 y: 1 z: 1 w: 1) reciprocal ] raise: Error.
+	self should: [ (Vector4 x: 1 y: 0 z: 1 w: 1) reciprocal ] raise: Error.
+	self should: [ (Vector4 x: 1 y: 1 z: 0 w: 1) reciprocal ] raise: Error.
+	self should: [ (Vector4 x: 1 y: 1 z: 1 w: 0) reciprocal ] raise: Error.
+]
+
+{ #category : #tests }
 Vector4Test >> testSubtraction [
 	self assert: (Vector4 x: 0 y: 0 z: 0 w: 0) - (Vector4 x: 0 y: 0 z: 0 w: 0) equals: (Vector4 x: 0 y: 0 z: 0 w: 0).
 	self assert: (Vector4 x: 1 y: 2 z: 3 w: 4) - (Vector4 x: 0 y: 0 z: 0 w: 0) equals: (Vector4 x: 1 y: 2 z: 3 w: 4).

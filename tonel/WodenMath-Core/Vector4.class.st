@@ -27,6 +27,15 @@ Vector4 class >> x: x y: y z: z w: w [
 		w: w
 ]
 
+{ #category : #construction }
+Vector4 class >> xyz: xyz w: w [
+	^ self basicNew
+		x: xyz x;
+		y: xyz y;
+		z: xyz z;
+		w: w
+]
+
 { #category : #comparing }
 Vector4 >> <=> other [
 	| coercedOther |

@@ -34,6 +34,16 @@ ReversibleAffineTransform3D class >> identity [
 ]
 
 { #category : #'instance creation' }
+ReversibleAffineTransform3D class >> rotation: aRotation translation: aTranslation [
+	^ self basicNew setRotation: aRotation translation: aTranslation
+]
+
+{ #category : #'instance creation' }
+ReversibleAffineTransform3D class >> scale: aScale rotation: aRotation translation: aTranslation [
+	^ self basicNew setScale: aScale rotation: aRotation translation: aTranslation
+]
+
+{ #category : #'instance creation' }
 ReversibleAffineTransform3D class >> translation: aTranslation [
 	^ self basicNew setIdentity; translation: aTranslation; yourself
 ]
@@ -138,6 +148,29 @@ ReversibleAffineTransform3D >> setOrthonormalMatrix: newMatrix [
 { #category : #accessing }
 ReversibleAffineTransform3D >> setOrthonormalMatrix: newMatrix translation: newTranslation [
 	self setMatrix: newMatrix inverseMatrix: newMatrix asMatrix3x3 transpose translation: newTranslation
+]
+
+{ #category : #initialization }
+ReversibleAffineTransform3D >> setRotation: anOrientation translation: aTranslation [
+	self setOrthonormalMatrix: anOrientation asMatrix3x3 translation: aTranslation
+]
+
+{ #category : #initialization }
+ReversibleAffineTransform3D >> setScale: aScale rotation: anOrientation translation: aTranslation [
+	| orientationMatrix scaleMatrix inverseScaleMatrix |
+	orientationMatrix := anOrientation asMatrix3x3.
+	scaleMatrix := Matrix3x3 scale: aScale.
+	inverseScaleMatrix := Matrix3x3 scale: aScale reciprocal.
+	self setMatrix: orientationMatrix * scaleMatrix inverseMatrix: inverseScaleMatrix * orientationMatrix transpose translation: aTranslation
+]
+
+{ #category : #arithmetic }
+ReversibleAffineTransform3D >> transformTransform: transform [
+	^ self class basicNew
+		setMatrix: matrix * transform matrix
+		inverseMatrix: transform inverseMatrix * inverseMatrix
+		translation: translation + (matrix * transform translation);
+		yourself.
 ]
 
 { #category : #accessing }

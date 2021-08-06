@@ -174,6 +174,13 @@ Vector2Test >> testOnes [
 ]
 
 { #category : #tests }
+Vector2Test >> testReciprocal [
+	self assert: (Vector2 x: 2 y: 3) reciprocal  equals: (Vector2 x: 1/2 y: 1/3).
+	self should: [ (Vector2 x: 0 y: 1) reciprocal ] raise: Error.
+	self should: [ (Vector2 x: 1 y: 0) reciprocal ] raise: Error.
+]
+
+{ #category : #tests }
 Vector2Test >> testSubtraction [
 	self assert: (Vector2 x: 0 y: 0) - (Vector2 x: 0 y: 0) equals: (Vector2 x: 0 y: 0).
 	self assert: (Vector2 x: 1 y: 2) - (Vector2 x: 0 y: 0) equals: (Vector2 x: 1 y: 2).

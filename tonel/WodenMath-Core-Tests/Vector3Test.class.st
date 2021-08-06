@@ -115,6 +115,14 @@ Vector3Test >> testOnes [
 ]
 
 { #category : #tests }
+Vector3Test >> testReciprocal [
+	self assert: (Vector3 x: 2 y: 3 z: 4) reciprocal  equals: (Vector3 x: 1/2 y: 1/3 z: 1/4).
+	self should: [ (Vector3 x: 0 y: 1 z: 1) reciprocal ] raise: Error.
+	self should: [ (Vector3 x: 1 y: 0 z: 1) reciprocal ] raise: Error.
+	self should: [ (Vector3 x: 1 y: 1 z: 0) reciprocal ] raise: Error.
+]
+
+{ #category : #tests }
 Vector3Test >> testSubtraction [
 	self assert: (Vector3 x: 0 y: 0 z: 0) - (Vector3 x: 0 y: 0 z: 0) equals: (Vector3 x: 0 y: 0 z: 0).
 	self assert: (Vector3 x: 1 y: 2 z: 3) - (Vector3 x: 0 y: 0 z: 0) equals: (Vector3 x: 1 y: 2 z: 3).

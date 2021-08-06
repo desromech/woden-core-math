@@ -113,6 +113,11 @@ AbstractPrimitiveTensor >> negated [
 ]
 
 { #category : #arithmetic }
+AbstractPrimitiveTensor >> reciprocal [
+	^ self collect: [ :each | each reciprocal ]
+]
+
+{ #category : #arithmetic }
 AbstractPrimitiveTensor >> sign [
 	^ self collect: [ :each | each sign ]
 ]
