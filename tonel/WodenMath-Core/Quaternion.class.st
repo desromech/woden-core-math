@@ -88,6 +88,18 @@ Quaternion class >> xRotation: angle [
 	^ self x: s y: 0 z: 0 w: c
 ]
 
+{ #category : #'accessing structure variables' }
+Quaternion class >> xyz: xyz [
+	^ self basicNew
+		x: xyz x; y: xyz y; z: xyz z; w: 0.0
+]
+
+{ #category : #'accessing structure variables' }
+Quaternion class >> xyz: xyz w: w [
+	^ self basicNew
+		x: xyz x; y: xyz y; z: xyz z; w: w
+]
+
 { #category : #'special matrices' }
 Quaternion class >> xyzRotation: angles [
 	^ (self xRotation: angles x) * (self yRotation: angles y) * (self zRotation: angles z)
@@ -341,6 +353,21 @@ Quaternion >> r: r [
 	w := r
 ]
 
+{ #category : #arithmetic }
+Quaternion >> rotateVector: vector [
+	^ ((self * (self class xyz: vector)) * self conjugated) xyz
+]
+
+{ #category : #arithmetic }
+Quaternion >> transformPosition3: position3 [
+	^ self rotateVector: position3
+]
+
+{ #category : #arithmetic }
+Quaternion >> transformVector3: vector3 [
+	^ self rotateVector: vector3
+]
+
 { #category : #accessing }
 Quaternion >> w [
 
@@ -363,6 +390,11 @@ Quaternion >> x [
 Quaternion >> x: anObject [
 
 	x := anObject
+]
+
+{ #category : #accessing }
+Quaternion >> xyz [
+	^ Vector3 x: x y: y z: z
 ]
 
 { #category : #accessing }

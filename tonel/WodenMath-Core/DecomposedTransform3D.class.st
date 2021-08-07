@@ -63,6 +63,11 @@ DecomposedTransform3D >> setIdentity [
 	translation := Vector3 zeros.
 ]
 
+{ #category : #transforming }
+DecomposedTransform3D >> translateBy: vector [
+	translation := translation + vector
+]
+
 { #category : #accessing }
 DecomposedTransform3D >> translation [
 
