@@ -45,3 +45,11 @@ AbstractPrimitiveVector >> length [
 AbstractPrimitiveVector >> length2 [
 	^ self dot: self
 ]
+
+{ #category : #accessing }
+AbstractPrimitiveVector >> normalized [
+	| l |
+	l := self length.
+	l <= 0 ifTrue: [ ^ self class zeros ].
+	^ self collect: [ :each | each / l ]
+]

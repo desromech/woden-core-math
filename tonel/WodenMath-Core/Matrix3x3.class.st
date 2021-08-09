@@ -602,6 +602,15 @@ Matrix3x3 >> transformPosition3: position [
 ]
 
 { #category : #arithmetic }
+Matrix3x3 >> transformVector2: vector2 [
+	| coervedVector2 |
+	coervedVector2 := vector2 asVector2.
+	^ Vector2
+		x: (m11*coervedVector2 x) + (m12*coervedVector2 y) + m13
+		y: (m21*coervedVector2 x) + (m22*coervedVector2 y) + m23
+]
+
+{ #category : #arithmetic }
 Matrix3x3 >> transformVector3: vector [
 	^ self * vector
 ]
