@@ -78,6 +78,11 @@ AbstractPrimitiveTensor >> abs [
 ]
 
 { #category : #arithmetic }
+AbstractPrimitiveTensor >> adaptToNumber: receiver andSend: selector [
+	^ (self class withAll: receiver) perform: selector with: self
+]
+
+{ #category : #arithmetic }
 AbstractPrimitiveTensor >> asFloat [
 	^ self collect: [ :each | each asFloat ]
 ]

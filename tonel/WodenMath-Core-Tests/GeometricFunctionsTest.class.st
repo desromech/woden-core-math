@@ -1,0 +1,98 @@
+"
+A GeometricFunctionsTest is a test class for testing the behavior of GeometricFunctions
+"
+Class {
+	#name : #GeometricFunctionsTest,
+	#superclass : #TestCase,
+	#category : #'WodenMath-Core-Tests-Geometry'
+}
+
+{ #category : #tests }
+GeometricFunctionsTest >> testClosestPointInLine [
+	| line |
+	line := { Vector3 zeros . (Vector3 x: 1) }.
+	self assert: (GeometricFunctions closestPointInLine: line to: (Vector3 x: 0.5 y: 1.0)) equals: (Vector3 x: 0.5).
+	self assert: (GeometricFunctions closestPointInLine: line to: (Vector3 x: -0.5 y: 1.0)) equals: (Vector3 x: 0.0).
+	self assert: (GeometricFunctions closestPointInLine: line to: (Vector3 x: 20.5 y: 1.0)) equals: (Vector3 x: 1.0).
+	self assert: (GeometricFunctions closestPointInLine: line to: (Vector3 x: 0.5 y: -1.0)) equals: (Vector3 x: 0.5).
+	self assert: (GeometricFunctions closestPointInLine: line to: (Vector3 x: -0.5 y: -1.0)) equals: (Vector3 x: 0.0).
+	self assert: (GeometricFunctions closestPointInLine: line to: (Vector3 x: 20.5 y: -1.0)) equals: (Vector3 x: 1.0).
+]
+
+{ #category : #tests }
+GeometricFunctionsTest >> testClosestPointInTetrahedron [
+	| tetrahedron |
+	tetrahedron := { Vector3 zeros . (Vector3 x: 1.0) . (Vector3 y: 1.0) . (Vector3 z: 1.0)}.
+
+	"Bottom triangle test."
+	self assert: (GeometricFunctions closestPointInTetrahedron: tetrahedron to: Vector3 zeros) equals: Vector3 zeros.
+	self assert: (GeometricFunctions closestPointInTetrahedron: tetrahedron to: (Vector3 x: 1.0)) equals: (Vector3 x: 1.0).
+	self assert: (GeometricFunctions closestPointInTetrahedron: tetrahedron to: (Vector3 y: 1.0)) equals: (Vector3 y: 1.0).
+	self assert: (GeometricFunctions closestPointInTetrahedron: tetrahedron to: (Vector3 x: 0.5 y: 0.5)) equals: (Vector3 x: 0.5 y: 0.5).
+	self assert: (GeometricFunctions closestPointInTetrahedron: tetrahedron to: (Vector3 x: 0.5 y: -0.5)) equals: (Vector3 x: 0.5).
+	self assert: (GeometricFunctions closestPointInTetrahedron: tetrahedron to: (Vector3 x: -0.5 y: 0.5)) equals: (Vector3 y: 0.5).
+	self assert: (GeometricFunctions closestPointInTetrahedron: tetrahedron to: Vector3 ones) closeTo: Vector3 ones /3.
+	
+	"Other tests."
+	self assert: (GeometricFunctions closestPointInTetrahedron: tetrahedron to: (Vector3 x: 0.25 y: 0.25 z: 0.25)) equals: (Vector3 x: 0.25 y: 0.25 z: 0.25).
+
+]
+
+{ #category : #tests }
+GeometricFunctionsTest >> testClosestPointInTriangle [
+	| triangle |
+	triangle := { Vector3 zeros . (Vector3 x: 1.0) . (Vector3 y: 1.0) }.
+	self assert: (GeometricFunctions closestPointInTriangle3D: triangle to: Vector3 zeros) equals: Vector3 zeros.
+	self assert: (GeometricFunctions closestPointInTriangle3D: triangle to: (Vector3 x: 1.0)) equals: (Vector3 x: 1.0).
+	self assert: (GeometricFunctions closestPointInTriangle3D: triangle to: (Vector3 y: 1.0)) equals: (Vector3 y: 1.0).
+	self assert: (GeometricFunctions closestPointInTriangle3D: triangle to: (Vector3 x: 0.5 y: 0.5)) equals: (Vector3 x: 0.5 y: 0.5).
+	self assert: (GeometricFunctions closestPointInTriangle3D: triangle to: (Vector3 x: 0.5 y: -0.5)) equals: (Vector3 x: 0.5).
+	self assert: (GeometricFunctions closestPointInTriangle3D: triangle to: (Vector3 x: -0.5 y: 0.5)) equals: (Vector3 y: 0.5).
+	self assert: (GeometricFunctions closestPointInTriangle3D: triangle to: Vector3 ones) equals: (Vector3 x: 0.5 y: 0.5).
+
+]
+
+{ #category : #tests }
+GeometricFunctionsTest >> testCollinearPoints3D [
+	self assert: (GeometricFunctions isPoint3DCollinear: Vector3 zeros with: Vector3 zeros with: Vector3 zeros).
+	self assert: (GeometricFunctions isPoint3DCollinear: Vector3 ones with: Vector3 ones with: Vector3 ones).
+	self assert: (GeometricFunctions isPoint3DCollinear: Vector3 zeros with: Vector3 ones with: Vector3 ones).
+	self assert: (GeometricFunctions isPoint3DCollinear: Vector3 ones with: Vector3 zeros with: Vector3 ones).
+	self assert: (GeometricFunctions isPoint3DCollinear: Vector3 ones with: Vector3 ones with: Vector3 zeros ).
+	self assert: (GeometricFunctions isPoint3DCollinear: (Vector3 x: 1) with: Vector3 zeros with: (Vector3 x: 20)).
+	self assert: (GeometricFunctions isPoint3DCollinear: Vector3 ones with: Vector3 ones*2 with: Vector3 ones*2).
+	self deny: (GeometricFunctions isPoint3DCollinear: Vector3 zeros with: Vector3 ones with: (Vector3 y: 1.0)).
+]
+
+{ #category : #tests }
+GeometricFunctionsTest >> testCoplanarPoints3D [
+	self assert: (GeometricFunctions isPoint3DCoplanar: Vector3 ones with: Vector3 ones with: Vector3 ones with: Vector3 ones).
+	self assert: (GeometricFunctions isPoint3DCoplanar: Vector3 zeros with: Vector3 ones with: Vector3 ones *2 with: Vector3 ones).
+	self assert: (GeometricFunctions isPoint3DCoplanar: Vector3 zeros with: (Vector3 x: 1.0) with: (Vector3 x: 1.0 y: 1.0) with: (Vector3 y: 1.0)).
+	self deny: (GeometricFunctions isPoint3DCoplanar: Vector3 zeros with: (Vector3 x: 1.0) with: Vector3 ones with: (Vector3 y: 1.0)).
+
+]
+
+{ #category : #tests }
+GeometricFunctionsTest >> testSphereSphereDistance [
+	| firstShape secondShape |
+	firstShape := Sphere center: (Vector3 x: -2) radius: 1.
+	secondShape := Sphere center: (Vector3 x: 2) radius: 1.
+	self assert: (GeometricFunctions gjkDistanceFrom: firstShape supportFunction to: secondShape supportFunction) closeTo: (firstShape distanceWithSphere: secondShape).
+]
+
+{ #category : #tests }
+GeometricFunctionsTest >> testSphereSphereDistance2 [
+	| firstShape secondShape |
+	firstShape := Sphere center: (Vector3 x: -2) radius: 1.
+	secondShape := Sphere center: (Vector3 x: 2 y: 1) radius: 1.
+	self assert: (GeometricFunctions gjkDistanceFrom: firstShape supportFunction to: secondShape supportFunction) closeTo: (firstShape distanceWithSphere: secondShape).
+]
+
+{ #category : #tests }
+GeometricFunctionsTest >> testSphereSphereDistance3 [
+	| firstShape secondShape |
+	firstShape := Sphere center: (Vector3 x: -2) radius: 1.
+	secondShape := Sphere center: (Vector3 x: 2 y: 1 z: 25) radius: 1.
+	self assert: (GeometricFunctions gjkDistanceFrom: firstShape supportFunction to: secondShape supportFunction) closeTo: (firstShape distanceWithSphere: secondShape).
+]
