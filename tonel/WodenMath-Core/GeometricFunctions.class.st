@@ -140,7 +140,7 @@ GeometricFunctions class >> gjkSimplexFrom: firstSupportFunction to: secondSuppo
 			^ simplex
 		].
 	
-		simplex insertPoint: nextPoint.
+		simplex insertPointOrdered: nextPoint.
 		lastPoint := nextPoint.
 		
 		"Do we contain the origin?"

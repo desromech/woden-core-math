@@ -4,5 +4,206 @@ I represent the geometry of a camera frustum. I am typically used for implementi
 Class {
 	#name : #Frustum,
 	#superclass : #Object,
+	#instVars : [
+		'leftBottomNear',
+		'rightBottomNear',
+		'leftTopNear',
+		'rightTopNear',
+		'leftBottomFar',
+		'rightBottomFar',
+		'leftTopFar',
+		'rightTopFar',
+		'planes'
+	],
 	#category : #'WodenMath-Core-Geometry'
 }
+
+{ #category : #computation }
+Frustum >> computePlanes [
+	planes := { 
+		"Near plane"
+   		Plane point: leftBottomNear point: rightBottomNear point: leftTopNear.
+		"Far plane"
+   		Plane point: rightBottomFar point: leftBottomFar point: leftTopFar.
+
+		"Left"
+		Plane point: leftBottomNear point: leftTopNear point: leftTopFar.
+		"Right"
+		Plane point: rightTopNear point: rightBottomNear point: rightTopFar.
+
+		"Bottom"
+   		Plane point: rightBottomNear point: leftBottomNear point: leftBottomFar.
+		"Top"
+		Plane point: leftTopNear point: rightTopNear point: leftTopFar
+	}
+]
+
+{ #category : #accessing }
+Frustum >> leftBottomFar [
+
+	^ leftBottomFar
+]
+
+{ #category : #accessing }
+Frustum >> leftBottomFar: anObject [
+
+	leftBottomFar := anObject
+]
+
+{ #category : #accessing }
+Frustum >> leftBottomNear [
+
+	^ leftBottomNear
+]
+
+{ #category : #accessing }
+Frustum >> leftBottomNear: anObject [
+
+	leftBottomNear := anObject
+]
+
+{ #category : #accessing }
+Frustum >> leftTopFar [
+
+	^ leftTopFar
+]
+
+{ #category : #accessing }
+Frustum >> leftTopFar: anObject [
+
+	leftTopFar := anObject
+]
+
+{ #category : #accessing }
+Frustum >> leftTopNear [
+
+	^ leftTopNear
+]
+
+{ #category : #accessing }
+Frustum >> leftTopNear: anObject [
+
+	leftTopNear := anObject
+]
+
+{ #category : #computation }
+Frustum >> makeFrustumLeft: left right: right bottom: bottom top: top near: near far: far [
+	|  factor |
+	leftBottomNear := Vector3 x: left y: bottom z: near negated.
+	rightBottomNear := Vector3 x: right y: bottom z: near negated.
+	leftTopNear := Vector3 x: left y: top z: near negated.
+	rightTopNear := Vector3 x: right y: top z: near negated.
+
+	factor := far / near.
+	leftBottomFar := leftBottomNear * factor.
+	rightBottomFar := rightBottomNear * factor.
+	leftTopFar := leftTopNear * factor.
+	rightTopFar := rightTopNear * factor.
+
+	self computePlanes.
+]
+
+{ #category : #computation }
+Frustum >> makePerspectiveFovY: fovy aspect: aspect near: near far: far [
+	| fovyRad top right |
+	fovyRad := fovy degreesToRadians * 0.5.
+	top := near * fovyRad tan.
+	right := top * aspect.
+	self makeFrustumLeft: right negated right: right bottom: top negated top: top near: near far: far
+]
+
+{ #category : #computation }
+Frustum >> normalizedPointInFarPlane: normalizedPoint [
+	^ (leftBottomFar interpolateTo: rightBottomFar at: normalizedPoint x) interpolateTo:
+		(leftTopFar interpolateTo: rightTopFar at: normalizedPoint x) at: normalizedPoint y.
+]
+
+{ #category : #computation }
+Frustum >> normalizedPointInNearPlane: normalizedPoint [
+	^ (leftBottomNear interpolateTo: rightBottomNear at: normalizedPoint x) interpolateTo:
+		(leftTopNear interpolateTo: rightTopNear at: normalizedPoint x) at: normalizedPoint y.
+]
+
+{ #category : #accessing }
+Frustum >> planes [
+
+	^ planes
+]
+
+{ #category : #accessing }
+Frustum >> planes: anObject [
+
+	planes := anObject
+]
+
+{ #category : #computation }
+Frustum >> rayForNormalizedPoint: normalizedPoint [
+	| nearPoint farPoint |
+	nearPoint := self normalizedPointInNearPlane: normalizedPoint.
+	farPoint := self normalizedPointInFarPlane: normalizedPoint.
+	^ Ray3D from: nearPoint to: farPoint
+]
+
+{ #category : #accessing }
+Frustum >> rightBottomFar [
+
+	^ rightBottomFar
+]
+
+{ #category : #accessing }
+Frustum >> rightBottomFar: anObject [
+
+	rightBottomFar := anObject
+]
+
+{ #category : #accessing }
+Frustum >> rightBottomNear [
+
+	^ rightBottomNear
+]
+
+{ #category : #accessing }
+Frustum >> rightBottomNear: anObject [
+
+	rightBottomNear := anObject
+]
+
+{ #category : #accessing }
+Frustum >> rightTopFar [
+
+	^ rightTopFar
+]
+
+{ #category : #accessing }
+Frustum >> rightTopFar: anObject [
+
+	rightTopFar := anObject
+]
+
+{ #category : #accessing }
+Frustum >> rightTopNear [
+
+	^ rightTopNear
+]
+
+{ #category : #accessing }
+Frustum >> rightTopNear: anObject [
+
+	rightTopNear := anObject
+]
+
+{ #category : #transforming }
+Frustum >> transformedWith: transform [
+	^ self class basicNew
+		leftBottomNear: (transform transformPosition: leftBottomNear);
+		rightBottomNear: (transform transformPosition: rightBottomNear);
+		leftTopNear: (transform transformPosition: leftTopNear);
+		rightTopNear: (transform transformPosition: rightTopNear);
+
+		leftBottomFar: (transform transformPosition: leftBottomFar);
+		rightBottomFar: (transform transformPosition: rightBottomFar);
+		leftTopFar: (transform transformPosition: leftTopFar);
+		rightTopFar: (transform transformPosition: rightTopFar);
+		computePlanes;
+		yourself
+]

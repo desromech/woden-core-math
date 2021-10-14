@@ -16,7 +16,7 @@ Class {
 	#category : #'WodenMath-Core-Geometry'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #construction }
 GJKSimplexPoint class >> forDirection: direction firstSupport: firstSupport secondSupport: secondSupport [
 	| firstPoint secondPoint |
 	firstPoint := firstSupport value: direction.

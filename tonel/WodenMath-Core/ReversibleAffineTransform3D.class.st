@@ -57,6 +57,19 @@ ReversibleAffineTransform3D >> = other [
 	inverseTranslation = other inverseTranslation ]]]]
 ]
 
+{ #category : #transforming }
+ReversibleAffineTransform3D >> applyMatrix: extraMatrix inverseMatrix: extraMatrixInverse [
+	matrix := extraMatrix * matrix.
+	inverseMatrix := inverseMatrix * extraMatrixInverse.
+	translation := extraMatrix * translation.
+	inverseTranslation := extraMatrixInverse * inverseTranslation
+]
+
+{ #category : #transforming }
+ReversibleAffineTransform3D >> applyOrthonormalMatrix: orthonormal [
+	^ self applyMatrix: orthonormal inverseMatrix: orthonormal transpose
+]
+
 { #category : #comparing }
 ReversibleAffineTransform3D >> hash [
 	^ self class identityHash bitXor: (matrix hash bitXor: (
@@ -109,6 +122,16 @@ ReversibleAffineTransform3D >> matrix [
 { #category : #accessing }
 ReversibleAffineTransform3D >> matrix4 [
 	^ Matrix4x4 mat3: matrix translation: translation
+]
+
+{ #category : #transforming }
+ReversibleAffineTransform3D >> rotateDegreesOnX: x [
+	self rotateRadiansOnX: x degreesToRadians.
+]
+
+{ #category : #transforming }
+ReversibleAffineTransform3D >> rotateRadiansOnX: x [
+	self applyOrthonormalMatrix: (Matrix3x3 xRotation: x).
 ]
 
 { #category : #initialization }
@@ -164,6 +187,11 @@ ReversibleAffineTransform3D >> setScale: aScale rotation: anOrientation translat
 	self setMatrix: orientationMatrix * scaleMatrix inverseMatrix: inverseScaleMatrix * orientationMatrix transpose translation: aTranslation
 ]
 
+{ #category : #transforming }
+ReversibleAffineTransform3D >> transformPosition: aPosition [
+	^ (matrix*aPosition) + translation
+]
+
 { #category : #arithmetic }
 ReversibleAffineTransform3D >> transformTransform: transform [
 	^ self class basicNew
@@ -171,6 +199,26 @@ ReversibleAffineTransform3D >> transformTransform: transform [
 		inverseMatrix: transform inverseMatrix * inverseMatrix
 		translation: translation + (matrix * transform translation);
 		yourself.
+]
+
+{ #category : #transforming }
+ReversibleAffineTransform3D >> translateBy: vector3 [
+	self translation: translation  + vector3
+]
+
+{ #category : #transforming }
+ReversibleAffineTransform3D >> translateByX: x [
+	self translateBy: (Vector3 x: x y: 0 z: 0)
+]
+
+{ #category : #transforming }
+ReversibleAffineTransform3D >> translateByY: y [
+	self translateBy: (Vector3 x: 0 y: y z: 0)
+]
+
+{ #category : #transforming }
+ReversibleAffineTransform3D >> translateByZ: z [
+	self translateBy: (Vector3 x: 0 y: 0 z: z)
 ]
 
 { #category : #accessing }

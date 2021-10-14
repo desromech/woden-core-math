@@ -102,6 +102,11 @@ AbstractPrimitiveTensor >> floor [
 	^ self collect: [ :each | each floor ]
 ]
 
+{ #category : #transforming }
+AbstractPrimitiveTensor >> interpolateTo: other at: param [
+    ^  self * (1 - param) + (other * param)
+]
+
 { #category : #arithmetic }
 AbstractPrimitiveTensor >> max: other [
 	^ self with: other collect: [ :a :b | a max: b ]
@@ -120,6 +125,11 @@ AbstractPrimitiveTensor >> negated [
 { #category : #arithmetic }
 AbstractPrimitiveTensor >> reciprocal [
 	^ self collect: [ :each | each reciprocal ]
+]
+
+{ #category : #arithmetic }
+AbstractPrimitiveTensor >> safeReciprocal [
+	^ self collect: [ :each | each safeReciprocal ]
 ]
 
 { #category : #arithmetic }
