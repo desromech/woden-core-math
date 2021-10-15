@@ -17,6 +17,14 @@ Class {
 }
 
 { #category : #construction }
+GJKSimplexPoint class >> differenceForDirection: direction firstSupport: firstSupport secondSupport: secondSupport [
+	| firstPoint secondPoint |
+	firstPoint := firstSupport value: direction.
+	secondPoint := secondSupport value: direction negated.
+	^ firstPoint - secondPoint
+]
+
+{ #category : #construction }
 GJKSimplexPoint class >> forDirection: direction firstSupport: firstSupport secondSupport: secondSupport [
 	| firstPoint secondPoint |
 	firstPoint := firstSupport value: direction.
@@ -31,6 +39,11 @@ GJKSimplexPoint class >> forDirection: direction firstSupport: firstSupport seco
 { #category : #comparing }
 GJKSimplexPoint >> closeTo: other [
 	^ differencePoint closeTo: other differencePoint
+]
+
+{ #category : #'as yet unclassified' }
+GJKSimplexPoint >> computeDifferencePoint [
+	^ firstShapePoint - secondShapePoint
 ]
 
 { #category : #accessing }

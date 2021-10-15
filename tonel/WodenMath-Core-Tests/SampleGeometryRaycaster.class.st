@@ -22,9 +22,40 @@ SampleGeometryRaycaster class >> exampleBoxGJK [
 ]
 
 { #category : #examples }
+SampleGeometryRaycaster class >> exampleEllipsoid [
+	^ self new
+		rayCastShape: (Ellipsoid radiuses: (Vector3 x: 1.0 y: 0.5 z: 0.3))
+		color: Color yellow darker asVector3
+]
+
+{ #category : #examples }
+SampleGeometryRaycaster class >> exampleEllipsoid2 [
+	^ self new
+		rayCastShape: (Ellipsoid radiuses: (Vector3 x: 1.0 y: 1.0 z: 1.0))
+		color: Color yellow darker asVector3
+]
+
+{ #category : #examples }
+SampleGeometryRaycaster class >> exampleEllipsoid2GJK [
+	^ self new
+		rayCastSupportFunction: (Ellipsoid radiuses: (Vector3 x: 1.0 y: 1.0 z: 1.0)) supportFunction
+		color: Color yellow darker asVector3
+]
+
+{ #category : #examples }
 SampleGeometryRaycaster class >> exampleEllipsoidGJK [
 	^ self new
 		rayCastSupportFunction: (Ellipsoid radiuses: (Vector3 x: 1.0 y: 0.5 z: 0.3)) supportFunction
+		color: Color yellow darker asVector3
+]
+
+{ #category : #examples }
+SampleGeometryRaycaster class >> exampleRoundedBoxGJK [
+	| box sphere |
+	box := AABox unit.
+	sphere := Sphere radius: 0.05.
+	^ self new
+		rayCastSupportFunction: [:d | (box supportInDirection: d) + (sphere supportInDirection: d)]
 		color: Color yellow darker asVector3
 ]
 
@@ -42,7 +73,7 @@ SampleGeometryRaycaster class >> exampleSphereGJK [
 		color: Color yellow darker asVector3
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #raycasting }
 SampleGeometryRaycaster >> rayCastAndShadeWith: rayCastBlock [
 	| w h aspect frustum bits destIndex |
 	w := 256.
@@ -86,7 +117,7 @@ SampleGeometryRaycaster >> rayCastAndShadeWith: rayCastBlock [
 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #raycasting }
 SampleGeometryRaycaster >> rayCastShape: shape color: color [
 	^ self rayCastAndShadeWith: [:ray |
 		(shape intersectionWithRay: ray) ifNil: [
@@ -101,10 +132,10 @@ SampleGeometryRaycaster >> rayCastShape: shape color: color [
 	]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #raycasting }
 SampleGeometryRaycaster >> rayCastSupportFunction: supportFunction color: color [
 	^ self rayCastAndShadeWith: [:ray |
-		(GeometricFunctions gjkSweepCastRay: ray first: supportFunction second: [ :v | Vector3 zeros ]) ifNil: [
+		(GeometricFunctions gjkRayCast: ray support: supportFunction) ifNil: [
 			Vector4 x: 0.2 y: 0.2 z: 0.5 w: 1.0
 		] ifNotNil: [:distanceAndNormal |
 			| normal NdotV |

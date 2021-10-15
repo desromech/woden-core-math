@@ -33,25 +33,25 @@ GJKSimplex class >> with: aPoint [
 GJKSimplex >> closestPointToOrigin [
 	closestPointToOrigin ifNotNil: [ ^ closestPointToOrigin ].
 	points size = 1 ifTrue: [ 
-		^ closestPointToOrigin := points first differencePoint
+		^ closestPointToOrigin := points first 
 	].
 
 	points size = 2 ifTrue: [ 
-		^ closestPointToOrigin := GeometricFunctions closestPointInLineFrom: points first differencePoint to: points second differencePoint to: Origin
+		^ closestPointToOrigin := GeometricFunctions closestPointInLineFrom: points first  to: points second  to: Origin
 	].
 
 	points size = 3 ifTrue: [ 
-		^ closestPointToOrigin := GeometricFunctions closestPointInTriangle3DA: points first differencePoint
-			B: points second differencePoint
-			C: points third differencePoint
+		^ closestPointToOrigin := GeometricFunctions closestPointInTriangle3DA: points first 
+			B: points second 
+			C: points third 
 			to: Origin
 	].
 
 	points size = 4 ifTrue: [ 
-		^ closestPointToOrigin := GeometricFunctions closestPointInTetrahedronA: points first differencePoint
-			B: points second differencePoint
-			C: points third differencePoint
-			D: points fourth differencePoint to: Origin
+		^ closestPointToOrigin := GeometricFunctions closestPointInTetrahedronA: points first 
+			B: points second 
+			C: points third 
+			D: points fourth  to: Origin
 	].
 	
 	self error: 'Unsupported case.'
@@ -80,7 +80,7 @@ GJKSimplex >> insertPointOrdered: newPoint [
 	].
 
 	points size = 3 ifTrue: [
-		(GeometricFunctions isPoint3DCoplanar: points first differencePoint with: points second differencePoint with: points third differencePoint with: newPoint differencePoint) ifTrue: [
+		(GeometricFunctions isPoint3DCoplanar: points first with: points second with: points third with: newPoint ) ifTrue: [
 			points := {points second . points third . newPoint }
 		] ifFalse: [ 
 			points := {points first . points second . points third . newPoint }
@@ -91,7 +91,7 @@ GJKSimplex >> insertPointOrdered: newPoint [
 
 	points size = 2 ifTrue: [
 		self assert: (points first closeTo: newPoint) not.		
-		(GeometricFunctions isPoint3DCollinear: points first differencePoint with: points second differencePoint with: newPoint differencePoint) ifTrue: [
+		(GeometricFunctions isPoint3DCollinear: points first with: points second with: newPoint ) ifTrue: [
 			points := {points second . newPoint }
 		] ifFalse: [ 
 			points := {points first . points second . newPoint }
@@ -104,6 +104,10 @@ GJKSimplex >> insertPointOrdered: newPoint [
 		^ self
 	].
 
+	points size = 0 ifTrue: [
+		points := { newPoint }.
+		^ self
+	].
 	self error
 ]
 
@@ -121,7 +125,7 @@ GJKSimplex >> insertPointUnordered: newPoint [
 	].
 
 	points size = 3 ifTrue: [
-		(GeometricFunctions isPoint3DCoplanar: points first differencePoint with: points second differencePoint with: points third differencePoint with: newPoint differencePoint) ifTrue: [
+		(GeometricFunctions isPoint3DCoplanar: points first  with: points second  with: points third  with: newPoint ) ifTrue: [
 			self removeFarthestPointTo: newPoint
 		] ifFalse: [ 
 			points := {points first . points second . points third . newPoint }.
@@ -130,7 +134,7 @@ GJKSimplex >> insertPointUnordered: newPoint [
 	].
 
 	points size = 2 ifTrue: [
-		(GeometricFunctions isPoint3DCollinear: points first differencePoint with: points second differencePoint with: newPoint differencePoint) ifTrue: [
+		(GeometricFunctions isPoint3DCollinear: points first  with: points second  with: newPoint ) ifTrue: [
 			self removeFarthestPointTo: newPoint
 		] ifFalse: [ 
 			points := {points first . points second . newPoint }
@@ -181,7 +185,7 @@ GJKSimplex >> removeFarthestPointTo: testPoint [
 	bestIndex := 0.
 	points doWithIndex: [ :p :index |
 		| l2 |
-		l2 := (p differencePoint - testPoint differencePoint) length2.
+		l2 := (p - testPoint ) length2.
 		l2 > bestDistance ifTrue: [
 			bestDistance := l2.
 			bestIndex := index
@@ -199,4 +203,13 @@ GJKSimplex >> removeFarthestPointTo: testPoint [
 	
 	points := result
 
+]
+
+{ #category : #modifying }
+GJKSimplex >> transformPointsWith: aBlock [
+	closestPointToOrigin := nil.
+	containsOrigin := nil.
+	1 to: points size do: [ :i |
+		points at: i put: (aBlock value: (points at: i))
+	]
 ]

@@ -116,26 +116,134 @@ GeometricFunctions class >> doClosestPointInTetrahedronA: a B: b C: c D: d to: p
 ]
 
 { #category : #'closest point computation' }
+GeometricFunctions class >> gjkConvexCast: firstSupportFunction from: firstStartPoint to: firstEndPoint with: secondSupportFunction from: secondStartPoint to: secondEndPoint [
+	| lambda r n v simplex remainingIterations firstDelta secondDelta firstSupport secondSupport interpolatedFirstPosition interpolatedSecondPosition |
+	lambda := 0.
+	n := Vector3 zeros.
+	
+	firstDelta := firstEndPoint - firstStartPoint.
+	secondDelta := secondEndPoint - secondStartPoint.
+	r := firstDelta - secondDelta.
+
+	firstSupport := firstSupportFunction value: r negated.
+	secondSupport := firstSupportFunction value: r.
+	v := firstSupport - secondSupport.
+	
+	interpolatedFirstPosition := firstStartPoint.
+	interpolatedSecondPosition := secondStartPoint.
+
+	remainingIterations := MaxNumberOfIterations.
+	simplex := GJKSimplex new.
+	[ remainingIterations > 0 and: [v length2 > Epsilon2] ] whileTrue: [
+		| w VdotW |
+		lambda > 1 ifTrue: [ ^ nil ].
+		
+		firstSupport := (firstSupportFunction value: r negated) + interpolatedFirstPosition.
+		secondSupport := (firstSupportFunction value: r) + interpolatedSecondPosition.
+		w := firstSupport - secondSupport.
+
+		VdotW := v dot: w.
+		VdotW > 0 ifTrue: [
+			| VdotR |
+			VdotR := (v dot: r).
+			VdotR >= 0 ifTrue: [ ^ nil ].
+			lambda := lambda - (VdotW / VdotR).
+			n := v.
+
+			interpolatedFirstPosition := firstStartPoint interpolateTo: firstEndPoint at: lambda.
+			interpolatedSecondPosition := secondStartPoint interpolateTo: secondEndPoint at: lambda.
+			
+			firstSupport := (firstSupportFunction value: r negated) + interpolatedFirstPosition.
+			secondSupport := (firstSupportFunction value: r) + interpolatedSecondPosition.
+			w := firstSupport - secondSupport.
+		].
+
+		(simplex isPointASimplexVertex: w) ifFalse: [ 
+			simplex insertPointOrdered: w.
+		].
+
+		simplex containsOrigin ifTrue: [ 
+			remainingIterations := 0
+		] ifFalse: [ 
+			v := simplex closestPointToOrigin.
+			remainingIterations := remainingIterations - 1
+		].
+	].
+
+	 ^ {lambda . n }
+]
+
+{ #category : #'closest point computation' }
 GeometricFunctions class >> gjkDistanceFrom: firstSupportFunction to: secondSupportFunction [
 	| simplex |
 	simplex := self gjkSimplexFor: firstSupportFunction with: secondSupportFunction.
-	^ simplex containsOrigin ifTrue: [ 0 ] ifFalse: [ simplex lastPoint differencePoint length ]
+	^ simplex containsOrigin ifTrue: [ 0 ] ifFalse: [ simplex closestPointToOrigin length ]
+]
+
+{ #category : #'closest point computation' }
+GeometricFunctions class >> gjkRayCast: ray support: supportFunction [
+	"Algorithm from 'Ray Casting against General Convex Objectswith Application to Continuous CollisionDetection' by G. Van Den Bergen."
+	| lambda x s r n v simplex remainingIterations |
+	lambda := ray tmin.
+	s := ray origin.
+	r := ray direction.
+	x := s + (r * lambda).
+	n := Vector3 zeros.
+	
+	v := x - (supportFunction value: r negated).
+	simplex := GJKSimplex new.
+	remainingIterations := MaxNumberOfIterations.
+	[ remainingIterations > 0 and: [v length2 > Epsilon2] ] whileTrue: [
+		| w p VdotW |
+		lambda > ray tmax ifTrue: [ ^ nil ].
+
+		p := supportFunction value: v.
+		w := x - p.
+		VdotW := v dot: w.
+		VdotW > 0 ifTrue: [
+			| VdotR oldX deltaX |
+			VdotR := (v dot: r).
+			VdotR >= Epsilon2 negated ifTrue: [ ^ nil ].
+			lambda := lambda - (VdotW / VdotR).
+			oldX := x.
+			x := s + (r * lambda).
+			n := v.
+			w := x - p.
+			deltaX := x - oldX.
+			simplex transformPointsWith: [ :sp | sp + deltaX ].
+			"simplex := GJKSimplex new."
+		].
+
+		"simplex insertPointUnordered: w."
+		(simplex isPointASimplexVertex: w) ifFalse: [ 
+			simplex insertPointOrdered: w.
+		].
+		simplex containsOrigin ifTrue: [ 
+			remainingIterations := 0
+		] ifFalse: [ 
+			v := simplex closestPointToOrigin.
+			remainingIterations := remainingIterations - 1
+		].
+	].
+
+	 ^ {lambda . n }
 ]
 
 { #category : #'closest point computation' }
 GeometricFunctions class >> gjkSimplexFor: firstSupportFunction with: secondSupportFunction [
 	| lastPoint simplex nextDirection remainingIterations |
-	lastPoint := GJKSimplexPoint forDirection: (Vector3 x: 1) firstSupport: firstSupportFunction secondSupport: secondSupportFunction.
+	nextDirection := Vector3 x: 1.
+	lastPoint := (firstSupportFunction value: nextDirection) - (secondSupportFunction value: nextDirection negated).
 	simplex := GJKSimplex with: lastPoint.
-	nextDirection := lastPoint 	differencePoint negated.
+	nextDirection := lastPoint negated.
 		
 	remainingIterations := MaxNumberOfIterations.
 	[ remainingIterations > 0 ] whileTrue: [ 	
 		| nextPoint delta |
-		nextPoint := GJKSimplexPoint forDirection: nextDirection firstSupport: firstSupportFunction secondSupport: secondSupportFunction.
+		nextPoint := (firstSupportFunction value: nextDirection) - (secondSupportFunction value: nextDirection negated).
 
 		"Are we getting closer to the origin?"
-		delta := nextPoint differencePoint - lastPoint differencePoint.
+		delta := nextPoint - lastPoint.
 		(delta dot: nextDirection) <= Epsilon ifTrue: [
 			^ simplex
 		].
@@ -151,49 +259,6 @@ GeometricFunctions class >> gjkSimplexFor: firstSupportFunction with: secondSupp
 	].
 
 	^ simplex
-]
-
-{ #category : #'closest point computation' }
-GeometricFunctions class >> gjkSweepCastRay: ray first: firstSupportFunction second: secondSupportFunction [
-	"Algorithm from 'Ray Casting against General Convex Objectswith Application to Continuous CollisionDetection' by G. Van Den Bergen."
-	| lambda x s r n v simplex remainingIterations sp |
-	lambda := ray tmin.
-	s := ray origin.
-	r := ray direction.
-	x := s + (r * lambda).
-	n := Vector3 zeros.
-	
-	sp := GJKSimplexPoint forDirection: ray direction firstSupport: firstSupportFunction secondSupport: secondSupportFunction.
-	v := x - sp differencePoint.
-	simplex := GJKSimplex new.
-	remainingIterations := MaxNumberOfIterations.
-	[ remainingIterations > 0 and: [v length2 > Epsilon2] ] whileTrue: [
-		| w |
-		lambda > ray tmax ifTrue: [ ^ nil ].
-
-		sp := GJKSimplexPoint forDirection: v firstSupport: firstSupportFunction secondSupport: secondSupportFunction.
-		w := x - sp differencePoint.
-		(v dot: w) > 0 ifTrue: [
-			(v dot: r) >= Epsilon2 negated ifTrue: [ ^ nil ].
-			lambda := lambda - ((v dot: w) / (v dot: r)).
-			x := s + (r * lambda).
-			n := v.
-			sp := GJKSimplexPoint forDirection: v firstSupport: firstSupportFunction secondSupport: secondSupportFunction.
-			w := x - sp differencePoint.
-		].
-	
-		sp differencePoint: w.
-		simplex insertPointUnordered: sp.
-		v := simplex closestPointToOrigin.
-		remainingIterations := remainingIterations - 1
-	].
-
-	 ^ {lambda . n }
-]
-
-{ #category : #'closest point computation' }
-GeometricFunctions class >> gjkSweepCastRay: ray from: firstSupportFunction to: secondSupportFunction [
-	self halt
 ]
 
 { #category : #initialization }
