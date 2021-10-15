@@ -24,27 +24,21 @@ SampleGeometryRaycaster class >> exampleBoxGJK [
 { #category : #examples }
 SampleGeometryRaycaster class >> exampleEllipsoidGJK [
 	^ self new
-		rayCastSupportFunction: (Ellipsoid new
-			radiuses: (Vector3 x: 1.0 y: 0.5 z: 0.3);
-			supportFunction)
+		rayCastSupportFunction: (Ellipsoid radiuses: (Vector3 x: 1.0 y: 0.5 z: 0.3)) supportFunction
 		color: Color yellow darker asVector3
 ]
 
 { #category : #examples }
 SampleGeometryRaycaster class >> exampleSphere [
 	^ self new
-		rayCastShape: (Sphere new
-			radius: 1.0;
-			yourself)
+		rayCastShape: (Sphere radius: 1.0)
 		color: Color yellow darker asVector3
 ]
 
 { #category : #examples }
 SampleGeometryRaycaster class >> exampleSphereGJK [
 	^ self new
-		rayCastSupportFunction: (Sphere new
-			radius: 1.0;
-			supportFunction)
+		rayCastSupportFunction: (Sphere radius: 1.0) supportFunction
 		color: Color yellow darker asVector3
 ]
 
@@ -110,7 +104,7 @@ SampleGeometryRaycaster >> rayCastShape: shape color: color [
 { #category : #'as yet unclassified' }
 SampleGeometryRaycaster >> rayCastSupportFunction: supportFunction color: color [
 	^ self rayCastAndShadeWith: [:ray |
-		(GeometricFunctions ray: ray castFor: supportFunction) ifNil: [
+		(GeometricFunctions gjkSweepCastRay: ray first: supportFunction second: [ :v | Vector3 zeros ]) ifNil: [
 			Vector4 x: 0.2 y: 0.2 z: 0.5 w: 1.0
 		] ifNotNil: [:distanceAndNormal |
 			| normal NdotV |

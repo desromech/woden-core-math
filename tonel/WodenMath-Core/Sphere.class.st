@@ -16,6 +16,11 @@ Sphere class >> center: center radius: radius [
 	^ self basicNew center: center; radius: radius; yourself
 ]
 
+{ #category : #'instance creation' }
+Sphere class >> radius: radius [
+	^ self new radius: radius; yourself
+]
+
 { #category : #accessing }
 Sphere >> center [
 

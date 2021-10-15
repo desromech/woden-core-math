@@ -23,3 +23,11 @@ SphereTest >> testNew [
 	self assert: sphere center isZeros.
 	self assert: sphere radius isZero.
 ]
+
+{ #category : #tests }
+SphereTest >> testRadius [
+	| sphere |
+	sphere := Sphere radius: 4.
+	self assert: sphere center isZeros.
+	self assert: sphere radius equals: 4.
+]
