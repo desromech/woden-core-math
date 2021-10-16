@@ -22,6 +22,20 @@ SampleGeometryRaycaster class >> exampleBoxGJK [
 ]
 
 { #category : #examples }
+SampleGeometryRaycaster class >> exampleCylinder [
+	^ self new
+		rayCastShape: (CylinderY height: 1 radius: 1)
+		color: Color yellow darker asVector3
+]
+
+{ #category : #examples }
+SampleGeometryRaycaster class >> exampleCylinderGJK [
+	^ self new
+		rayCastSupportFunction: (CylinderY height: 1 radius: 1) supportFunction
+		color: Color yellow darker asVector4
+]
+
+{ #category : #examples }
 SampleGeometryRaycaster class >> exampleEllipsoid [
 	^ self new
 		rayCastShape: (Ellipsoid radiuses: (Vector3 x: 1.0 y: 0.5 z: 0.3))
@@ -50,10 +64,23 @@ SampleGeometryRaycaster class >> exampleEllipsoidGJK [
 ]
 
 { #category : #examples }
+SampleGeometryRaycaster class >> examplePolytopeGJK [
+	
+	^ self new
+		rayCastSupportFunction: (self supportForConvexHullOfPoints: {
+			Vector3 x: -1 y: 0 z: 1.
+			Vector3 x: 1 y: 0 z: 1.
+			Vector3 x: 0 y: 0 z: -1.
+			Vector3 x: 0.5 y: 1 z: -0.5.
+		})
+		color: Color yellow darker asVector4
+]
+
+{ #category : #examples }
 SampleGeometryRaycaster class >> exampleRoundedBoxGJK [
 	| box sphere |
 	box := AABox unit.
-	sphere := Sphere radius: 0.05.
+	sphere := Sphere radius: 0.1.
 	^ self new
 		rayCastSupportFunction: [:d | (box supportInDirection: d) + (sphere supportInDirection: d)]
 		color: Color yellow darker asVector3
@@ -71,6 +98,25 @@ SampleGeometryRaycaster class >> exampleSphereGJK [
 	^ self new
 		rayCastSupportFunction: (Sphere radius: 1.0) supportFunction
 		color: Color yellow darker asVector3
+]
+
+{ #category : #examples }
+SampleGeometryRaycaster class >> supportForConvexHullOfPoints: points [
+	^ [ :d |
+		| bestSupport best|
+		bestSupport := Float negativeInfinity.
+		best := nil.
+		points do: [ :p |
+			| support |
+			support := p dot: d.
+			support > bestSupport ifTrue: [ 
+				bestSupport := support.
+				best := p
+			]
+		].
+	
+		best
+	]
 ]
 
 { #category : #raycasting }

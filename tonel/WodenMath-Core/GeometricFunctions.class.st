@@ -126,46 +126,48 @@ GeometricFunctions class >> gjkConvexCast: firstSupportFunction from: firstStart
 	r := firstDelta - secondDelta.
 
 	firstSupport := firstSupportFunction value: r negated.
-	secondSupport := firstSupportFunction value: r.
+	secondSupport := secondSupportFunction value: r.
 	v := firstSupport - secondSupport.
 	
 	interpolatedFirstPosition := firstStartPoint.
 	interpolatedSecondPosition := secondStartPoint.
 
 	remainingIterations := MaxNumberOfIterations.
-	simplex := GJKSimplex new.
+	simplex := GJKVoronoiSimplexSolver new.
 	[ remainingIterations > 0 and: [v length2 > Epsilon2] ] whileTrue: [
 		| w VdotW |
 		lambda > 1 ifTrue: [ ^ nil ].
 		
-		firstSupport := (firstSupportFunction value: r negated) + interpolatedFirstPosition.
-		secondSupport := (firstSupportFunction value: r) + interpolatedSecondPosition.
+		firstSupport := (firstSupportFunction value: v negated) + interpolatedFirstPosition.
+		secondSupport := (secondSupportFunction value: v) + interpolatedSecondPosition.
 		w := firstSupport - secondSupport.
 
 		VdotW := v dot: w.
 		VdotW > 0 ifTrue: [
 			| VdotR |
 			VdotR := (v dot: r).
-			VdotR >= 0 ifTrue: [ ^ nil ].
+			VdotR >= Epsilon2 negated ifTrue: [ ^ nil ].
 			lambda := lambda - (VdotW / VdotR).
 			n := v.
 
 			interpolatedFirstPosition := firstStartPoint interpolateTo: firstEndPoint at: lambda.
 			interpolatedSecondPosition := secondStartPoint interpolateTo: secondEndPoint at: lambda.
 			
-			firstSupport := (firstSupportFunction value: r negated) + interpolatedFirstPosition.
-			secondSupport := (firstSupportFunction value: r) + interpolatedSecondPosition.
+			firstSupport := (firstSupportFunction value: v negated) + interpolatedFirstPosition.
+			secondSupport := (secondSupportFunction value: v) + interpolatedSecondPosition.
 			w := firstSupport - secondSupport.
+			simplex := GJKVoronoiSimplexSolver new.
 		].
 
-		(simplex isPointASimplexVertex: w) ifFalse: [ 
-			simplex insertPointOrdered: w.
+		(simplex containsPoint: w) ifFalse: [ 
+			simplex insertPoint: w.
 		].
 
 		simplex containsOrigin ifTrue: [ 
 			remainingIterations := 0
 		] ifFalse: [ 
 			v := simplex closestPointToOrigin.
+			simplex reduce.
 			remainingIterations := remainingIterations - 1
 		].
 	].
@@ -184,6 +186,17 @@ GeometricFunctions class >> gjkDistanceFrom: firstSupportFunction to: secondSupp
 GeometricFunctions class >> gjkRayCast: ray support: supportFunction [
 	"Algorithm from 'Ray Casting against General Convex Objectswith Application to Continuous CollisionDetection' by G. Van Den Bergen."
 	| lambda x s r n v simplex remainingIterations |
+	
+	false ifTrue: [ 
+		| startPoint endPoint pair |
+		startPoint := ray pointAtDistance: ray tmin.
+		endPoint := ray pointAtDistance: (ray tmax min: 1000000).
+		pair := self gjkConvexCast: [:d | Vector3 zeros] from: startPoint to: endPoint
+			with: supportFunction from: Vector3 zeros to: Vector3 zeros.
+		pair ifNil: [ ^ pair ].
+		^ { ray tmin interpolateTo: (ray tmax min: 1000000) at: pair first . pair second }
+	].
+
 	lambda := ray tmin.
 	s := ray origin.
 	r := ray direction.
@@ -191,7 +204,7 @@ GeometricFunctions class >> gjkRayCast: ray support: supportFunction [
 	n := Vector3 zeros.
 	
 	v := x - (supportFunction value: r negated).
-	simplex := GJKSimplex new.
+	simplex := GJKVoronoiSimplexSolver new.
 	remainingIterations := MaxNumberOfIterations.
 	[ remainingIterations > 0 and: [v length2 > Epsilon2] ] whileTrue: [
 		| w p VdotW |
@@ -211,17 +224,19 @@ GeometricFunctions class >> gjkRayCast: ray support: supportFunction [
 			w := x - p.
 			deltaX := x - oldX.
 			simplex transformPointsWith: [ :sp | sp + deltaX ].
-			"simplex := GJKSimplex new."
+			simplex containsOrigin ifTrue: [ ^ {lambda . n } ].
+			simplex reduce.
+			"simplex := GJKVoronoiSimplexSolver new."
 		].
 
-		"simplex insertPointUnordered: w."
-		(simplex isPointASimplexVertex: w) ifFalse: [ 
-			simplex insertPointOrdered: w.
+		(simplex containsPoint: w) ifFalse: [ 
+			simplex insertPoint: w.
 		].
 		simplex containsOrigin ifTrue: [ 
 			remainingIterations := 0
 		] ifFalse: [ 
 			v := simplex closestPointToOrigin.
+			simplex reduce.
 			remainingIterations := remainingIterations - 1
 		].
 	].
@@ -234,7 +249,7 @@ GeometricFunctions class >> gjkSimplexFor: firstSupportFunction with: secondSupp
 	| lastPoint simplex nextDirection remainingIterations |
 	nextDirection := Vector3 x: 1.
 	lastPoint := (firstSupportFunction value: nextDirection) - (secondSupportFunction value: nextDirection negated).
-	simplex := GJKSimplex with: lastPoint.
+	simplex := GJKVoronoiSimplexSolver with: lastPoint.
 	nextDirection := lastPoint negated.
 		
 	remainingIterations := MaxNumberOfIterations.
@@ -248,14 +263,17 @@ GeometricFunctions class >> gjkSimplexFor: firstSupportFunction with: secondSupp
 			^ simplex
 		].
 	
-		simplex insertPointOrdered: nextPoint.
+		simplex insertPoint: nextPoint.
 		lastPoint := nextPoint.
 		
 		"Do we contain the origin?"
 		simplex containsOrigin ifTrue: [ ^ simplex ].
 	
 		"Advance in direction to the origin."
-		nextDirection := simplex closestPointToOrigin negated
+		nextDirection := simplex closestPointToOrigin negated.
+		
+		"Reduce the simplex."
+		simplex reduce.
 	].
 
 	^ simplex

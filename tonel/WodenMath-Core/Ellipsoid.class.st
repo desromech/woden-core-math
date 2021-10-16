@@ -62,7 +62,7 @@ Ellipsoid >> intersectionWithRay: ray [
 	rxryrz2 := radiuses x * radiuses y * radiuses z.
 	rxryrz2 := rxryrz2 * rxryrz2.
 	
-	o := ray origin.
+	o := ray origin - center.
 	o2 := o*o.
 	d := ray direction.
 	d2 := d*d.
