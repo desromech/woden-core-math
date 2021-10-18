@@ -22,16 +22,44 @@ SampleGeometryRaycaster class >> exampleBoxGJK [
 ]
 
 { #category : #examples }
-SampleGeometryRaycaster class >> exampleCylinder [
+SampleGeometryRaycaster class >> exampleCylinderX [
+	^ self new
+		rayCastShape: (CylinderX height: 1 radius: 1)
+		color: Color yellow darker asVector3
+]
+
+{ #category : #examples }
+SampleGeometryRaycaster class >> exampleCylinderXGJK [
+	^ self new
+		rayCastSupportFunction: (CylinderX height: 1 radius: 1) supportFunction
+		color: Color yellow darker asVector4
+]
+
+{ #category : #examples }
+SampleGeometryRaycaster class >> exampleCylinderY [
 	^ self new
 		rayCastShape: (CylinderY height: 1 radius: 1)
 		color: Color yellow darker asVector3
 ]
 
 { #category : #examples }
-SampleGeometryRaycaster class >> exampleCylinderGJK [
+SampleGeometryRaycaster class >> exampleCylinderYGJK [
 	^ self new
 		rayCastSupportFunction: (CylinderY height: 1 radius: 1) supportFunction
+		color: Color yellow darker asVector4
+]
+
+{ #category : #examples }
+SampleGeometryRaycaster class >> exampleCylinderZ [
+	^ self new
+		rayCastShape: (CylinderZ height: 0.5 radius: 0.5)
+		color: Color yellow darker asVector3
+]
+
+{ #category : #examples }
+SampleGeometryRaycaster class >> exampleCylinderZGJK [
+	^ self new
+		rayCastSupportFunction: (CylinderZ height: 0.5 radius: 0.5) supportFunction
 		color: Color yellow darker asVector4
 ]
 

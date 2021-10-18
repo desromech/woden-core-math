@@ -22,7 +22,7 @@ CylinderY class >> height: height radius: radius [
 	^ self new height: height; radius: radius; yourself
 ]
 
-{ #category : #'ray casting' }
+{ #category : #private }
 CylinderY >> capIntersectionIntersectionWithRay: ray [
 	| oy dy halfHeight t1 t2 isT1Valid isT2Valid |
 	dy := ray direction y.
@@ -56,7 +56,7 @@ CylinderY >> center: anObject [
 	center := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #geometry }
 CylinderY >> computeNormalForPoint: point [
 	| delta hh |
 	delta := point - center.
@@ -84,7 +84,7 @@ CylinderY >> height: anObject [
 	height := anObject
 ]
 
-{ #category : #'ray casting' }
+{ #category : #private }
 CylinderY >> infiniteCylinderIntersectionWithRay: ray [
 	| d d2 o o2 a b c delta deltaSqrt t1 t2 isT1Valid isT2Valid |
 	d := ray direction.
@@ -133,7 +133,7 @@ CylinderY >> intersectionWithRay: ray [
 	^ capIntersection min: infiniteCylinderIntersection
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #private }
 CylinderY >> isCapPointInCylinder: capPoint [
 	| dx dz |
 	dx := capPoint x - center x.
@@ -141,7 +141,7 @@ CylinderY >> isCapPointInCylinder: capPoint [
 	^ (dx*dx) + (dz*dz) <= (radius*radius)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #private }
 CylinderY >> isInfiniteCylinderPointInside: infiniteCylinderPoint [
 	| halfHeight |
 	halfHeight := self halfHeight.
