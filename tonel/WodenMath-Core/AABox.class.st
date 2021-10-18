@@ -51,12 +51,12 @@ AABox >> center [
 	^ min + self halfExtent
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #geometry }
 AABox >> computeNormalForPoint: point [
 	^ (self computePenetrationNormalAndDistanceForPoint: point) first
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #geometry }
 AABox >> computePenetrationNormalAndDistanceForPoint: point [
 	| delta deltaAbsolute normal penetrationDistance |
 	delta := point - self center.

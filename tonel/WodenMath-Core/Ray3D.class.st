@@ -70,7 +70,7 @@ Ray3D >> origin: anObject [
 	origin := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #geometry }
 Ray3D >> pointAtDistance: alpha [
 	^ origin + (direction * alpha)
 ]

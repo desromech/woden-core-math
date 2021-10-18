@@ -33,7 +33,7 @@ Ellipsoid >> center: anObject [
 	center := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'ray casting' }
 Ellipsoid >> computeNormalForPoint: point [
 	| delta |
 	delta := point - center.
@@ -100,12 +100,12 @@ Ellipsoid >> radiuses: anObject [
 	radiuses := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'support mapping' }
 Ellipsoid >> supportFunction [
 	^ [ :direction | self supportInDirection: direction ]
 ]
 
-{ #category : #'as yet unclassified' }
-Ellipsoid >> supportInDirection: aDirection [
-	^ center + (aDirection normalized * radiuses)
+{ #category : #'support mapping' }
+Ellipsoid >> supportInDirection: d [
+	^ center + ((d*radiuses) normalized * radiuses)
 ]
