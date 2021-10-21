@@ -144,19 +144,24 @@ GeometricFunctions class >> gjkConvexCast: firstSupportFunction from: firstStart
 
 		VdotW := v dot: w.
 		VdotW > 0 ifTrue: [
-			| VdotR |
+			| VdotR oldOffset newOffset deltaOffset |
 			VdotR := (v dot: r).
 			VdotR >= Epsilon2 negated ifTrue: [ ^ nil ].
 			lambda := lambda - (VdotW / VdotR).
 			n := v.
 
+			oldOffset := interpolatedFirstPosition - interpolatedSecondPosition.
 			interpolatedFirstPosition := firstStartPoint interpolateTo: firstEndPoint at: lambda.
 			interpolatedSecondPosition := secondStartPoint interpolateTo: secondEndPoint at: lambda.
+			newOffset := interpolatedFirstPosition - interpolatedSecondPosition.
+			deltaOffset := newOffset - oldOffset.
 			
 			firstSupport := (firstSupportFunction value: v negated) + interpolatedFirstPosition.
 			secondSupport := (secondSupportFunction value: v) + interpolatedSecondPosition.
 			w := firstSupport - secondSupport.
-			simplex := GJKVoronoiSimplexSolver new.
+			simplex transformPointsWith: [ :sp | sp + deltaOffset ].
+			simplex containsOrigin ifTrue: [ ^ {lambda . n } ].
+			simplex reduce.
 		].
 
 		(simplex containsPoint: w) ifFalse: [ 
@@ -187,6 +192,8 @@ GeometricFunctions class >> gjkRayCast: ray support: supportFunction [
 	"Algorithm from 'Ray Casting against General Convex Objectswith Application to Continuous CollisionDetection' by G. Van Den Bergen."
 	| lambda x s r n v simplex remainingIterations |
 	
+	"
+	Code for testing the convex cast.
 	false ifTrue: [ 
 		| startPoint endPoint pair |
 		startPoint := ray pointAtDistance: ray tmin.
@@ -196,6 +203,7 @@ GeometricFunctions class >> gjkRayCast: ray support: supportFunction [
 		pair ifNil: [ ^ pair ].
 		^ { ray tmin interpolateTo: (ray tmax min: 1000000) at: pair first . pair second }
 	].
+	"
 
 	lambda := ray tmin.
 	s := ray origin.
@@ -226,7 +234,6 @@ GeometricFunctions class >> gjkRayCast: ray support: supportFunction [
 			simplex transformPointsWith: [ :sp | sp + deltaX ].
 			simplex containsOrigin ifTrue: [ ^ {lambda . n } ].
 			simplex reduce.
-			"simplex := GJKVoronoiSimplexSolver new."
 		].
 
 		(simplex containsPoint: w) ifFalse: [ 
