@@ -125,13 +125,13 @@ GeometricFunctions class >> gjkConvexCast: firstSupportFunction from: firstStart
 	secondDelta := secondEndPoint - secondStartPoint.
 	r := firstDelta - secondDelta.
 
-	firstSupport := firstSupportFunction value: r negated.
-	secondSupport := secondSupportFunction value: r.
-	v := firstSupport - secondSupport.
-	
 	interpolatedFirstPosition := firstStartPoint.
 	interpolatedSecondPosition := secondStartPoint.
 
+	firstSupport := (firstSupportFunction value: r negated) + interpolatedFirstPosition.
+	secondSupport := (secondSupportFunction value: r) + interpolatedSecondPosition.
+	v := firstSupport - secondSupport.
+	
 	remainingIterations := MaxNumberOfIterations.
 	simplex := GJKVoronoiSimplexSolver new.
 	[ remainingIterations > 0 and: [v length2 > Epsilon2] ] whileTrue: [
