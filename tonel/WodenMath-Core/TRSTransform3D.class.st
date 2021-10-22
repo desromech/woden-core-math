@@ -2,7 +2,7 @@
 I am a 3D transform that is decomposed in a successive sequence of scale, rotation, and translation.
 "
 Class {
-	#name : #DecomposedTransform3D,
+	#name : #TRSTransform3D,
 	#superclass : #Object,
 	#instVars : [
 		'scale',
@@ -12,70 +12,75 @@ Class {
 	#category : #'WodenMath-Core-Transform'
 }
 
-{ #category : #converting }
-DecomposedTransform3D >> asDecomposedTransform3D [
-	^ self
+{ #category : #'instance creation' }
+TRSTransform3D class >> identity [
+	^ self new
 ]
 
 { #category : #converting }
-DecomposedTransform3D >> asReversibleAffineTransform [
+TRSTransform3D >> asReversibleAffineTransform [
 	^ ReversibleAffineTransform3D scale: scale rotation: rotation translation: translation
 ]
 
+{ #category : #converting }
+TRSTransform3D >> asTRSTransform3D [
+	^ self
+]
+
 { #category : #initialization }
-DecomposedTransform3D >> initialize [
+TRSTransform3D >> initialize [
 	self setIdentity.
 ]
 
 { #category : #testing }
-DecomposedTransform3D >> isIdentity [
+TRSTransform3D >> isIdentity [
 	^ scale = Vector3 ones and: [ rotation = Quaternion identity and: [ translation = Vector3 zeros ] ]
 ]
 
 { #category : #accessing }
-DecomposedTransform3D >> rotation [
+TRSTransform3D >> rotation [
 
 	^ rotation
 ]
 
 { #category : #accessing }
-DecomposedTransform3D >> rotation: anObject [
+TRSTransform3D >> rotation: anObject [
 
 	rotation := anObject
 ]
 
 { #category : #accessing }
-DecomposedTransform3D >> scale [
+TRSTransform3D >> scale [
 
 	^ scale
 ]
 
 { #category : #accessing }
-DecomposedTransform3D >> scale: anObject [
+TRSTransform3D >> scale: anObject [
 
 	scale := anObject
 ]
 
 { #category : #initialization }
-DecomposedTransform3D >> setIdentity [
+TRSTransform3D >> setIdentity [
 	scale := Vector3 ones.
 	rotation := Quaternion identity.
 	translation := Vector3 zeros.
 ]
 
 { #category : #transforming }
-DecomposedTransform3D >> translateBy: vector [
+TRSTransform3D >> translateBy: vector [
 	translation := translation + vector
 ]
 
 { #category : #accessing }
-DecomposedTransform3D >> translation [
+TRSTransform3D >> translation [
 
 	^ translation
 ]
 
 { #category : #accessing }
-DecomposedTransform3D >> translation: anObject [
+TRSTransform3D >> translation: anObject [
 
 	translation := anObject
 ]

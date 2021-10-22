@@ -139,6 +139,8 @@ QuaternionTest >> testNotEquals [
 QuaternionTest >> testOne [
 	self assert: Quaternion one equals: (Quaternion r: 1 i: 0 j: 0 k: 0).
 	self assert: Quaternion one xyzw equals: (Vector4 x: 0 y: 0 z: 0 w: 1).
+	self assert: Quaternion one isIdentity.
+	self deny: Quaternion zero isIdentity.
 ]
 
 { #category : #tests }

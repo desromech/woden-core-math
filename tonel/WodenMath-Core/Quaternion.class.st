@@ -308,6 +308,11 @@ Quaternion >> inverse [
 	^ self class x: x negated / l2 y: y negated / l2 z: z negated / l2 w: w / l2
 ]
 
+{ #category : #testing }
+Quaternion >> isIdentity [
+	^ x = 0 and: [ y = 0 and: [ z = 0 and: [ w = 1 ] ] ]
+]
+
 { #category : #accessing }
 Quaternion >> j [
 	^ y
