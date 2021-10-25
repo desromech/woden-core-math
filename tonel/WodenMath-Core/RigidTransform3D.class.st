@@ -21,6 +21,16 @@ RigidTransform3D >> initialize [
 	self setIdentity.
 ]
 
+{ #category : #matrix }
+RigidTransform3D >> matrix [
+	^ rotation asMatrix3x3
+]
+
+{ #category : #accessing }
+RigidTransform3D >> matrix4 [
+	^ Matrix4x4 mat3: self matrix translation: translation
+]
+
 { #category : #accessing }
 RigidTransform3D >> rotation [
 

@@ -38,6 +38,16 @@ TRSTransform3D >> isIdentity [
 ]
 
 { #category : #accessing }
+TRSTransform3D >> matrix [
+	^ rotation asMatrix3x3 * (Matrix3x3 scale: scale)
+]
+
+{ #category : #accessing }
+TRSTransform3D >> matrix4 [
+	^ Matrix4x4 mat3: self matrix translation: translation
+]
+
+{ #category : #accessing }
 TRSTransform3D >> rotation [
 
 	^ rotation
