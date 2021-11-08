@@ -7,7 +7,8 @@ Class {
 	#classVars : [
 		'Epsilon',
 		'Epsilon2',
-		'MaxNumberOfIterations'
+		'MaxNumberOfIterations',
+		'PenetrationDistanceSampleVectors'
 	],
 	#category : #'WodenMath-Core-Geometry'
 }
@@ -288,9 +289,24 @@ GeometricFunctions class >> gjkSimplexFor: firstSupportFunction with: secondSupp
 
 { #category : #initialization }
 GeometricFunctions class >> initialize [
+	| penetrationDistanceSampleVectorCoordinates sourceIndex |
 	MaxNumberOfIterations := 32.
 	Epsilon := 0.00001.
 	Epsilon2 := Epsilon*Epsilon.
+
+	PenetrationDistanceSampleVectors := OrderedCollection new.
+	penetrationDistanceSampleVectorCoordinates := #(-0.7071067811865476 0.0 -0.7071067811865476 -0.5773502691896258 -0.5773502691896258 -0.5773502691896258 -0.7071067811865476 -0.7071067811865476 0.0 -1.0 0.0 0.0 -0.5773502691896258 -0.5773502691896258 0.5773502691896258 -0.7071067811865476 0.0 0.7071067811865476 -0.5773502691896258 0.5773502691896258 0.5773502691896258 -0.7071067811865476 0.7071067811865476 0.0 -0.5773502691896258 0.5773502691896258 -0.5773502691896258 0.7071067811865476 0.0 -0.7071067811865476 0.5773502691896258 0.5773502691896258 -0.5773502691896258 0.7071067811865476 0.7071067811865476 0.0 1.0 0.0 0.0 0.5773502691896258 0.5773502691896258 0.5773502691896258 0.7071067811865476 0.0 0.7071067811865476 0.5773502691896258 -0.5773502691896258 0.5773502691896258 0.7071067811865476 -0.7071067811865476 0.0 0.5773502691896258 -0.5773502691896258 -0.5773502691896258 0.0 -0.7071067811865476 -0.7071067811865476 0.0 -1.0 0.0 0.0 -0.7071067811865476 0.7071067811865476 0.0 0.7071067811865476 -0.7071067811865476 0.0 1.0 0.0 0.0 0.7071067811865476 0.7071067811865476 0.0 0.0 -1.0 0.0 0.0 1.0).
+	
+	sourceIndex := 1.
+	1 to: penetrationDistanceSampleVectorCoordinates size  // 3 do: [ :i |
+	| x y z |
+		x := penetrationDistanceSampleVectorCoordinates at: sourceIndex.
+		y := penetrationDistanceSampleVectorCoordinates at: sourceIndex + 1.
+		z := penetrationDistanceSampleVectorCoordinates at: sourceIndex + 2.
+		PenetrationDistanceSampleVectors add: (Vector3 x: x y: y z: z).
+		sourceIndex := sourceIndex + 3
+	].
+	PenetrationDistanceSampleVectors := PenetrationDistanceSampleVectors asArray
 ]
 
 { #category : #testing }
@@ -309,6 +325,23 @@ GeometricFunctions class >> isPoint3DCoplanar: first with: second with: third wi
 	v2 := third - first.	
 	v3 := fourth - first.
 	^ (v1 dot: (v2 cross: v3)) closeTo: 0.0
+]
+
+{ #category : #'closest point computation' }
+GeometricFunctions class >> samplePenetrationDistanceAndNormalForSupport: firstSupport with: secondSupport [
+	| bestDistanceSquared bestNormal |
+	bestDistanceSquared := Float infinity.
+	bestNormal := Vector3 zeros.
+	PenetrationDistanceSampleVectors do: [ :sampleVector |
+		| supportDistanceSquared |
+		supportDistanceSquared := ((firstSupport value: sampleVector) - (secondSupport value: sampleVector negated)) length2.
+		supportDistanceSquared < bestDistanceSquared ifTrue: [
+			bestDistanceSquared := supportDistanceSquared.
+			bestNormal := sampleVector
+		]
+	].
+	
+	^ { bestDistanceSquared sqrt / 2 . bestNormal }
 ]
 
 { #category : #'see class side' }

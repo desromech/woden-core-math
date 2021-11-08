@@ -96,3 +96,15 @@ GeometricFunctionsTest >> testSphereSphereDistance3 [
 	secondShape := Sphere center: (Vector3 x: 2 y: 1 z: 25) radius: 1.
 	self assert: (GeometricFunctions gjkDistanceFrom: firstShape supportFunction to: secondShape supportFunction) closeTo: (firstShape distanceWithSphere: secondShape).
 ]
+
+{ #category : #tests }
+GeometricFunctionsTest >> testSphereSpherePenetrationDistance [
+	| firstShape secondShape distanceAndNormal distance normal |
+	firstShape := Sphere center: (Vector3 x: -1) radius: 2.
+	secondShape := Sphere center: (Vector3 x: 1) radius: 2.
+	distanceAndNormal := GeometricFunctions samplePenetrationDistanceAndNormalForSupport: firstShape supportFunction with: secondShape supportFunction.
+	distance := distanceAndNormal first.
+	normal := distanceAndNormal second.
+	self assert: (distance closeTo: 1).
+	self assert: (normal closeTo: (Vector3 x: 1)).
+]
