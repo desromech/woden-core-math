@@ -126,12 +126,12 @@ GeometricFunctions class >> gjkConvexCast: firstSupportFunction from: firstStart
 	secondDelta := secondEndPoint - secondStartPoint.
 	r := firstDelta - secondDelta.
 
+	firstSupport := (firstSupportFunction value: r) + firstStartPoint.
+	secondSupport := (secondSupportFunction value: r negated) + secondStartPoint.
+	v := firstSupport - secondSupport.
+
 	interpolatedFirstPosition := firstStartPoint.
 	interpolatedSecondPosition := secondStartPoint.
-
-	firstSupport := (firstSupportFunction value: r negated) + interpolatedFirstPosition.
-	secondSupport := (secondSupportFunction value: r) + interpolatedSecondPosition.
-	v := firstSupport - secondSupport.
 	
 	remainingIterations := MaxNumberOfIterations.
 	simplex := GJKVoronoiSimplexSolver new.
@@ -149,6 +149,7 @@ GeometricFunctions class >> gjkConvexCast: firstSupportFunction from: firstStart
 			VdotR := (v dot: r).
 			VdotR >= Epsilon2 negated ifTrue: [ ^ nil ].
 			lambda := lambda - (VdotW / VdotR).
+			lambda > 1 ifTrue: [ ^ nil ].
 			n := v.
 
 			oldOffset := interpolatedFirstPosition - interpolatedSecondPosition.
@@ -191,11 +192,12 @@ GeometricFunctions class >> gjkDistanceFrom: firstSupportFunction to: secondSupp
 { #category : #'closest point computation' }
 GeometricFunctions class >> gjkRayCast: ray support: supportFunction [
 	"Algorithm from 'Ray Casting against General Convex Objectswith Application to Continuous CollisionDetection' by G. Van Den Bergen."
-	| lambda x s r n v simplex remainingIterations |
+	| lambda lambdaMax x s r n v simplex remainingIterations |
 	
 	"
 	Code for testing the convex cast.
-	false ifTrue: [ 
+	"
+	"false ifTrue: [ 
 		| startPoint endPoint pair |
 		startPoint := ray pointAtDistance: ray tmin.
 		endPoint := ray pointAtDistance: (ray tmax min: 1000000).
@@ -203,10 +205,10 @@ GeometricFunctions class >> gjkRayCast: ray support: supportFunction [
 			with: supportFunction from: Vector3 zeros to: Vector3 zeros.
 		pair ifNil: [ ^ pair ].
 		^ { ray tmin interpolateTo: (ray tmax min: 1000000) at: pair first . pair second }
-	].
-	"
+	]."
 
 	lambda := ray tmin.
+	lambdaMax := ray tmax.
 	s := ray origin.
 	r := ray direction.
 	x := s + (r * lambda).
@@ -217,7 +219,7 @@ GeometricFunctions class >> gjkRayCast: ray support: supportFunction [
 	remainingIterations := MaxNumberOfIterations.
 	[ remainingIterations > 0 and: [v length2 > Epsilon2] ] whileTrue: [
 		| w p VdotW |
-		lambda > ray tmax ifTrue: [ ^ nil ].
+		lambda > lambdaMax ifTrue: [ ^ nil ].
 
 		p := supportFunction value: v.
 		w := x - p.
@@ -227,6 +229,7 @@ GeometricFunctions class >> gjkRayCast: ray support: supportFunction [
 			VdotR := (v dot: r).
 			VdotR >= Epsilon2 negated ifTrue: [ ^ nil ].
 			lambda := lambda - (VdotW / VdotR).
+			lambda > lambdaMax ifTrue: [ ^ nil ].
 			oldX := x.
 			x := s + (r * lambda).
 			n := v.
