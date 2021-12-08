@@ -73,8 +73,17 @@ Vector3Test >> testHash [
 ]
 
 { #category : #tests }
+Vector3Test >> testInfiniteNorm [
+	self assert: (Vector3 x: 1 y: 0 z: 0) infiniteNorm equals: 1.
+	self assert: (Vector3 x: -1 y: 0 z: 0) infiniteNorm equals: 1.
+	self assert: (Vector3 x: 1 y: 3 z: 1/2) infiniteNorm equals: 3.
+	self assert: (Vector3 x: -1 y: 2 z: -5) infiniteNorm equals: 5.
+]
+
+{ #category : #tests }
 Vector3Test >> testLength [
 	self assert: (Vector3 x: 1 y: 2 z: 2) length equals: 3.
+	self assert: ((Vector3 x: 1 y: 2 z: 2) numberedNorm: 2) equals: 3.
 ]
 
 { #category : #tests }

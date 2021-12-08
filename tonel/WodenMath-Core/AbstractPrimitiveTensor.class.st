@@ -97,14 +97,42 @@ AbstractPrimitiveTensor >> collect: aBlock [
 	self subclassResponsibility
 ]
 
+{ #category : #enumerating }
+AbstractPrimitiveTensor >> do: aBlock [
+	self subclassResponsibility
+]
+
 { #category : #arithmetic }
 AbstractPrimitiveTensor >> floor [
 	^ self collect: [ :each | each floor ]
 ]
 
+{ #category : #arithmetic }
+AbstractPrimitiveTensor >> infiniteNorm [
+	^ self inject: 0 into: [ :sum :each | sum max: each abs ]
+]
+
+{ #category : #enumerating }
+AbstractPrimitiveTensor >> inject: aValue into: aBlock [
+	| nextValue |
+	nextValue := aValue.
+	self do: [ :each | nextValue := aBlock value: nextValue value: each ].
+	^ nextValue
+]
+
 { #category : #transforming }
 AbstractPrimitiveTensor >> interpolateTo: other at: param [
     ^  self * (1 - param) + (other * param)
+]
+
+{ #category : #arithmetic }
+AbstractPrimitiveTensor >> length [
+	^ self length2 sqrt
+]
+
+{ #category : #arithmetic }
+AbstractPrimitiveTensor >> length2 [
+	^ self inject: 0 into: [ :sum :each | sum + (each *each) ]
 ]
 
 { #category : #arithmetic }
@@ -120,6 +148,11 @@ AbstractPrimitiveTensor >> min: other [
 { #category : #arithmetic }
 AbstractPrimitiveTensor >> negated [
 	^ self collect: [ :each | each negated ]
+]
+
+{ #category : #arithmetic }
+AbstractPrimitiveTensor >> numberedNorm: number [
+	^ (self inject: 0 into: [ :sum :each | sum + (each abs raisedTo: number) ]) raisedTo: 1/number
 ]
 
 { #category : #arithmetic }

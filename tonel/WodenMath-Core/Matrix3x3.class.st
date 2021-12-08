@@ -293,6 +293,21 @@ Matrix3x3 >> determinant [
 		- (m31 * m22 * m13) - (m32 * m23 * m11) - (m33 * m21 * m12)
 ]
 
+{ #category : #enumerating }
+Matrix3x3 >> do: aBlock [
+	aBlock value: m11.
+	aBlock value: m12.
+	aBlock value: m13.
+	
+	aBlock value: m21.
+	aBlock value: m22.
+	aBlock value: m23.
+	
+	aBlock value: m31.
+	aBlock value: m32.
+	aBlock value: m33.
+]
+
 { #category : #accessing }
 Matrix3x3 >> firstColumn [
 	^ Vector3 x: m11 y: m21 z: m31

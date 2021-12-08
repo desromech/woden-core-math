@@ -106,6 +106,13 @@ Vector3 >> cross: other [
 		yourself
 ]
 
+{ #category : #enumerating }
+Vector3 >> do: aBlock [
+	aBlock value: x.
+	aBlock value: y.
+	aBlock value: z.
+]
+
 { #category : #arithmetic }
 Vector3 >> dot: other [
 	| coercedOther |

@@ -21,6 +21,11 @@ Number >> asVector4 [
 ]
 
 { #category : #'*WodenMath-Core' }
+Number >> cubicHemiteCurve [
+	^ self * self * (3.0 - (2.0*self))
+]
+
+{ #category : #'*WodenMath-Core' }
 Number >> decodeSRGBComponent [
 	"
 	From: https://en.wikipedia.org/wiki/SRGB
@@ -41,6 +46,35 @@ Number >> encodeSRGBComponent [
 ]
 
 { #category : #'*WodenMath-Core' }
+Number >> floorFract [
+	^ self - self floor
+]
+
+{ #category : #'*WodenMath-Core' }
+Number >> floorModule: period [
+	^ self - ((self / period) floor * period)
+]
+
+{ #category : #'*WodenMath-Core' }
+Number >> gradientNoise [
+	^ self signedGradientNoise * 0.5 + 0.5
+]
+
+{ #category : #'*WodenMath-Core' }
+Number >> linearStepFrom: leftEdge to: rightEdge [
+	self <= leftEdge ifTrue: [ ^ 0.0 ].
+	self >= rightEdge ifTrue: [ ^ 1.0 ].
+	
+	^ ((self - leftEdge) / (rightEdge - leftEdge))
+]
+
+{ #category : #'*WodenMath-Core' }
+Number >> randomNoise [
+	^ self floor randomNoiseHashNormalized
+	
+]
+
+{ #category : #'*WodenMath-Core' }
 Number >> safeReciprocal [
 	self isZero ifTrue: [ 
 		^ self = 0 ifTrue: [ Float nan ]
@@ -50,4 +84,72 @@ Number >> safeReciprocal [
 	].
 
 	^ self reciprocal
+]
+
+{ #category : #'*WodenMath-Core' }
+Number >> signedGradientNoise [
+	| l f |
+	l := self floor.
+	f := self - l.
+	^ (l signedRandomNoise * f) smoothInterpolateTo: ((l+1.0) signedRandomNoise * (f-1.0)) at: f
+]
+
+{ #category : #'*WodenMath-Core' }
+Number >> signedRandomNoise [
+	^ self randomNoise * 2.0 - 1.0
+
+]
+
+{ #category : #'*WodenMath-Core' }
+Number >> signedValueNoise [
+	^ self valueNoise * 2.0 - 1.0
+]
+
+{ #category : #'*WodenMath-Core' }
+Number >> smoothInterpolateTo: aNumber at: param [
+	^ self interpolateTo: aNumber at: param cubicHemiteCurve
+]
+
+{ #category : #'*WodenMath-Core' }
+Number >> smoothStepFrom: leftEdge to: rightEdge [
+	self <= leftEdge ifTrue: [ ^ 0.0 ].
+	self >= rightEdge ifTrue: [ ^ 1.0 ].
+	
+	^ ((self - leftEdge) / (rightEdge - leftEdge)) cubicHemiteCurve
+]
+
+{ #category : #'*WodenMath-Core' }
+Number >> stepEdge: edge [
+	^ self < edge ifTrue: [0.0] ifFalse: [ 1.0 ]
+]
+
+{ #category : #'*WodenMath-Core' }
+Number >> turbulence [
+	^ self turbulenceScales: 4
+]
+
+{ #category : #'*WodenMath-Core' }
+Number >> turbulenceScales: scale [
+	| result currentCoord amplitude amplitudeSum |
+	result := 0.0.
+	currentCoord := self.
+	amplitude := 0.5.
+	amplitudeSum := 0.0.
+	
+	1 to: scale do: [ :i |
+		result := result + (currentCoord signedGradientNoise * amplitude).
+		currentCoord := currentCoord * 2.0.
+		amplitudeSum := amplitudeSum + amplitude.
+		amplitude := amplitude * 0.5
+	].
+
+	^ result / amplitudeSum
+
+]
+
+{ #category : #'*WodenMath-Core' }
+Number >> valueNoise [
+	| lower |
+	lower := self floor.
+	^ lower randomNoise interpolateTo: (lower + 1.0) randomNoise at: (self - lower) cubicHemiteCurve
 ]

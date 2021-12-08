@@ -157,6 +157,14 @@ Matrix2x2 >> determinant [
 	^ (m11 * m22) - (m21 * m12)
 ]
 
+{ #category : #enumerating }
+Matrix2x2 >> do: aBlock [
+	aBlock value: m11.
+	aBlock value: m12.
+	aBlock value: m21.
+	aBlock value: m22.
+]
+
 { #category : #accessing }
 Matrix2x2 >> firstColumn [
 	^ Vector2 x: m11 y: m21

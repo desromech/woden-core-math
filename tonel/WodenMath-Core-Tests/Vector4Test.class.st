@@ -64,6 +64,7 @@ Vector4Test >> testHash [
 { #category : #tests }
 Vector4Test >> testLength [
 	self assert: (Vector4 x: 2 y: 2 z: 2 w: 2) length equals: 4.
+	self assert: ((Vector4 x: 2 y: 2 z: 2 w: 2) numberedNorm: 2) equals: 4.
 ]
 
 { #category : #tests }

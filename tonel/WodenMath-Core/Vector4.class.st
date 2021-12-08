@@ -85,6 +85,14 @@ Vector4 >> collect: aBlock [
 		yourself
 ]
 
+{ #category : #enumerating }
+Vector4 >> do: aBlock [
+	aBlock value: x.
+	aBlock value: y.
+	aBlock value: z.
+	aBlock value: w.
+]
+
 { #category : #arithmetic }
 Vector4 >> dot: other [
 	| coercedOther |

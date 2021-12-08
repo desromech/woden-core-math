@@ -362,6 +362,30 @@ Matrix4x4 >> determinant [
 		- ((self minorAtRow: 1 atColumn: 4) * m14)
 ]
 
+{ #category : #enumerating }
+Matrix4x4 >> do: aBlock [
+	aBlock value: m11.
+	aBlock value: m12.
+	aBlock value: m13.
+	aBlock value: m14.
+	
+	aBlock value: m21.
+	aBlock value: m22.
+	aBlock value: m23.
+	aBlock value: m24.
+	
+	aBlock value: m31.
+	aBlock value: m32.
+	aBlock value: m33.
+	aBlock value: m34.
+	
+	aBlock value: m41.
+	aBlock value: m42.
+	aBlock value: m43.
+	aBlock value: m44.
+
+]
+
 { #category : #accessing }
 Matrix4x4 >> firstColumn [
 	^ Vector4 x: m11 y: m21 z: m31 w: m41
@@ -841,7 +865,7 @@ Matrix4x4 >> thirdRow: row [
 	m34 := coercedRow w.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 Matrix4x4 >> topLeft3x3 [
 	^ Matrix3x3 basicNew
 		m11: m11; m12: m12; m13: m13;

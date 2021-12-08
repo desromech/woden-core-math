@@ -110,8 +110,17 @@ Vector2Test >> testHash [
 ]
 
 { #category : #tests }
+Vector2Test >> testInfiniteNorm [
+	self assert: (Vector3 x: 1 y: 0) infiniteNorm equals: 1.
+	self assert: (Vector3 x: -1 y: 0) infiniteNorm equals: 1.
+	self assert: (Vector3 x: 1 y: 3) infiniteNorm equals: 3.
+	self assert: (Vector3 x: -2 y: 1) infiniteNorm equals: 2.
+]
+
+{ #category : #tests }
 Vector2Test >> testLength [
 	self assert: (Vector2 x: 3 y: 4) length equals: 5.
+	self assert: ((Vector2 x: 3 y: 4) numberedNorm: 2) equals: 5.
 ]
 
 { #category : #tests }
