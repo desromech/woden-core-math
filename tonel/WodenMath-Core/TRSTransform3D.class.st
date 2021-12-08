@@ -83,6 +83,21 @@ TRSTransform3D >> translateBy: vector [
 	translation := translation + vector
 ]
 
+{ #category : #transforming }
+TRSTransform3D >> translateByX: distance [
+	translation := translation + (Vector3 x: distance)
+]
+
+{ #category : #transforming }
+TRSTransform3D >> translateByY: distance [
+	translation := translation + (Vector3 y: distance)
+]
+
+{ #category : #transforming }
+TRSTransform3D >> translateByZ: distance [
+	translation := translation + (Vector3 z: distance)
+]
+
 { #category : #accessing }
 TRSTransform3D >> translation [
 
