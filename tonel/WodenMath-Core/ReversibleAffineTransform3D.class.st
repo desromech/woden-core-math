@@ -125,13 +125,33 @@ ReversibleAffineTransform3D >> matrix4 [
 ]
 
 { #category : #transforming }
-ReversibleAffineTransform3D >> rotateDegreesOnX: x [
-	self rotateRadiansOnX: x degreesToRadians.
+ReversibleAffineTransform3D >> rotateDegreesOnX: amount [
+	self rotateRadiansOnX: amount degreesToRadians.
 ]
 
 { #category : #transforming }
-ReversibleAffineTransform3D >> rotateRadiansOnX: x [
-	self applyOrthonormalMatrix: (Matrix3x3 xRotation: x).
+ReversibleAffineTransform3D >> rotateDegreesOnY: amount [
+	self rotateRadiansOnY: amount degreesToRadians.
+]
+
+{ #category : #transforming }
+ReversibleAffineTransform3D >> rotateDegreesOnZ: amount [
+	self rotateRadiansOnZ: amount degreesToRadians.
+]
+
+{ #category : #transforming }
+ReversibleAffineTransform3D >> rotateRadiansOnX: amount [
+	self applyOrthonormalMatrix: (Matrix3x3 xRotation: amount).
+]
+
+{ #category : #transforming }
+ReversibleAffineTransform3D >> rotateRadiansOnY: amount [
+	self applyOrthonormalMatrix: (Matrix3x3 yRotation: amount).
+]
+
+{ #category : #transforming }
+ReversibleAffineTransform3D >> rotateRadiansOnZ: amount [
+	self applyOrthonormalMatrix: (Matrix3x3 zRotation: amount).
 ]
 
 { #category : #initialization }

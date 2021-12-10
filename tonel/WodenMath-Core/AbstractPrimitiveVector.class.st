@@ -257,6 +257,56 @@ AbstractPrimitiveVector >> voronoiNoiseTiledWith: tilingPeriod [
 ]
 
 { #category : #noise }
+AbstractPrimitiveVector >> voronoiTurbulence [
+	^ self voronoiTurbulenceScales: 4
+]
+
+{ #category : #noise }
+AbstractPrimitiveVector >> voronoiTurbulenceScales: scale [
+	| result currentCoord amplitude amplitudeSum |
+	result := 0.0.
+	currentCoord := self.
+	amplitude := 0.5.
+	amplitudeSum := 0.0.
+	
+	1 to: scale do: [ :i |
+		result := result + (currentCoord voronoiNoise * amplitude).
+		currentCoord := currentCoord * 2.0.
+		amplitudeSum := amplitudeSum + amplitude.
+		amplitude := amplitude * 0.5
+	].
+
+	^ result / amplitudeSum
+
+]
+
+{ #category : #noise }
+AbstractPrimitiveVector >> voronoiTurbulenceScales: scale tiledWith: tilingPeriod [
+	| result currentCoord amplitude amplitudeSum currentTilingPeriod |
+	result := 0.0.
+	currentCoord := self.
+	amplitude := 0.5.
+	amplitudeSum := 0.0.
+	currentTilingPeriod := tilingPeriod.
+	
+	1 to: scale do: [ :i |
+		result := result + ((currentCoord voronoiNoiseTiledWith: currentTilingPeriod) * amplitude).
+		currentCoord := currentCoord * 2.0.
+		currentTilingPeriod := currentTilingPeriod * 2.0.
+		amplitudeSum := amplitudeSum + amplitude.
+		amplitude := amplitude * 0.5
+	].
+
+	^ result / amplitudeSum
+
+]
+
+{ #category : #noise }
+AbstractPrimitiveVector >> voronoiTurbulenceTiledWith: tilingPeriod [
+	^ self voronoiTurbulenceScales: 4 tiledWith: tilingPeriod
+]
+
+{ #category : #noise }
 AbstractPrimitiveVector >> worleyNoise [
 	| components |
 	components := self voronoiNoiseComponents.

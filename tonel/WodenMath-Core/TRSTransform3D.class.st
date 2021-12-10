@@ -47,6 +47,36 @@ TRSTransform3D >> matrix4 [
 	^ Matrix4x4 mat3: self matrix translation: translation
 ]
 
+{ #category : #transforming }
+TRSTransform3D >> rotateDegreesOnX: amount [
+	self rotateRadiansOnX: amount degreesToRadians
+]
+
+{ #category : #transforming }
+TRSTransform3D >> rotateDegreesOnY: amount [
+	self rotateRadiansOnY: amount degreesToRadians
+]
+
+{ #category : #transforming }
+TRSTransform3D >> rotateDegreesOnZ: amount [
+	self rotateRadiansOnZ: amount degreesToRadians
+]
+
+{ #category : #transforming }
+TRSTransform3D >> rotateRadiansOnX: amount [
+	rotation := (Quaternion xRotation: amount) * rotation
+]
+
+{ #category : #transforming }
+TRSTransform3D >> rotateRadiansOnY: amount [
+	rotation := (Quaternion yRotation: amount) * rotation
+]
+
+{ #category : #transforming }
+TRSTransform3D >> rotateRadiansOnZ: amount [
+	rotation := (Quaternion zRotation: amount) * rotation
+]
+
 { #category : #accessing }
 TRSTransform3D >> rotation [
 
@@ -79,6 +109,21 @@ TRSTransform3D >> setIdentity [
 ]
 
 { #category : #transforming }
+TRSTransform3D >> transformNormalVector: vector3 [
+	^ (rotation transformVector3: vector3 / scale) normalized
+]
+
+{ #category : #transforming }
+TRSTransform3D >> transformPosition: position [
+	^ (rotation transformVector3:  scale * position) + translation
+]
+
+{ #category : #transforming }
+TRSTransform3D >> transformVector3: vector3 [
+	^ (rotation transformVector3: scale * vector3)
+]
+
+{ #category : #transforming }
 TRSTransform3D >> translateBy: vector [
 	translation := translation + vector
 ]
@@ -96,6 +141,11 @@ TRSTransform3D >> translateByY: distance [
 { #category : #transforming }
 TRSTransform3D >> translateByZ: distance [
 	translation := translation + (Vector3 z: distance)
+]
+
+{ #category : #transforming }
+TRSTransform3D >> translateToX: x y: y z: z [
+	self translation: (Vector3 x: x y: y z: z)
 ]
 
 { #category : #accessing }
