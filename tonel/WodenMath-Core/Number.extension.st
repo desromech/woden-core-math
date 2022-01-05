@@ -75,6 +75,11 @@ Number >> randomNoise [
 ]
 
 { #category : #'*WodenMath-Core' }
+Number >> roundFloorWithQuantum: quantum [
+	^ (self / quantum) floor * quantum
+]
+
+{ #category : #'*WodenMath-Core' }
 Number >> safeReciprocal [
 	self isZero ifTrue: [ 
 		^ self = 0 ifTrue: [ Float nan ]
