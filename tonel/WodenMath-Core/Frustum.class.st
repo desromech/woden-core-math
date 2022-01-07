@@ -104,12 +104,32 @@ Frustum >> makeFrustumLeft: left right: right bottom: bottom top: top near: near
 ]
 
 { #category : #computation }
+Frustum >> makeOrthoLeft: left right: right bottom: bottom top: top near: near far: far [
+	leftBottomNear := Vector3 x: left y: bottom z: near negated.
+	rightBottomNear := Vector3 x: right y: bottom z: near negated.
+	leftTopNear := Vector3 x: left y: top z: near negated.
+	rightTopNear := Vector3 x: right y: top z: near negated.
+
+	leftBottomFar := Vector3 x: left y: bottom z: far negated.
+	rightBottomFar := Vector3 x: right y: bottom z: far negated.
+	leftTopFar := Vector3 x: left y: top z: far negated.
+	rightTopFar := Vector3 x: right y: top z: far negated.
+
+	self computePlanes.
+]
+
+{ #category : #computation }
 Frustum >> makePerspectiveFovY: fovy aspect: aspect near: near far: far [
 	| fovyRad top right |
 	fovyRad := fovy degreesToRadians * 0.5.
 	top := near * fovyRad tan.
 	right := top * aspect.
 	self makeFrustumLeft: right negated right: right bottom: top negated top: top near: near far: far
+]
+
+{ #category : #computation }
+Frustum >> normalizedPoint: aPosition linearDepth: aDepth [
+	^ (self normalizedPointInNearPlane: aPosition) interpolateTo: (self normalizedPointInFarPlane: aPosition) at: aDepth
 ]
 
 { #category : #computation }
