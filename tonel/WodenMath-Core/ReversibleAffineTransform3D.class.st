@@ -203,7 +203,7 @@ ReversibleAffineTransform3D >> setScale: aScale rotation: anOrientation translat
 	| orientationMatrix scaleMatrix inverseScaleMatrix |
 	orientationMatrix := anOrientation asMatrix3x3.
 	scaleMatrix := Matrix3x3 scale: aScale.
-	inverseScaleMatrix := Matrix3x3 scale: aScale reciprocal.
+	inverseScaleMatrix := Matrix3x3 scale: aScale safeReciprocal.
 	self setMatrix: orientationMatrix * scaleMatrix inverseMatrix: inverseScaleMatrix * orientationMatrix transpose translation: aTranslation
 ]
 

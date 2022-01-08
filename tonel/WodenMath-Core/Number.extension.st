@@ -80,6 +80,11 @@ Number >> roundFloorWithQuantum: quantum [
 ]
 
 { #category : #'*WodenMath-Core' }
+Number >> roundWithQuantum: quantum [
+	^ ((self / quantum) + 0.5) floor * quantum
+]
+
+{ #category : #'*WodenMath-Core' }
 Number >> safeReciprocal [
 	self isZero ifTrue: [ 
 		^ self = 0 ifTrue: [ Float nan ]

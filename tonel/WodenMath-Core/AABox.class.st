@@ -193,6 +193,23 @@ AABox >> supportInDirection: direction [
 	^ self positiveVertex: direction
 ]
 
+{ #category : #'as yet unclassified' }
+AABox >> trsTransformToConvertToMe: sourceBox [
+	| scale |
+	(self isEmpty or: [ sourceBox isEmpty ]) ifTrue: [ ^ TRSTransform3D identity ].
+	scale := self halfExtent / sourceBox halfExtent.
+	
+	^ TRSTransform3D identity
+		scale: scale;
+		translation: self center - (scale * sourceBox center);
+		yourself.
+]
+
+{ #category : #'as yet unclassified' }
+AABox >> trsTransformToConvertUnitBoxToMe [
+	^ self trsTransformToConvertToMe: self class unit
+]
+
 { #category : #'set arithmetic' }
 AABox >> unionWithPoint: aPoint [
 	^ self shallowCopy insertPoint: aPoint; yourself

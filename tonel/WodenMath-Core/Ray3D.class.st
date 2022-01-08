@@ -98,3 +98,11 @@ Ray3D >> tmin: anObject [
 
 	tmin := anObject
 ]
+
+{ #category : #transforming }
+Ray3D >> transformedWith: aTransform [
+	self flag: 'Fixme: handle the non-orthonomal transform case'.
+	^ self class
+		origin: (aTransform transformPosition: origin)
+		direction: (aTransform transformVector3: direction) tmin: tmin tmax: tmax
+]
