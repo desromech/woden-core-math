@@ -21,6 +21,11 @@ Plane class >> normal: normal distance: distance [
 ]
 
 { #category : #'as yet unclassified' }
+Plane class >> nx: nx ny: ny nz: nz distance: distance [
+	^ self normal: (Vector3 x: nx y: ny z: nz) distance: distance
+]
+
+{ #category : #'as yet unclassified' }
 Plane class >> point: first point: second point: third [
 	^ self basicNew setForPoint: first point: second point: third
 ]
