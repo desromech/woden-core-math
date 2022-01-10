@@ -112,6 +112,11 @@ AABox >> cornersDo: aBlock [
 ]
 
 { #category : #accessing }
+AABox >> depth [
+	^ max z - min z
+]
+
+{ #category : #accessing }
 AABox >> farBottomLeft [
 	^ Vector3 x: min x y: min y z: max z
 ]
@@ -164,6 +169,11 @@ AABox >> halfExtent [
 { #category : #comparing }
 AABox >> hash [
 	^ min hash hashMultiply + max hash
+]
+
+{ #category : #accessing }
+AABox >> height [
+	^ max y - min y
 ]
 
 { #category : #initialization }
@@ -418,6 +428,11 @@ AABox >> trsTransformToConvertUnitBoxToMe [
 { #category : #'set arithmetic' }
 AABox >> unionWithPoint: aPoint [
 	^ self shallowCopy insertPoint: aPoint; yourself
+]
+
+{ #category : #accessing }
+AABox >> width [
+	^ max x - min x
 ]
 
 { #category : #'as yet unclassified' }

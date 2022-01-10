@@ -87,10 +87,9 @@ Number >> roundWithQuantum: quantum [
 { #category : #'*WodenMath-Core' }
 Number >> safeReciprocal [
 	self isZero ifTrue: [ 
-		^ self = 0 ifTrue: [ Float nan ]
-			ifFalse: [ self positive
-					ifTrue: [ Float infinity ]
-					ifFalse: [ Float negativeInfinity ]]
+		^ (self positive and: [ self ~~ -0.0 ])
+			ifTrue: [ Float infinity ]
+			ifFalse: [ Float negativeInfinity ]
 	].
 
 	^ self reciprocal
