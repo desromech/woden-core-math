@@ -75,6 +75,15 @@ Ray3D >> pointAtDistance: alpha [
 	^ origin + (direction * alpha)
 ]
 
+{ #category : #printing }
+Ray3D >> printOn: aStream [
+	aStream nextPutAll: self class name;
+		nextPutAll: ' origin: '; print: origin;
+		nextPutAll: ' direction: '; print: direction;
+		nextPutAll: ' tmin: '; print: tmin;
+		nextPutAll: ' tmax: '; print: tmax
+]
+
 { #category : #accessing }
 Ray3D >> tmax [
 

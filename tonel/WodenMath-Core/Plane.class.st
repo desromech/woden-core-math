@@ -53,6 +53,16 @@ Plane >> initialize [
 	distance := 0.
 ]
 
+{ #category : #'ray casting' }
+Plane >> intersectionWithRay: ray [
+	| den t |
+	den := normal dot: ray direction.
+	(den closeTo: 0) ifTrue: [ ^ nil ].
+	t := ((distance - (normal dot: ray origin)) / den).
+	(t < ray tmin or: [t > ray tmax]) ifTrue: [ ^ nil ].
+	^ t
+]
+
 { #category : #geometry }
 Plane >> isPointBehind: aPoint [
 	^ (self signedDistanceToPoint: aPoint) < 0
