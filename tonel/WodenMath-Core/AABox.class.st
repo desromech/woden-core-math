@@ -408,6 +408,11 @@ AABox >> transformedWith: aTransform [
 	^ result
 ]
 
+{ #category : #transforming }
+AABox >> translatedBy: translation [
+	^ self class min: min + translation max: max + translation
+]
+
 { #category : #'as yet unclassified' }
 AABox >> trsTransformToConvertToMe: sourceBox [
 	| scale |
