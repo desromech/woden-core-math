@@ -91,7 +91,7 @@ Quaternion class >> xRotation: angle [
 { #category : #'accessing structure variables' }
 Quaternion class >> xyz: xyz [
 	^ self basicNew
-		x: xyz x; y: xyz y; z: xyz z; w: 0.0
+		x: xyz x; y: xyz y; z: xyz z; w: 0
 ]
 
 { #category : #'accessing structure variables' }

@@ -120,7 +120,7 @@ TRSTransform3D >> setIdentity [
 
 { #category : #transforming }
 TRSTransform3D >> transformNormalVector: vector3 [
-	^ (rotation transformVector3: vector3 / scale) normalized
+	^ rotation transformVector3: vector3 / scale
 ]
 
 { #category : #transforming }
