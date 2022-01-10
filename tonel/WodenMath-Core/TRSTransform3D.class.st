@@ -32,6 +32,16 @@ TRSTransform3D >> initialize [
 	self setIdentity.
 ]
 
+{ #category : #transforming }
+TRSTransform3D >> inverseTransformPosition: position [
+	^ (rotation conjugated transformVector3: position - translation) / scale
+]
+
+{ #category : #transforming }
+TRSTransform3D >> inverseTransformVector3: vector3 [
+	^ (rotation conjugated transformVector3: vector3) / scale
+]
+
 { #category : #testing }
 TRSTransform3D >> isIdentity [
 	^ scale = Vector3 ones and: [ rotation = Quaternion identity and: [ translation = Vector3 zeros ] ]
@@ -116,6 +126,16 @@ TRSTransform3D >> transformNormalVector: vector3 [
 { #category : #transforming }
 TRSTransform3D >> transformPosition: position [
 	^ (rotation transformVector3:  scale * position) + translation
+]
+
+{ #category : #arithmetic }
+TRSTransform3D >> transformTransform: otherTransform [
+	self assert: otherTransform class == self class.
+	^ self class new
+		scale: scale * (rotation rotateVector: otherTransform scale);
+		rotation: rotation * otherTransform rotation;
+		translation: (self transformPosition: otherTransform translation);
+		yourself
 ]
 
 { #category : #transforming }

@@ -160,6 +160,21 @@ AbstractPrimitiveTensor >> reciprocal [
 	^ self collect: [ :each | each reciprocal ]
 ]
 
+{ #category : #rounding }
+AbstractPrimitiveTensor >> roundFloorWithQuantum: quantum [
+	^ self collect: [ :each | each roundFloorWithQuantum: quantum ]
+]
+
+{ #category : #rounding }
+AbstractPrimitiveTensor >> roundTo: quantum [
+	^ self collect: [ :each | each roundTo: quantum ]
+]
+
+{ #category : #rounding }
+AbstractPrimitiveTensor >> roundWithQuantum: quantum [
+	^ self collect: [ :each | each roundWithQuantum: quantum ]
+]
+
 { #category : #arithmetic }
 AbstractPrimitiveTensor >> safeReciprocal [
 	^ self collect: [ :each | each safeReciprocal ]

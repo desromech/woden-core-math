@@ -47,6 +47,11 @@ AABox >> = other [
 ]
 
 { #category : #accessing }
+AABox >> bottomPoint [
+	^ (self leftBottomPoint + self rightBottomPoint) / 2
+]
+
+{ #category : #accessing }
 AABox >> center [
 	^ min + self halfExtent
 ]
@@ -76,6 +81,79 @@ AABox >> computePenetrationNormalAndDistanceForPoint: point [
 		].
 	penetrationDistance := (delta - (self halfExtent*normal) dot: normal) abs.
 	^ {normal . penetrationDistance}
+]
+
+{ #category : #accessing }
+AABox >> corners [
+	^ {
+		self nearBottomLeft.
+		self nearBottomRight.
+		self nearTopLeft.
+		self nearTopRight.
+		
+		self farBottomLeft.
+		self farBottomRight.
+		self farTopLeft.
+		self farTopRight.
+	}
+]
+
+{ #category : #accessing }
+AABox >> cornersDo: aBlock [
+	aBlock value: self nearBottomLeft.
+	aBlock value: self nearBottomRight.
+	aBlock value: self nearTopLeft.
+	aBlock value: self nearTopRight.
+	
+	aBlock value: self farBottomLeft.
+	aBlock value: self farBottomRight.
+	aBlock value: self farTopLeft.
+	aBlock value: self farTopRight.
+]
+
+{ #category : #accessing }
+AABox >> farBottomLeft [
+	^ Vector3 x: min x y: min y z: max z
+]
+
+{ #category : #accessing }
+AABox >> farBottomPoint [
+	^ (self farBottomLeft + self farBottomRight) / 2
+]
+
+{ #category : #accessing }
+AABox >> farBottomRight [
+	^ Vector3 x: max x y:min y z: max z
+]
+
+{ #category : #accessing }
+AABox >> farLeftPoint [
+	^ (self farBottomLeft + self farTopLeft) / 2
+]
+
+{ #category : #accessing }
+AABox >> farPoint [
+	^ (self farLeftPoint + self farRightPoint) / 2
+]
+
+{ #category : #accessing }
+AABox >> farRightPoint [
+	^ (self farBottomRight + self farTopRight) / 2
+]
+
+{ #category : #accessing }
+AABox >> farTopLeft [
+	^ Vector3 x: min x y: max y z: max z
+]
+
+{ #category : #accessing }
+AABox >> farTopPoint [
+	^ (self farTopLeft + self farTopRight) / 2
+]
+
+{ #category : #accessing }
+AABox >> farTopRight [
+	^ max
 ]
 
 { #category : #accessing }
@@ -133,6 +211,58 @@ AABox >> isPoint [
 ]
 
 { #category : #accessing }
+AABox >> leftBottomPoint [
+	^ (self nearBottomLeft + self farBottomLeft) / 2
+]
+
+{ #category : #accessing }
+AABox >> leftPoint [
+	^ (self leftBottomPoint + self leftTopPoint) / 2
+]
+
+{ #category : #accessing }
+AABox >> leftTopPoint [
+	^ (self nearTopLeft + self farTopLeft) / 2
+]
+
+{ #category : #accessing }
+AABox >> manipulationPoints [
+	^ { 
+		self nearBottomLeft .
+		self nearBottomRight .
+		self nearTopLeft .	
+		self nearTopRight .
+
+		self farBottomLeft .
+		self farBottomRight .
+		self farTopLeft .
+		self farTopRight .
+
+		self nearLeftPoint .
+		self nearRightPoint .
+		self nearTopPoint .
+		self nearBottomPoint .
+
+		self farLeftPoint .
+		self farRightPoint .
+		self farTopPoint .
+		self farBottomPoint .
+
+		self leftBottomPoint .
+		self rightBottomPoint .
+		self leftTopPoint .
+		self rightTopPoint .
+
+		self leftPoint .
+		self rightPoint .
+		self bottomPoint .
+		self topPoint .
+		self nearPoint .
+		self farPoint .
+	}
+]
+
+{ #category : #accessing }
 AABox >> max [
 
 	^ max
@@ -154,6 +284,51 @@ AABox >> min [
 AABox >> min: anObject [
 
 	min := anObject
+]
+
+{ #category : #accessing }
+AABox >> nearBottomLeft [
+	^ min
+]
+
+{ #category : #accessing }
+AABox >> nearBottomPoint [
+	^ (self nearBottomLeft + self nearBottomRight) / 2
+]
+
+{ #category : #accessing }
+AABox >> nearBottomRight [
+	^ Vector3 x: max x y: min y z: min z
+]
+
+{ #category : #accessing }
+AABox >> nearLeftPoint [
+	^ (self nearBottomLeft + self nearTopLeft) / 2
+]
+
+{ #category : #accessing }
+AABox >> nearPoint [
+	^ (self nearLeftPoint + self nearRightPoint) / 2
+]
+
+{ #category : #accessing }
+AABox >> nearRightPoint [
+	^ (self nearBottomRight + self nearTopRight) / 2
+]
+
+{ #category : #accessing }
+AABox >> nearTopLeft [
+	^ Vector3 x: min x y: max y z: min z
+]
+
+{ #category : #accessing }
+AABox >> nearTopPoint [
+	^ (self nearTopLeft + self nearTopRight) / 2
+]
+
+{ #category : #accessing }
+AABox >> nearTopRight [
+	^ Vector3 x: max x y: max y z: min z
 ]
 
 { #category : #support }
@@ -183,6 +358,21 @@ AABox >> printOn: aStream [
 		nextPutAll: ' max: '; print: max; nextPut: $)
 ]
 
+{ #category : #accessing }
+AABox >> rightBottomPoint [
+	^ (self nearBottomRight + self farBottomRight) / 2
+]
+
+{ #category : #accessing }
+AABox >> rightPoint [
+	^ (self rightBottomPoint + self rightTopPoint) / 2
+]
+
+{ #category : #accessing }
+AABox >> rightTopPoint [
+	^ (self nearTopRight + self farTopRight) / 2
+]
+
 { #category : #support }
 AABox >> supportFunction [
 	^ [ :d | self supportInDirection: d ]
@@ -191,6 +381,21 @@ AABox >> supportFunction [
 { #category : #support }
 AABox >> supportInDirection: direction [
 	^ self positiveVertex: direction
+]
+
+{ #category : #accessing }
+AABox >> topPoint [
+	^ (self leftTopPoint + self rightTopPoint) / 2
+]
+
+{ #category : #transforming }
+AABox >> transformedWith: aTransform [
+	| result |
+	result := self class empty.
+	self cornersDo: [ :corner |
+		result insertPoint: (aTransform transformPosition: corner)
+	].
+	^ result
 ]
 
 { #category : #'as yet unclassified' }
@@ -213,4 +418,9 @@ AABox >> trsTransformToConvertUnitBoxToMe [
 { #category : #'set arithmetic' }
 AABox >> unionWithPoint: aPoint [
 	^ self shallowCopy insertPoint: aPoint; yourself
+]
+
+{ #category : #'as yet unclassified' }
+AABox >> withExpandedHalfExtent: extraHalfExtent [
+	^ self class center: self center halfExtent: self halfExtent + extraHalfExtent
 ]

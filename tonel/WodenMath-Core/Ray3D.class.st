@@ -58,6 +58,14 @@ Ray3D >> inverseDirection: anObject [
 	inverseDirection := anObject
 ]
 
+{ #category : #transforming }
+Ray3D >> inverseTransformedWith: aTransform [
+	self flag: 'Fixme: handle the non-orthonomal transform case'.
+	^ self class
+		origin: (aTransform inverseTransformPosition: origin)
+		direction: (aTransform inverseTransformVector3: direction) tmin: tmin tmax: tmax
+]
+
 { #category : #accessing }
 Ray3D >> origin [
 

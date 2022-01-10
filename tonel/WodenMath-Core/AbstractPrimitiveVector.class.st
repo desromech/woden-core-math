@@ -84,16 +84,6 @@ AbstractPrimitiveVector >> randomNoiseVector2 [
 	^ Vector2 x: self randomNoise y: self randomNoiseSecondComponent
 ]
 
-{ #category : #rounding }
-AbstractPrimitiveVector >> roundFloorWithQuantum: quantum [
-	^ self collect: [ :each | each roundFloorWithQuantum: quantum ]
-]
-
-{ #category : #rounding }
-AbstractPrimitiveVector >> roundWithQuantum: quantum [
-	^ self collect: [ :each | each roundWithQuantum: quantum ]
-]
-
 { #category : #noise }
 AbstractPrimitiveVector >> signedGradientNoise [
 	self subclassResponsibility
