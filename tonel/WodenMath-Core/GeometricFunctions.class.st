@@ -189,6 +189,11 @@ GeometricFunctions class >> gjkDistanceFrom: firstSupportFunction to: secondSupp
 	^ simplex containsOrigin ifTrue: [ 0 ] ifFalse: [ simplex closestPointToOrigin length ]
 ]
 
+{ #category : #'intersection testing' }
+GeometricFunctions class >> gjkIntersectionTest: firstSupportFunction with: secondSupportFunction [
+	^ (self gjkDistanceFrom: firstSupportFunction to: secondSupportFunction) closeTo: 0
+]
+
 { #category : #'closest point computation' }
 GeometricFunctions class >> gjkRayCast: ray support: supportFunction [
 	"Algorithm from 'Ray Casting against General Convex Objectswith Application to Continuous CollisionDetection' by G. Van Den Bergen."
@@ -345,6 +350,11 @@ GeometricFunctions class >> samplePenetrationDistanceAndNormalForSupport: firstS
 	].
 	
 	^ { bestDistanceSquared sqrt / 2 . bestNormal }
+]
+
+{ #category : #'support function utilities' }
+GeometricFunctions class >> transformSupportFunction: supportFunction with: transform [
+	^ [ :d | transform transformPosition: (supportFunction value: (transform inverseTransformVector3: d)) ]
 ]
 
 { #category : #'see class side' }

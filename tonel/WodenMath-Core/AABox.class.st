@@ -166,6 +166,11 @@ AABox >> halfExtent [
 	^ (max - min) / 2
 ]
 
+{ #category : #testing }
+AABox >> hasIntersectionWithBox: other [
+	^ (self isBoxOutside: other) not
+]
+
 { #category : #comparing }
 AABox >> hash [
 	^ min hash hashMultiply + max hash
@@ -174,6 +179,34 @@ AABox >> hash [
 { #category : #accessing }
 AABox >> height [
 	^ max y - min y
+]
+
+{ #category : #testing }
+AABox >> includesBox: other [
+	^ min x <= other min x and: [other max x <= max x and: [
+		min y <= other min y and: [other max y <= max y and: [
+		min z <= other min z and: [other max z <= max z ]]]]]
+]
+
+{ #category : #testing }
+AABox >> includesBoxExclusively: other [
+	^ min x <= other min x and: [other max x < max x and: [
+		min y <= other min y and: [other max y < max y and: [
+		min z <= other min z and: [other max z < max z ]]]]]
+]
+
+{ #category : #testing }
+AABox >> includesPoint: point [
+	^ min x <= point x and: [point x <= max x and: [
+		min y <= point y and: [point y <= max y and: [
+		min z <= point z and: [point z <= max z ]]]]]
+]
+
+{ #category : #testing }
+AABox >> includesPointExclusively: point [
+	^ min x <= point x and: [point x < max x and: [
+		min y <= point y and: [point y < max y and: [
+		min z <= point z and: [point z < max z ]]]]]
 ]
 
 { #category : #initialization }
@@ -208,6 +241,13 @@ AABox >> intersectionWithRay: ray [
  	hasIntersection ifFalse: [ ^ nil ].
 
 	^ maxTMin min: minTMax
+]
+
+{ #category : #testing }
+AABox >> isBoxOutside: other [
+	^ other max x < min x or: [ max x < other min x or: [
+	  other max y < min y or: [ max y < other min y or: [
+	  other max z < min z or: [ max z < other min z ]]]]]
 ]
 
 { #category : #testing }
