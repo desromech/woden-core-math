@@ -16,9 +16,77 @@ RigidTransform3D class >> identity [
 	^ self new
 ]
 
+{ #category : #accessing }
+RigidTransform3D class >> rotation: aRotation [
+	^ self new rotation: aRotation; yourself
+]
+
+{ #category : #accessing }
+RigidTransform3D class >> scale: aScale [
+	^ self new scale: aScale; yourself
+]
+
+{ #category : #accessing }
+RigidTransform3D class >> translation: aTranslation [
+	^ self new translation: aTranslation; yourself
+]
+
+{ #category : #comparing }
+RigidTransform3D >> = other [
+	^ self class == other class and: [ rotation = other rotation and: [ translation = other translation ] ]
+]
+
+{ #category : #comparing }
+RigidTransform3D >> closeTo: other [
+	^ self class == other class and: [
+		(rotation closeTo: other rotation) and: [
+		(translation closeTo: other translation) ] ]
+]
+
+{ #category : #comparing }
+RigidTransform3D >> closeTo: other precision: precision [
+	^ self class == other class and: [
+		(rotation closeTo: other rotation precision: precision) and: [
+		(translation closeTo: other translation precision: precision) ] ]
+]
+
+{ #category : #comparing }
+RigidTransform3D >> hash [
+	^ self class identityHash bitXor: (rotation hash bitXor: (
+	translation hash))
+]
+
 { #category : #initialization }
 RigidTransform3D >> initialize [
 	self setIdentity.
+]
+
+{ #category : #operations }
+RigidTransform3D >> inverse [
+	^ self class basicNew
+		rotation: self inverseRotation;
+		translation: self inverseTranslation;
+		yourself
+]
+
+{ #category : #accessing }
+RigidTransform3D >> inverseRotation [
+	^ rotation conjugated
+]
+
+{ #category : #transforming }
+RigidTransform3D >> inverseTransformPosition: position [
+	^ rotation conjugated transformVector3: position - translation
+]
+
+{ #category : #transforming }
+RigidTransform3D >> inverseTransformVector3: vector3 [
+	^ rotation conjugated transformVector3: vector3
+]
+
+{ #category : #accessing }
+RigidTransform3D >> inverseTranslation [
+	^ rotation inverseRotateVector: translation negated
 ]
 
 { #category : #matrix }
@@ -52,6 +120,30 @@ RigidTransform3D >> scale [
 RigidTransform3D >> setIdentity [
 	rotation := Quaternion identity.
 	translation := Vector3 zeros.
+]
+
+{ #category : #transforming }
+RigidTransform3D >> transformNormalVector: vector3 [
+	^ rotation transformVector3: vector3
+]
+
+{ #category : #transforming }
+RigidTransform3D >> transformPosition: position [
+	^ (rotation transformVector3: position) + translation
+]
+
+{ #category : #arithmetic }
+RigidTransform3D >> transformTransform: otherTransform [
+	self assert: otherTransform class == self class.
+	^ self class basicNew
+		rotation: rotation * otherTransform rotation;
+		translation: (self transformPosition: otherTransform translation);
+		yourself
+]
+
+{ #category : #transforming }
+RigidTransform3D >> transformVector3: vector3 [
+	^ rotation transformVector3: vector3
 ]
 
 { #category : #accessing }

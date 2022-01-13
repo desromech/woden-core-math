@@ -17,6 +17,26 @@ TRSTransform3D class >> identity [
 	^ self new
 ]
 
+{ #category : #accessing }
+TRSTransform3D class >> rotation: aRotation [
+	^ self new rotation: aRotation; yourself
+]
+
+{ #category : #accessing }
+TRSTransform3D class >> scale: aScale [
+	^ self new scale: aScale; yourself
+]
+
+{ #category : #accessing }
+TRSTransform3D class >> translation: aTranslation [
+	^ self new translation: aTranslation; yourself
+]
+
+{ #category : #comparing }
+TRSTransform3D >> = other [
+	^ self class == other class and: [ scale = other scale and: [ rotation = other rotation and: [ translation = other translation ] ] ]
+]
+
 { #category : #converting }
 TRSTransform3D >> asReversibleAffineTransform [
 	^ ReversibleAffineTransform3D scale: scale rotation: rotation translation: translation
@@ -27,9 +47,51 @@ TRSTransform3D >> asTRSTransform3D [
 	^ self
 ]
 
+{ #category : #comparing }
+TRSTransform3D >> closeTo: other [
+	^ self class == other class and: [
+		(scale closeTo: other scale) and: [
+		(rotation closeTo: other rotation) and: [
+		(translation closeTo: other translation) ] ] ]
+]
+
+{ #category : #comparing }
+TRSTransform3D >> closeTo: other precision: precision [
+	^ self class == other class and: [
+		(scale closeTo: other scale precision: precision) and: [
+		(rotation closeTo: other rotation precision: precision) and: [
+		(translation closeTo: other translation precision: precision) ] ] ]
+]
+
+{ #category : #comparing }
+TRSTransform3D >> hash [
+	^ self class identityHash bitXor: (scale hash bitXor: (
+	rotation hash bitXor: (
+	translation hash)))
+]
+
 { #category : #initialization }
 TRSTransform3D >> initialize [
 	self setIdentity.
+]
+
+{ #category : #operations }
+TRSTransform3D >> inverse [
+	^ self class basicNew
+		scale: self inverseScale;
+		rotation: self inverseRotation;
+		translation: self inverseTranslation;
+		yourself
+]
+
+{ #category : #accessing }
+TRSTransform3D >> inverseRotation [
+	^ rotation conjugated
+]
+
+{ #category : #accessing }
+TRSTransform3D >> inverseScale [
+	^ rotation rotateScale: scale safeReciprocal
 ]
 
 { #category : #transforming }
@@ -38,8 +100,18 @@ TRSTransform3D >> inverseTransformPosition: position [
 ]
 
 { #category : #transforming }
+TRSTransform3D >> inverseTransformTransform: otherTransform [
+	^ self inverse transformTransform: otherTransform
+]
+
+{ #category : #transforming }
 TRSTransform3D >> inverseTransformVector3: vector3 [
 	^ (rotation conjugated transformVector3: vector3) / scale
+]
+
+{ #category : #accessing }
+TRSTransform3D >> inverseTranslation [
+	^ scale safeReciprocal * (rotation inverseRotateVector: translation negated)
 ]
 
 { #category : #testing }
@@ -55,6 +127,15 @@ TRSTransform3D >> matrix [
 { #category : #accessing }
 TRSTransform3D >> matrix4 [
 	^ Matrix4x4 mat3: self matrix translation: translation
+]
+
+{ #category : #printing }
+TRSTransform3D >> printOn: aStream [
+	aStream nextPut: $(; nextPutAll: self class name;
+		nextPutAll:  ' scale: '; print: scale;
+		nextPutAll:  ' rotation: '; print: rotation;
+		nextPutAll:  ' translation: '; print: translation;
+		nextPut: $)
 ]
 
 { #category : #transforming }
@@ -125,14 +206,14 @@ TRSTransform3D >> transformNormalVector: vector3 [
 
 { #category : #transforming }
 TRSTransform3D >> transformPosition: position [
-	^ (rotation transformVector3:  scale * position) + translation
+	^ (rotation transformVector3: scale * position) + translation
 ]
 
 { #category : #arithmetic }
 TRSTransform3D >> transformTransform: otherTransform [
 	self assert: otherTransform class == self class.
-	^ self class new
-		scale: scale * (rotation rotateVector: otherTransform scale);
+	^ self class basicNew
+		scale: (otherTransform rotation inverseRotateScale: scale) * otherTransform scale;
 		rotation: rotation * otherTransform rotation;
 		translation: (self transformPosition: otherTransform translation);
 		yourself

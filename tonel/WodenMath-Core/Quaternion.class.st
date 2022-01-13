@@ -308,6 +308,16 @@ Quaternion >> inverse [
 	^ self class x: x negated / l2 y: y negated / l2 z: z negated / l2 w: w / l2
 ]
 
+{ #category : #transforming }
+Quaternion >> inverseRotateScale: scale [
+	^ (self inverseRotateVector: scale) * (self inverseRotateVector: scale sign) "Cancel sign changes"
+]
+
+{ #category : #transforming }
+Quaternion >> inverseRotateVector: vector [
+	^ ((self conjugated * (self class xyz: vector)) * self) xyz
+]
+
 { #category : #testing }
 Quaternion >> isIdentity [
 	^ x = 0 and: [ y = 0 and: [ z = 0 and: [ w = 1 ] ] ]
@@ -348,6 +358,16 @@ Quaternion >> negated [
 	^ self class x: x negated y: y negated z: z negated w: w negated
 ]
 
+{ #category : #printing }
+Quaternion >> printOn: aStream [
+	aStream nextPut: $(; nextPutAll: self class name;
+		nextPutAll:  ' x: '; print: x;
+		nextPutAll:  ' y: '; print: y;
+		nextPutAll:  ' z: '; print: z;
+		nextPutAll:  ' w: '; print: w;
+		nextPut: $)
+]
+
 { #category : #accessing }
 Quaternion >> r [
 	^ w
@@ -358,7 +378,12 @@ Quaternion >> r: r [
 	w := r
 ]
 
-{ #category : #arithmetic }
+{ #category : #transforming }
+Quaternion >> rotateScale: scale [
+	^ (self rotateVector: scale) * (self rotateVector: scale sign) "Cancel sign changes"
+]
+
+{ #category : #transforming }
 Quaternion >> rotateVector: vector [
 	^ ((self * (self class xyz: vector)) * self conjugated) xyz
 ]
