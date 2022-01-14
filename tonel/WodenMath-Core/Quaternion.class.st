@@ -27,6 +27,11 @@ Quaternion class >> identity [
 	^ self x: 0 y: 0 z: 0 w: 1
 ]
 
+{ #category : #serialization }
+Quaternion class >> loadFromJson: jsonData [
+	^ self x: jsonData first asNumber y: jsonData second asNumber z: jsonData third asNumber w: jsonData fourth asNumber
+]
+
 { #category : #'special matrices' }
 Quaternion class >> lookAtBack [
 	^ self yRotation: Float pi
@@ -284,6 +289,11 @@ Quaternion >> conjugated [
 { #category : #arithmetic }
 Quaternion >> dot: other [
 	^ (x* other x) + (y * other y) + (z * other z) + (w * other w)
+]
+
+{ #category : #serialization }
+Quaternion >> encodeForJSON [
+	^ { x . y . z . w }
 ]
 
 { #category : #comparing }

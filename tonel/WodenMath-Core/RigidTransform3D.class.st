@@ -16,6 +16,14 @@ RigidTransform3D class >> identity [
 	^ self new
 ]
 
+{ #category : #serialization }
+RigidTransform3D class >> loadFromJson: jsonData [
+	^ self new
+		rotation: (Quaternion loadFromJson: jsonData);
+		translation: (Vector3 loadFromJson: jsonData);
+		yourself
+]
+
 { #category : #accessing }
 RigidTransform3D class >> rotation: aRotation [
 	^ self new rotation: aRotation; yourself
@@ -48,6 +56,14 @@ RigidTransform3D >> closeTo: other precision: precision [
 	^ self class == other class and: [
 		(rotation closeTo: other rotation precision: precision) and: [
 		(translation closeTo: other translation precision: precision) ] ]
+]
+
+{ #category : #serialization }
+RigidTransform3D >> encodeForJSON [
+	^ OrderedDictionary newFromPairs: { 
+		#rotation . rotation encodeForJSON.
+		#translation . translation encodeForJSON.
+	}
 ]
 
 { #category : #comparing }

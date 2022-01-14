@@ -15,6 +15,11 @@ Class {
 	#category : #'WodenMath-Core-Geometry'
 }
 
+{ #category : #serialization }
+Plane class >> loadFromJson: jsonData [
+	^ self nx: jsonData first asNumber ny: jsonData second asNumber nz: jsonData third asNumber distance: jsonData fourth asNumber negated
+]
+
 { #category : #'as yet unclassified' }
 Plane class >> normal: normal distance: distance [
 	^ self basicNew normal: normal; distance: distance; yourself
@@ -84,6 +89,11 @@ Plane >> distance: anObject [
 { #category : #geometry }
 Plane >> distanceToPoint: aPoint [
 	^ (self signedDistanceToPoint: aPoint) abs
+]
+
+{ #category : #serialization }
+Plane >> encodeForJSON [
+	^ { normal x . normal y. normal z . distance negated }
 ]
 
 { #category : #initialization }

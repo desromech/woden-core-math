@@ -26,6 +26,11 @@ AABox class >> halfExtent: halfExtent [
 	^ self min: halfExtent negated max: halfExtent
 ]
 
+{ #category : #serialization }
+AABox class >> loadFromJson: jsonData [
+	^ self min: (Vector3 loadFromJson: (jsonData at: #min)) max: (Vector3 loadFromJson: (jsonData at: #max))
+]
+
 { #category : #accessing }
 AABox class >> min: min max: max [
 	^ self basicNew min: min; max: max; yourself
@@ -114,6 +119,14 @@ AABox >> cornersDo: aBlock [
 { #category : #accessing }
 AABox >> depth [
 	^ max z - min z
+]
+
+{ #category : #serialization }
+AABox >> encodeForJSON [
+	^ OrderedDictionary newFromPairs: { 
+		#min . min encodeForJSON.
+		#max . max encodeForJSON.
+	}
 ]
 
 { #category : #accessing }

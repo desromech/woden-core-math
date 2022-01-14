@@ -17,6 +17,15 @@ TRSTransform3D class >> identity [
 	^ self new
 ]
 
+{ #category : #serialization }
+TRSTransform3D class >> loadFromJson: jsonData [
+	^ self new
+		scale: (Vector3 loadFromJson: jsonData);
+		rotation: (Quaternion loadFromJson: jsonData);
+		translation: (Vector3 loadFromJson: jsonData);
+		yourself
+]
+
 { #category : #accessing }
 TRSTransform3D class >> rotation: aRotation [
 	^ self new rotation: aRotation; yourself
@@ -61,6 +70,15 @@ TRSTransform3D >> closeTo: other precision: precision [
 		(scale closeTo: other scale precision: precision) and: [
 		(rotation closeTo: other rotation precision: precision) and: [
 		(translation closeTo: other translation precision: precision) ] ] ]
+]
+
+{ #category : #serialization }
+TRSTransform3D >> encodeForJSON [
+	^ OrderedDictionary newFromPairs: { 
+		#scale . scale encodeForJSON.
+		#rotation . rotation encodeForJSON.
+		#translation . translation encodeForJSON.
+	}
 ]
 
 { #category : #comparing }

@@ -12,6 +12,11 @@ Class {
 	#category : #'WodenMath-Core-LinearAlgebra'
 }
 
+{ #category : #serialization }
+Vector3 class >> loadFromJson: jsonData [
+	^ self x: jsonData first asNumber y: jsonData second asNumber z: jsonData third asNumber
+]
+
 { #category : #'instance creation' }
 Vector3 class >> withAll: element [
 	^ self x: element y: element z: element
@@ -118,6 +123,11 @@ Vector3 >> dot: other [
 	| coercedOther |
 	coercedOther := other asVector3.
 	^ (x * coercedOther x) + (y * coercedOther y) + (z * coercedOther z)
+]
+
+{ #category : #serialization }
+Vector3 >> encodeForJSON [
+	^ { x . y . z }
 ]
 
 { #category : #comparing }

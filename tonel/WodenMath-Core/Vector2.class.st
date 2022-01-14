@@ -11,6 +11,11 @@ Class {
 	#category : #'WodenMath-Core-LinearAlgebra'
 }
 
+{ #category : #serialization }
+Vector2 class >> loadFromJson: jsonData [
+	^ self x: jsonData first asNumber y: jsonData second asNumber
+]
+
 { #category : #'instance creation' }
 Vector2 class >> withAll: element [
 	^ self x: element y: element
@@ -93,6 +98,11 @@ Vector2 >> dot: other [
 	| coercedOther |
 	coercedOther := other asVector2.
 	^ (x * coercedOther x) + (y * coercedOther y)
+]
+
+{ #category : #serialization }
+Vector2 >> encodeForJSON [
+	^ { x . y }
 ]
 
 { #category : #comparing }
