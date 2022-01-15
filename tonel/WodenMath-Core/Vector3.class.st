@@ -71,6 +71,11 @@ Vector3 >> = other [
 ]
 
 { #category : #converting }
+Vector3 >> asColor [
+	^ Color r: x encodeSRGBComponent g: y encodeSRGBComponent b: z encodeSRGBComponent
+]
+
+{ #category : #converting }
 Vector3 >> asVector3 [
 	^ self
 ]
