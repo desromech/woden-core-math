@@ -67,6 +67,16 @@ Matrix4x4 class >> frustumLeft: left right: right bottom: bottom top: top near: 
 	}
 ]
 
+{ #category : #'as yet unclassified' }
+Matrix4x4 class >> frustumTangents: frustumTangents near: nearDistance far: farDistance [
+	^ self frustumLeft: frustumTangents left * nearDistance
+		right: frustumTangents right * nearDistance
+		bottom: frustumTangents bottom * nearDistance
+		top: frustumTangents top * nearDistance
+		near: nearDistance
+		far: farDistance
+]
+
 { #category : #'special matrices' }
 Matrix4x4 class >> mat3: mat3 [
 	^ self basicNew
@@ -127,6 +137,16 @@ Matrix4x4 class >> reverseDepthFrustumLeft: left right: right bottom: bottom top
 		Vector4 x: 0 y: 0 z: near / (far - near) w: near*far / (far - near).
 		Vector4 x: 0 y: 0 z: -1 w: 0
 	}
+]
+
+{ #category : #'as yet unclassified' }
+Matrix4x4 class >> reverseDepthFrustumTangents: frustumTangents near: nearDistance far: farDistance [
+	^ self reverseDepthFrustumLeft: frustumTangents left * nearDistance
+		right: frustumTangents right * nearDistance
+		bottom: frustumTangents bottom * nearDistance
+		top: frustumTangents top * nearDistance
+		near: nearDistance
+		far: farDistance
 ]
 
 { #category : #'special matrices' }
