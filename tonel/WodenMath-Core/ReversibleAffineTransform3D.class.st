@@ -33,6 +33,11 @@ ReversibleAffineTransform3D class >> identity [
 	^ self basicNew setIdentity; yourself
 ]
 
+{ #category : #'as yet unclassified' }
+ReversibleAffineTransform3D class >> orthonormal: matrix translation: translation [
+	^ self basicNew setOrthonormalMatrix: matrix translation: translation
+]
+
 { #category : #'instance creation' }
 ReversibleAffineTransform3D class >> rotation: aRotation translation: aTranslation [
 	^ self basicNew setRotation: aRotation translation: aTranslation
