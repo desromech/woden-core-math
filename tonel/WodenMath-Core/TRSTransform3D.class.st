@@ -20,9 +20,9 @@ TRSTransform3D class >> identity [
 { #category : #serialization }
 TRSTransform3D class >> loadFromJson: jsonData [
 	^ self new
-		scale: (Vector3 loadFromJson: jsonData);
-		rotation: (Quaternion loadFromJson: jsonData);
-		translation: (Vector3 loadFromJson: jsonData);
+		scale: (Vector3 loadFromJson: (jsonData at: #scale));
+		rotation: (Quaternion loadFromJson: (jsonData at: #rotation));
+		translation: (Vector3 loadFromJson: (jsonData at: #translation));
 		yourself
 ]
 

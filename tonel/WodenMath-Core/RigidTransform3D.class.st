@@ -19,8 +19,8 @@ RigidTransform3D class >> identity [
 { #category : #serialization }
 RigidTransform3D class >> loadFromJson: jsonData [
 	^ self new
-		rotation: (Quaternion loadFromJson: jsonData);
-		translation: (Vector3 loadFromJson: jsonData);
+		rotation: (Quaternion loadFromJson: (jsonData at: #rotation));
+		translation: (Vector3 loadFromJson: (jsonData at: #translation));
 		yourself
 ]
 
