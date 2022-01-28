@@ -46,6 +46,11 @@ Ray3D >> direction: anObject [
 	direction := anObject
 ]
 
+{ #category : #'as yet unclassified' }
+Ray3D >> distanceForPoint: point [
+	^ (point - origin dot: direction) / direction length2
+]
+
 { #category : #accessing }
 Ray3D >> inverseDirection [
 
@@ -60,10 +65,22 @@ Ray3D >> inverseDirection: anObject [
 
 { #category : #transforming }
 Ray3D >> inverseTransformedWith: aTransform [
-	self flag: 'Fixme: handle the non-orthonomal transform case'.
+	| newOrigin newDirection newTMin newTMax |
+	newOrigin := aTransform inverseTransformPosition: origin.
+	newDirection := aTransform inverseTransformVector3: direction.
+	newTMin := tmin.
+	newTMax := tmax.
+	(tmin ~= 0 and: [ tmin isInfinite not]) ifTrue: [
+		newTMin := ((aTransform inverseTransformPosition: (self pointAtDistance: tmin)) - newOrigin dot: newDirection) / newDirection length2
+	].
+
+	(tmax ~= 0 and: [ tmax isInfinite not]) ifTrue: [ 
+		newTMax := ((aTransform inverseTransformPosition: (self pointAtDistance: tmax)) - newOrigin dot: newDirection) / newDirection length2
+	].
+	
 	^ self class
-		origin: (aTransform inverseTransformPosition: origin)
-		direction: (aTransform inverseTransformVector3: direction) tmin: tmin tmax: tmax
+		origin: newOrigin
+		direction: newDirection tmin: newTMin tmax: newTMax
 ]
 
 { #category : #accessing }
@@ -118,8 +135,21 @@ Ray3D >> tmin: anObject [
 
 { #category : #transforming }
 Ray3D >> transformedWith: aTransform [
-	self flag: 'Fixme: handle the non-orthonomal transform case'.
+	| newOrigin newDirection newTMin newTMax |
+	newOrigin := aTransform transformPosition: origin.
+	newDirection := aTransform transformVector3: direction.
+	
+	newTMin := tmin.
+	newTMax := tmax.
+	(tmin ~= 0 and: [ tmin isInfinite not]) ifTrue: [
+		newTMin := ((aTransform transformPosition: (self pointAtDistance: tmin)) - newOrigin dot: newDirection) / newDirection length2
+	].
+
+	(tmax ~= 0 and: [ tmax isInfinite not]) ifTrue: [ 
+		newTMax := ((aTransform transformPosition: (self pointAtDistance: tmax)) - newOrigin dot: newDirection) / newDirection length2
+	].
+
 	^ self class
-		origin: (aTransform transformPosition: origin)
-		direction: (aTransform transformVector3: direction) tmin: tmin tmax: tmax
+		origin: newOrigin
+		direction: newDirection tmin: newTMin tmax: newTMax
 ]
