@@ -256,6 +256,23 @@ AABox >> intersectionWithRay: ray [
 	^ maxTMin min: minTMax
 ]
 
+{ #category : #'ray casting' }
+AABox >> intersectionsWithRay: ray [
+	"Slab testing algorithm from: A Ray-Box Intersection Algorithm andEfficient Dynamic Voxel Rendering. By Majercik et al"
+	| t0 t1 tmin tmax maxTMin minTMax hasIntersection |
+	t0 := (min - ray origin)*ray inverseDirection.
+	t1 := (max - ray origin)*ray inverseDirection.
+	tmin := t0 min: t1.
+	tmax := t0 max: t1.
+	maxTMin := ((tmin x max: tmin y) max: tmin z) max: ray tmin.
+	minTMax := ((tmax x min: tmax y) min: tmax z) min: ray tmax.
+
+	hasIntersection := maxTMin <= minTMax.
+ 	hasIntersection ifFalse: [ ^ nil ].
+
+	^ {maxTMin min: minTMax. maxTMin max: minTMax}
+]
+
 { #category : #testing }
 AABox >> isBoxOutside: other [
 	^ other max x < min x or: [ max x < other min x or: [
