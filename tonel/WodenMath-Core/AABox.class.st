@@ -487,7 +487,9 @@ AABox >> translatedBy: translation [
 AABox >> trsTransformToConvertToMe: sourceBox [
 	| scale |
 	(self isEmpty or: [ sourceBox isEmpty ]) ifTrue: [ ^ TRSTransform3D identity ].
-	scale := self halfExtent / (sourceBox halfExtent collect: [:each | each isZero ifTrue: [1] ifFalse: [each]]).
+	scale := self halfExtent with: sourceBox halfExtent collect: [:a :b |
+		b isZero ifTrue: [1] ifFalse: [a / b]
+	].
 	
 	^ TRSTransform3D identity
 		scale: scale;
