@@ -69,6 +69,20 @@ Number >> linearStepFrom: leftEdge to: rightEdge [
 ]
 
 { #category : #'*WodenMath-Core' }
+Number >> pseudoInverse [
+	^ self pseudoReciprocal
+]
+
+{ #category : #'*WodenMath-Core' }
+Number >> pseudoReciprocal [
+	self isZero ifTrue: [ 
+		^ 0
+	].
+
+	^ self reciprocal
+]
+
+{ #category : #'*WodenMath-Core' }
 Number >> randomNoise [
 	^ self floor randomNoiseHashNormalized
 	

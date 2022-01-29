@@ -156,6 +156,16 @@ AbstractPrimitiveTensor >> numberedNorm: number [
 ]
 
 { #category : #arithmetic }
+AbstractPrimitiveTensor >> pseudoInverse [
+	^ self pseudoReciprocal
+]
+
+{ #category : #arithmetic }
+AbstractPrimitiveTensor >> pseudoReciprocal [
+	^ self collect: [ :each | each pseudoReciprocal ]
+]
+
+{ #category : #arithmetic }
 AbstractPrimitiveTensor >> reciprocal [
 	^ self collect: [ :each | each reciprocal ]
 ]
