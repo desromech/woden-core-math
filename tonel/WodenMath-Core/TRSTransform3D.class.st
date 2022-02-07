@@ -26,14 +26,44 @@ TRSTransform3D class >> loadFromJson: jsonData [
 		yourself
 ]
 
+{ #category : #'as yet unclassified' }
+TRSTransform3D class >> matrix: matrix translation: translation [
+	^ self basicNew setMatrix: matrix translation: translation
+]
+
 { #category : #accessing }
 TRSTransform3D class >> rotation: aRotation [
 	^ self new rotation: aRotation; yourself
 ]
 
 { #category : #accessing }
+TRSTransform3D class >> rotation: aRotation around: pivot [
+	^ self new
+		rotation: aRotation;
+		translation: pivot - (aRotation rotateVector: pivot);
+		yourself
+]
+
+{ #category : #accessing }
 TRSTransform3D class >> scale: aScale [
 	^ self new scale: aScale; yourself
+]
+
+{ #category : #accessing }
+TRSTransform3D class >> scale: aScale around: aPivot [
+	^ self new
+		scale: aScale;
+		translation: aPivot - (aPivot*aScale);
+		yourself
+]
+
+{ #category : #'instance creation' }
+TRSTransform3D class >> scale: aScale rotation: aRotation translation: aTranslation [
+	^ self basicNew
+		scale: aScale;
+		rotation: aRotation;
+		translation: aTranslation;
+		yourself
 ]
 
 { #category : #accessing }
@@ -93,13 +123,14 @@ TRSTransform3D >> initialize [
 	self setIdentity.
 ]
 
-{ #category : #operations }
-TRSTransform3D >> inverse [
-	^ self class basicNew
-		scale: self inverseScale;
-		rotation: self inverseRotation;
-		translation: self inverseTranslation;
-		yourself
+{ #category : #accessing }
+TRSTransform3D >> inverseMatrix [
+	^ (Matrix3x3 scale: self inverseScale) * rotation asMatrix3x3
+]
+
+{ #category : #accessing }
+TRSTransform3D >> inverseMatrix4 [
+	^ Matrix4x4 mat3: self inverseMatrix translation: self inverseTranslation
 ]
 
 { #category : #accessing }
@@ -109,7 +140,7 @@ TRSTransform3D >> inverseRotation [
 
 { #category : #accessing }
 TRSTransform3D >> inverseScale [
-	^ rotation rotateScale: scale safeReciprocal
+	^ scale safeReciprocal
 ]
 
 { #category : #transforming }
@@ -119,7 +150,18 @@ TRSTransform3D >> inverseTransformPosition: position [
 
 { #category : #transforming }
 TRSTransform3D >> inverseTransformTransform: otherTransform [
-	^ self inverse transformTransform: otherTransform
+	(scale isIsotropic or: [otherTransform scale isIsotropic or: [otherTransform rotation isIdentity]]) ifTrue: [
+		^ self class basicNew
+			scale: self inverseScale * otherTransform scale;
+			rotation: self inverseRotation * otherTransform rotation;
+			translation: (self inverseTransformPosition: otherTransform translation);
+			yourself		
+	] ifFalse: [
+		^ self class basicNew
+			setMatrix: self inverseMatrix * otherTransform matrix translation: (self inverseTransformPosition: otherTransform translation);
+			yourself
+	]
+
 ]
 
 { #category : #transforming }
@@ -129,7 +171,7 @@ TRSTransform3D >> inverseTransformVector3: vector3 [
 
 { #category : #accessing }
 TRSTransform3D >> inverseTranslation [
-	^ scale safeReciprocal * (rotation inverseRotateVector: translation negated)
+	^ self inverseScale * (rotation inverseRotateVector: translation negated)
 ]
 
 { #category : #testing }
@@ -217,6 +259,13 @@ TRSTransform3D >> setIdentity [
 	translation := Vector3 zeros.
 ]
 
+{ #category : #initialization }
+TRSTransform3D >> setMatrix: matrix translation: aTranslation [
+	scale := Vector3 x: matrix firstColumn length y: matrix secondColumn length z: matrix thirdColumn length.
+	rotation := (matrix * (Matrix3x3 scale: scale safeReciprocal)) asQuaternion normalized.
+	translation := aTranslation
+]
+
 { #category : #transforming }
 TRSTransform3D >> transformNormalVector: vector3 [
 	^ rotation transformVector3: vector3 / scale
@@ -230,11 +279,17 @@ TRSTransform3D >> transformPosition: position [
 { #category : #arithmetic }
 TRSTransform3D >> transformTransform: otherTransform [
 	self assert: otherTransform class == self class.
+	(scale isIsotropic or: [otherTransform scale isIsotropic or: [otherTransform rotation isIdentity]]) ifTrue: [ 
 	^ self class basicNew
-		scale: (otherTransform rotation inverseRotateScale: scale) * otherTransform scale;
+		scale: scale * otherTransform scale;
 		rotation: rotation * otherTransform rotation;
 		translation: (self transformPosition: otherTransform translation);
-		yourself
+		yourself		
+	] ifFalse: [
+		^ self class basicNew
+			setMatrix: self matrix * otherTransform matrix translation: (self transformPosition: otherTransform translation);
+			yourself
+	].
 ]
 
 { #category : #transforming }

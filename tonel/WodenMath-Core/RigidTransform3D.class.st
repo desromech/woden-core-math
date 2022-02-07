@@ -30,8 +30,11 @@ RigidTransform3D class >> rotation: aRotation [
 ]
 
 { #category : #accessing }
-RigidTransform3D class >> scale: aScale [
-	^ self new scale: aScale; yourself
+RigidTransform3D class >> rotation: aRotation around: pivot [
+	^ self new
+		rotation: aRotation;
+		translation: pivot - (aRotation rotateVector: pivot);
+		yourself
 ]
 
 { #category : #accessing }

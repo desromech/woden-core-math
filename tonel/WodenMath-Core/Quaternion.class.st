@@ -19,6 +19,7 @@ Quaternion class >> axis: axis angle: angle [
 	halfAngle := angle / 2.
 	c := halfAngle cos.
 	s := halfAngle sin.
+	Transcript show: axis; space; show: angle; cr.
 	^ self xyz: axis*s w: c
 ]
 
@@ -108,6 +109,12 @@ Quaternion class >> xyz: xyz w: w [
 { #category : #'special matrices' }
 Quaternion class >> xyzRotation: angles [
 	^ (self xRotation: angles x) * (self yRotation: angles y) * (self zRotation: angles z)
+]
+
+{ #category : #'accessing structure variables' }
+Quaternion class >> xyzw: xyzw [
+	^ self basicNew
+		x: xyzw x; y: xyzw y; z: xyzw z; w: xyzw w
 ]
 
 { #category : #'special matrices' }
@@ -319,11 +326,6 @@ Quaternion >> inverse [
 ]
 
 { #category : #transforming }
-Quaternion >> inverseRotateScale: scale [
-	^ (self inverseRotateVector: scale) * (self inverseRotateVector: scale sign) "Cancel sign changes"
-]
-
-{ #category : #transforming }
 Quaternion >> inverseRotateVector: vector [
 	^ ((self conjugated * (self class xyz: vector)) * self) xyz
 ]
@@ -368,6 +370,14 @@ Quaternion >> negated [
 	^ self class x: x negated y: y negated z: z negated w: w negated
 ]
 
+{ #category : #arithmetic }
+Quaternion >> normalized [
+	| l |
+	l := self length.
+	l <= 0 ifTrue: [ ^ self class zero ].
+	^ self class x: x / l y: y / l z: z / l w: w / l
+]
+
 { #category : #printing }
 Quaternion >> printOn: aStream [
 	aStream nextPut: $(; nextPutAll: self class name;
@@ -386,11 +396,6 @@ Quaternion >> r [
 { #category : #accessing }
 Quaternion >> r: r [
 	w := r
-]
-
-{ #category : #transforming }
-Quaternion >> rotateScale: scale [
-	^ (self rotateVector: scale) * (self rotateVector: scale sign) "Cancel sign changes"
 ]
 
 { #category : #transforming }

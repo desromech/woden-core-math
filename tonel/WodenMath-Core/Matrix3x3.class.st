@@ -241,6 +241,24 @@ Matrix3x3 >> asMatrix3x3 [
 	^ self
 ]
 
+{ #category : #converting }
+Matrix3x3 >> asQuaternion [
+	| diag signs xyzw |
+	"Matrix to quaternion conversion algorithm from: https://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/"
+	diag := self diagonal.
+	signs := Vector3
+		x: (self secondColumn z - self thirdColumn y) sign
+      y: (self thirdColumn x - self firstColumn z) sign
+      z: (self firstColumn y - self secondColumn x) sign.
+
+	xyzw := Vector4
+		x: (1 + diag x - diag y - diag z max: 0.0) sqrt * 0.5 * signs x
+		y: (1 - diag x + diag y - diag z max: 0.0) sqrt * 0.5 * signs y
+		z: (1 - diag x - diag y + diag z max: 0.0) sqrt * 0.5 * signs z
+		w: (1 + diag x + diag y + diag z max: 0.0) sqrt * 0.5.
+	^ Quaternion xyzw: xyzw
+]
+
 { #category : #comparing }
 Matrix3x3 >> closeTo: other [
 	^ self class == other class and: [
@@ -291,6 +309,11 @@ Matrix3x3 >> determinant [
 	"
 	^ (m11 * m22 * m33) + (m12 * m23 * m31) + (m13 * m21 *m32)
 		- (m31 * m22 * m13) - (m32 * m23 * m11) - (m33 * m21 * m12)
+]
+
+{ #category : #accessing }
+Matrix3x3 >> diagonal [
+	^ Vector3 x: m11 y: m22 z: m33
 ]
 
 { #category : #enumerating }

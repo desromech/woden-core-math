@@ -75,6 +75,11 @@ ReversibleAffineTransform3D >> applyOrthonormalMatrix: orthonormal [
 	^ self applyMatrix: orthonormal inverseMatrix: orthonormal transpose
 ]
 
+{ #category : #converting }
+ReversibleAffineTransform3D >> asTRSTransform3D [
+	^ TRSTransform3D matrix: matrix translation: translation
+]
+
 { #category : #comparing }
 ReversibleAffineTransform3D >> hash [
 	^ self class identityHash bitXor: (matrix hash bitXor: (

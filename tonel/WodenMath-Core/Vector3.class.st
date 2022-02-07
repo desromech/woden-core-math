@@ -141,6 +141,11 @@ Vector3 >> hash [
 ]
 
 { #category : #testing }
+Vector3 >> isIsotropic [
+	^ x = y = z
+]
+
+{ #category : #testing }
 Vector3 >> isOnes [
 	^ x = 1 and: [ y = 1 and: [ z = 1 ] ]
 ]
