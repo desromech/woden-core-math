@@ -38,6 +38,45 @@ Frustum >> computePlanes [
 	}
 ]
 
+{ #category : #enumerating }
+Frustum >> corners [
+	^ {
+		leftBottomNear.
+		rightBottomNear.
+		leftTopNear.
+		rightTopNear.
+		leftBottomFar.
+		rightBottomFar.
+		leftTopFar.
+		rightTopFar.
+	}
+]
+
+{ #category : #enumerating }
+Frustum >> cornersDo: aBlock [
+	aBlock value: leftBottomNear.
+	aBlock value: rightBottomNear.
+	aBlock value: leftTopNear.
+	aBlock value: rightTopNear.
+	aBlock value: leftBottomFar.
+	aBlock value: rightBottomFar.
+	aBlock value: leftTopFar.
+	aBlock value: rightTopFar.
+]
+
+{ #category : #testing }
+Frustum >> intersectsOrContainsBox: box [
+	^ (self isBoxOutside: box) not
+]
+
+{ #category : #testing }
+Frustum >> isBoxOutside: box [
+	"This technique comes from this article: http://www.lighthouse3d.com/tutorials/view-frustum-culling/geometric-approach-testing-boxes-ii/"
+	^ planes anySatisfy: [ :each |
+		each isPointInFront: (box negativeVertex: each normal)
+	]
+]
+
 { #category : #accessing }
 Frustum >> leftBottomFar [
 
@@ -156,6 +195,11 @@ Frustum >> planes: anObject [
 	planes := anObject
 ]
 
+{ #category : #enumerating }
+Frustum >> printOn: aStream [
+	aStream nextPutAll: self class name; nextPutAll: ' corners: '; print: self corners
+]
+
 { #category : #computation }
 Frustum >> rayForNormalizedPoint: normalizedPoint [
 	| nearPoint farPoint |
@@ -210,6 +254,86 @@ Frustum >> rightTopNear [
 Frustum >> rightTopNear: anObject [
 
 	rightTopNear := anObject
+]
+
+{ #category : #splitting }
+Frustum >> splitAtBottomLambda: bottomLambda topLambda: topLambda [
+	self assert: (bottomLambda between: 0 and: 1).
+	self assert: (topLambda between: 0 and: 1).
+
+	^ self class basicNew
+		leftBottomNear: (leftBottomNear interpolateTo: leftTopNear at: bottomLambda);
+		rightBottomNear: (rightBottomNear interpolateTo: rightTopNear at: bottomLambda);
+		leftTopNear: (leftBottomNear interpolateTo: leftTopNear at: topLambda);
+		rightTopNear: (rightBottomNear interpolateTo: rightTopNear at: topLambda);
+
+		leftBottomFar: (leftBottomFar interpolateTo: leftTopFar at: bottomLambda);
+		rightBottomFar: (rightBottomFar interpolateTo: rightTopFar at: bottomLambda);
+		leftTopFar: (leftBottomFar interpolateTo: leftTopFar at: topLambda);
+		rightTopFar: (rightBottomFar interpolateTo: rightTopFar at: topLambda);
+		computePlanes;
+		yourself
+]
+
+{ #category : #splitting }
+Frustum >> splitAtLeftLambda: leftLambda rightLambda: rightLambda [
+	self assert: (leftLambda between: 0 and: 1).
+	self assert: (rightLambda between: 0 and: 1).
+
+	^ self class basicNew
+		leftBottomNear: (leftBottomNear interpolateTo: rightBottomNear at: leftLambda);
+		rightBottomNear: (leftBottomNear interpolateTo: rightBottomNear at: rightLambda);
+		leftTopNear: (leftTopNear interpolateTo: rightTopNear at: leftLambda);
+		rightTopNear: (leftTopNear interpolateTo: rightTopNear at: rightLambda);
+
+		leftBottomFar: (leftBottomFar interpolateTo: rightBottomFar at: leftLambda);
+		rightBottomFar: (leftBottomFar interpolateTo: rightBottomFar at: rightLambda);
+		leftTopFar: (leftTopFar interpolateTo: rightTopFar at: leftLambda);
+		rightTopFar: (leftTopFar interpolateTo: rightTopFar at: rightLambda);
+		computePlanes;
+		yourself
+]
+
+{ #category : #splitting }
+Frustum >> splitAtNearLambda: splitNearLambda farLambda: splitFarLambda [
+	self assert: (splitNearLambda between: 0 and: 1).
+	self assert: (splitFarLambda between: 0 and: 1).
+
+	^ self class basicNew
+		leftBottomNear: (leftBottomNear interpolateTo: leftBottomFar at: splitNearLambda);
+		rightBottomNear: (rightBottomNear interpolateTo: rightBottomFar at: splitNearLambda);
+		leftTopNear: (leftTopNear interpolateTo: leftTopFar at: splitNearLambda);
+		rightTopNear: (rightTopNear interpolateTo: rightTopFar at: splitNearLambda);
+
+		leftBottomFar: (leftBottomNear interpolateTo: leftBottomFar at: splitFarLambda);
+		rightBottomFar: (rightBottomNear interpolateTo: rightBottomFar at: splitFarLambda);
+		leftTopFar: (leftTopNear interpolateTo: leftTopFar at: splitFarLambda);
+		rightTopFar: (rightTopNear interpolateTo: rightTopFar at: splitFarLambda);
+		computePlanes;
+		yourself
+]
+
+{ #category : #support }
+Frustum >> supportFunction [
+	^ [ :d | self supportInDirection: d ]
+]
+
+{ #category : #support }
+Frustum >> supportInDirection: d [
+	| best bestDot |
+	best := nil.
+	bestDot := Float negativeInfinity.
+	self cornersDo: [ :v |
+		| dot |
+		dot := v dot: d.
+		dot > bestDot ifTrue: [
+			best := v.
+			bestDot := dot
+		]
+	].
+
+	^ best
+
 ]
 
 { #category : #transforming }
