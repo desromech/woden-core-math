@@ -131,6 +131,11 @@ Vector4 >> isZeros [
 ]
 
 { #category : #arithmetic }
+Vector4 >> max [
+	^ (x max: y) max: (z max: w)
+]
+
+{ #category : #arithmetic }
 Vector4 >> minorAt: index [
 	index = 1 ifTrue: [ ^ Vector3 x: y y: z z: w ].
 	index = 2 ifTrue: [ ^ Vector3 x: x y: z z: w ].

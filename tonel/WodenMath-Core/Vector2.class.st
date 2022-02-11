@@ -126,6 +126,11 @@ Vector2 >> isZeros [
 	^ x = 0 and: [ y = 0 ]
 ]
 
+{ #category : #arithmetic }
+Vector2 >> max [
+	^ x max: y
+]
+
 { #category : #printing }
 Vector2 >> printOn: aStream [
 	aStream nextPut: $(; nextPutAll: self class name;

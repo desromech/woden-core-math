@@ -155,6 +155,11 @@ Vector3 >> isZeros [
 	^ x = 0 and: [ y = 0 and: [ z = 0 ] ]
 ]
 
+{ #category : #arithmetic }
+Vector3 >> max [
+	^ (x max: y) max: z
+]
+
 { #category : #printing }
 Vector3 >> printOn: aStream [
 	aStream nextPut: $(; nextPutAll: self class name;
