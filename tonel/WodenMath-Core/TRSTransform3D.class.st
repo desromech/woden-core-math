@@ -333,3 +333,11 @@ TRSTransform3D >> translation: anObject [
 
 	translation := anObject
 ]
+
+{ #category : #'as yet unclassified' }
+TRSTransform3D >> withoutScale [
+	^ self class new
+		rotation: rotation;
+		translation: translation;
+		yourself
+]
