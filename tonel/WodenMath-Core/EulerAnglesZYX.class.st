@@ -1,8 +1,8 @@
 "
-I describe a rotation in terms of successive Z (roll) Y (yaw) X (pitch) rotations.
+I describe a rotation in terms of successive X (pitch) Y (yaw) Z (roll) rotations.
 "
 Class {
-	#name : #EulerAnglesXYZ,
+	#name : #EulerAnglesZYX,
 	#superclass : #Object,
 	#instVars : [
 		'x',
@@ -13,27 +13,27 @@ Class {
 }
 
 { #category : #accessing }
-EulerAnglesXYZ >> asMatrix [
-	^ Matrix3x3 xyzRotation: self
+EulerAnglesZYX >> asMatrix [
+	^ Matrix3x3 zyxRotation: self
 ]
 
 { #category : #accessing }
-EulerAnglesXYZ >> asQuaternion [
-	^ Quaternion xyzRotation: self
+EulerAnglesZYX >> asQuaternion [
+	^ Quaternion zyxRotation: self
 ]
 
 { #category : #accessing }
-EulerAnglesXYZ >> pitch [
+EulerAnglesZYX >> pitch [
 	^ x
 ]
 
 { #category : #accessing }
-EulerAnglesXYZ >> pitch: anAngle [
+EulerAnglesZYX >> pitch: anAngle [
 	x := anAngle
 ]
 
 { #category : #printing }
-EulerAnglesXYZ >> printOn: aStream [
+EulerAnglesZYX >> printOn: aStream [
 	aStream nextPutAll: self class name;
 		space; nextPutAll: ' x: '; print: x;
 		space; nextPutAll: ' y: '; print: y;
@@ -41,57 +41,57 @@ EulerAnglesXYZ >> printOn: aStream [
 ]
 
 { #category : #accessing }
-EulerAnglesXYZ >> roll [
+EulerAnglesZYX >> roll [
 	^ z
 ]
 
 { #category : #accessing }
-EulerAnglesXYZ >> roll: anAngle [
+EulerAnglesZYX >> roll: anAngle [
 	z := anAngle
 ]
 
 { #category : #accessing }
-EulerAnglesXYZ >> x [
+EulerAnglesZYX >> x [
 
 	^ x
 ]
 
 { #category : #accessing }
-EulerAnglesXYZ >> x: anObject [
+EulerAnglesZYX >> x: anObject [
 
 	x := anObject
 ]
 
 { #category : #accessing }
-EulerAnglesXYZ >> y [
+EulerAnglesZYX >> y [
 
 	^ y
 ]
 
 { #category : #accessing }
-EulerAnglesXYZ >> y: anObject [
+EulerAnglesZYX >> y: anObject [
 
 	y := anObject
 ]
 
 { #category : #accessing }
-EulerAnglesXYZ >> yaw [
+EulerAnglesZYX >> yaw [
 	^ y
 ]
 
 { #category : #accessing }
-EulerAnglesXYZ >> yaw: anAngle [
+EulerAnglesZYX >> yaw: anAngle [
 	y := anAngle
 ]
 
 { #category : #accessing }
-EulerAnglesXYZ >> z [
+EulerAnglesZYX >> z [
 
 	^ z
 ]
 
 { #category : #accessing }
-EulerAnglesXYZ >> z: anObject [
+EulerAnglesZYX >> z: anObject [
 
 	z := anObject
 ]

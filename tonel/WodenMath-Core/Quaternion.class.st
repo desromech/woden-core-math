@@ -242,6 +242,27 @@ Quaternion >> abs [
 	^ self length2 sqrt
 ]
 
+{ #category : #'as yet unclassified' }
+Quaternion >> asEulerXYZ [
+	self shouldBeImplemented 
+]
+
+{ #category : #'as yet unclassified' }
+Quaternion >> asEulerZYX [
+	"Formula https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles [17th February, 2022]."
+	| siny yaw |
+	siny := 2 *((w*y) - (z*x)).
+	yaw := siny abs >= 1
+		ifTrue: [ Float halfPi * siny sign ]
+		ifFalse: [ siny arcSin ].
+		 
+	^ EulerAnglesZYX basicNew
+		pitch: (2*((w*x) + (y*z)) arcTan: 1 - (2*((x*x) + (y*y))));
+		yaw: yaw;
+		roll: (2*((w*z) + (x*y)) arcTan: 1 - (2*((y*y) + 	(z*z))));
+		yourself
+]
+
 { #category : #converting }
 Quaternion >> asMatrix3x3 [
 	| r i j k |
