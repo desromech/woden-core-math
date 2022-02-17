@@ -19,7 +19,6 @@ Quaternion class >> axis: axis angle: angle [
 	halfAngle := angle / 2.
 	c := halfAngle cos.
 	s := halfAngle sin.
-	Transcript show: axis; space; show: angle; cr.
 	^ self xyz: axis*s w: c
 ]
 

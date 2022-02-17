@@ -208,6 +208,16 @@ Complex >> negated [
 ]
 
 { #category : #accessing }
+Complex >> normalized [
+	^ self / self length
+]
+
+{ #category : #printing }
+Complex >> printOn: aStream [
+	aStream nextPutAll: self class name; space; print: x; space; print: y
+]
+
+{ #category : #accessing }
 Complex >> r [
 	^ x
 ]
