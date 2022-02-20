@@ -128,8 +128,18 @@ Plane >> isPointInsideOrBehind: aPoint [
 ]
 
 { #category : #geometry }
+Plane >> isPointInsideOrBehind: aPoint withEpsilon: epsilon [
+	^ (self signedDistanceToPoint: aPoint) <= epsilon
+]
+
+{ #category : #geometry }
 Plane >> isPointInsideOrInFront: aPoint [
 	^ (self signedDistanceToPoint: aPoint) >= 0
+]
+
+{ #category : #geometry }
+Plane >> isPointInsideOrInFront: aPoint withEpsilon: epsilon [
+	^ (self signedDistanceToPoint: aPoint) >= epsilon negated
 ]
 
 { #category : #testing }
