@@ -32,6 +32,88 @@ AbstractPrimitiveVector >> dot: other [
 ]
 
 { #category : #noise }
+AbstractPrimitiveVector >> fbmSignedGradientNoiseAbsOctaves: octaves lacunarity: lacunarity [
+	^ self fbmSignedGradientNoiseAbsOctaves: octaves lacunarity: lacunarity gain: lacunarity reciprocal
+]
+
+{ #category : #noise }
+AbstractPrimitiveVector >> fbmSignedGradientNoiseAbsOctaves: octaves lacunarity: lacunarity gain: gain [
+	^ self fractionalBrownianMotionOctaves: octaves lacunarity: lacunarity gain: gain with: [:p | p signedGradientNoise abs]
+]
+
+{ #category : #noise }
+AbstractPrimitiveVector >> fbmSignedGradientNoiseAbsOctaves: octaves lacunarity: lacunarity gain: gain tiledWith: tilingPeriod [
+	^ self fractionalBrownianMotionOctaves: octaves lacunarity: lacunarity gain: gain tiledWith: tilingPeriod with: [:p :tp | (p signedGradientNoiseTiledWith: tp) abs]
+]
+
+{ #category : #noise }
+AbstractPrimitiveVector >> fbmSignedGradientNoiseAbsOctaves: octaves lacunarity: lacunarity tiledWith: tilingPeriod [
+	^ self fbmSignedGradientNoiseAbsOctaves: octaves lacunarity: lacunarity gain: lacunarity reciprocal tiledWith: tilingPeriod
+]
+
+{ #category : #noise }
+AbstractPrimitiveVector >> fbmVoronoiNoiseOctaves: octaves lacunarity: lacunarity gain: gain tiledWith: tilingPeriod [
+	^ self fractionalBrownianMotionOctaves: octaves lacunarity: lacunarity gain: gain tiledWith: tilingPeriod with: [:p :tp | p voronoiNoiseTiledWith: tp ]
+
+]
+
+{ #category : #noise }
+AbstractPrimitiveVector >> fbmVoronoiNoiseOctaves: octaves lacunarity: lacunarity tiledWith: tilingPeriod [
+	^ self fbmVoronoiNoiseOctaves: octaves lacunarity: lacunarity gain: lacunarity reciprocal tiledWith: tilingPeriod
+]
+
+{ #category : #noise }
+AbstractPrimitiveVector >> fbmWorleyNoiseOctaves: octaves lacunarity: lacunarity gain: gain tiledWith: tilingPeriod [
+	^ self fractionalBrownianMotionOctaves: octaves lacunarity: lacunarity gain: gain tiledWith: tilingPeriod with: [:p :tp | p worleyNoiseTiledWith: tp]
+
+]
+
+{ #category : #noise }
+AbstractPrimitiveVector >> fbmWorleyNoiseOctaves: octaves lacunarity: lacunarity tiledWith: tilingPeriod [
+	^ self fbmWorleyNoiseOctaves: octaves lacunarity: lacunarity gain: lacunarity reciprocal tiledWith: tilingPeriod
+]
+
+{ #category : #noise }
+AbstractPrimitiveVector >> fractionalBrownianMotionOctaves: octaves lacunarity: lacunarity gain: gain tiledWith: tilingPeriod with: aBlock [
+	| result currentCoord amplitude currentTilingPeriod amplitudeSum |
+	result := 0.0.
+	currentCoord := self.
+	currentTilingPeriod := tilingPeriod.
+	amplitude := 0.5.
+	amplitudeSum := 0.0.
+	
+	1 to: octaves do: [ :i |
+		result := result + ((aBlock value: currentCoord value: currentTilingPeriod) * amplitude).
+		currentCoord := currentCoord * lacunarity.
+		currentTilingPeriod := currentTilingPeriod*lacunarity.
+		amplitudeSum := amplitudeSum + amplitude.
+		amplitude := amplitude * gain
+	].
+
+	^ result / amplitudeSum
+
+]
+
+{ #category : #noise }
+AbstractPrimitiveVector >> fractionalBrownianMotionOctaves: octaves lacunarity: lacunarity gain: gain with: aBlock [
+	| result currentCoord amplitude amplitudeSum |
+	result := 0.0.
+	currentCoord := self.
+	amplitude := 0.5.
+	amplitudeSum := 0.0.
+	
+	1 to: octaves do: [ :i |
+		result := result + ((aBlock value: currentCoord) * amplitude).
+		currentCoord := currentCoord * lacunarity.
+		amplitudeSum := amplitudeSum + amplitude.
+		amplitude := amplitude * gain
+	].
+
+	^ result / amplitudeSum
+
+]
+
+{ #category : #noise }
 AbstractPrimitiveVector >> gradientNoise [
 	^ self signedGradientNoise * 0.5 + 0.5
 ]
@@ -163,42 +245,15 @@ AbstractPrimitiveVector >> turbulence [
 
 { #category : #noise }
 AbstractPrimitiveVector >> turbulenceScales: scale [
-	| result currentCoord amplitude amplitudeSum |
-	result := 0.0.
-	currentCoord := self.
-	amplitude := 0.5.
-	amplitudeSum := 0.0.
-	
-	1 to: scale do: [ :i |
-		result := result + (currentCoord signedGradientNoise * amplitude).
-		currentCoord := currentCoord * 2.0.
-		amplitudeSum := amplitudeSum + amplitude.
-		amplitude := amplitude * 0.5
-	].
-
-	^ result / amplitudeSum
+	^ self fractionalBrownianMotionOctaves: scale lacunarity: 2.0 gain: 0.5
+		with: [:p | p signedGradientNoise ]
 
 ]
 
 { #category : #noise }
 AbstractPrimitiveVector >> turbulenceScales: scale tiledWith: tilingPeriod [
-	| result currentCoord amplitude amplitudeSum currentTilingPeriod |
-	result := 0.0.
-	currentCoord := self.
-	amplitude := 0.5.
-	amplitudeSum := 0.0.
-	currentTilingPeriod := tilingPeriod.
-	
-	1 to: scale do: [ :i |
-		result := result + ((currentCoord signedGradientNoiseTiledWith: currentTilingPeriod) * amplitude).
-		currentCoord := currentCoord * 2.0.
-		currentTilingPeriod := currentTilingPeriod * 2.0.
-		amplitudeSum := amplitudeSum + amplitude.
-		amplitude := amplitude * 0.5
-	].
-
-	^ result / amplitudeSum
-
+	^ self fractionalBrownianMotionOctaves: scale lacunarity: 2.0 gain: 0.5 tiledWith: tilingPeriod
+		with: [:p | p signedGradientNoise ]
 ]
 
 { #category : #noise }
