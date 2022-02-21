@@ -253,7 +253,7 @@ AbstractPrimitiveVector >> turbulenceScales: scale [
 { #category : #noise }
 AbstractPrimitiveVector >> turbulenceScales: scale tiledWith: tilingPeriod [
 	^ self fractionalBrownianMotionOctaves: scale lacunarity: 2.0 gain: 0.5 tiledWith: tilingPeriod
-		with: [:p | p signedGradientNoise ]
+		with: [:p :tp | p signedGradientNoiseTiledWith: tp ]
 ]
 
 { #category : #noise }
