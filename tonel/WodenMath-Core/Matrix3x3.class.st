@@ -157,6 +157,19 @@ Matrix3x3 class >> texScale: scale offset: offset [
 		m31: 0; m32: 0; m33: 1
 ]
 
+{ #category : #'special matrices' }
+Matrix3x3 class >> texScale: scale rotation: rotation offset: offset [
+	| coercedScale coercedOffset cos sin |
+	coercedScale := scale asVector2.
+	coercedOffset := offset asVector2.
+	cos := rotation cos.
+	sin := rotation sin.
+	^ self basicNew
+		m11: cos * coercedScale x; m12: sin * coercedScale x; m13: coercedOffset x;
+		m21: sin negated * coercedScale y; m22: cos * coercedScale y; m23: coercedOffset y;
+		m31: 0; m32: 0; m33: 1
+]
+
 { #category : #'instance creation' }
 Matrix3x3 class >> withAll: value [
 	^ self basicNew
