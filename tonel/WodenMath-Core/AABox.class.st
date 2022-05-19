@@ -349,9 +349,8 @@ AABox >> max [
 ]
 
 { #category : #accessing }
-AABox >> max: anObject [
-
-	max := anObject
+AABox >> max: newMaxCorner [
+	max := newMaxCorner asVector3
 ]
 
 { #category : #accessing }
@@ -361,9 +360,8 @@ AABox >> min [
 ]
 
 { #category : #accessing }
-AABox >> min: anObject [
-
-	min := anObject
+AABox >> min: newMinCorner [
+	min := newMinCorner asVector3
 ]
 
 { #category : #accessing }

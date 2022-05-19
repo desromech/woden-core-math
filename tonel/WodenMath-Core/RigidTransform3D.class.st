@@ -47,6 +47,11 @@ RigidTransform3D >> = other [
 	^ self class == other class and: [ rotation = other rotation and: [ translation = other translation ] ]
 ]
 
+{ #category : #converting }
+RigidTransform3D >> asTRSTransform3D [
+	^ TRSTransform3D new rotation: rotation; translation: translation; yourself
+]
+
 { #category : #comparing }
 RigidTransform3D >> closeTo: other [
 	^ self class == other class and: [

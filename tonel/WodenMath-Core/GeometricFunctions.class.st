@@ -337,19 +337,22 @@ GeometricFunctions class >> isPoint3DCoplanar: first with: second with: third wi
 
 { #category : #'closest point computation' }
 GeometricFunctions class >> samplePenetrationDistanceAndNormalForSupport: firstSupport with: secondSupport [
-	| bestDistanceSquared bestNormal |
-	bestDistanceSquared := Float infinity.
+	| bestDistance bestNormal |
+	bestDistance := Float infinity.
 	bestNormal := Vector3 zeros.
 	PenetrationDistanceSampleVectors do: [ :sampleVector |
-		| supportDistanceSquared |
-		supportDistanceSquared := ((firstSupport value: sampleVector) - (secondSupport value: sampleVector negated)) length2.
-		supportDistanceSquared < bestDistanceSquared ifTrue: [
-			bestDistanceSquared := supportDistanceSquared.
+		| supportVector delta |
+		supportVector := (firstSupport value: sampleVector) - (secondSupport value: sampleVector negated).
+		delta := supportVector dot: sampleVector.
+		delta < bestDistance ifTrue: [
+			bestDistance := delta.
 			bestNormal := sampleVector
 		]
 	].
+
+	bestDistance < 0 ifTrue: [ ^ nil ].
 	
-	^ { bestDistanceSquared sqrt / 2 . bestNormal }
+	^ { bestDistance . bestNormal }
 ]
 
 { #category : #'support function utilities' }

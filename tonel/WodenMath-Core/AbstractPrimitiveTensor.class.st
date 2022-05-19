@@ -151,6 +151,11 @@ AbstractPrimitiveTensor >> negated [
 ]
 
 { #category : #arithmetic }
+AbstractPrimitiveTensor >> nonZeroSign [
+	^ self collect: [ :each | each < 0 ifTrue: [ -1 ] ifFalse: [ 1 ] ]
+]
+
+{ #category : #arithmetic }
 AbstractPrimitiveTensor >> numberedNorm: number [
 	^ (self inject: 0 into: [ :sum :each | sum + (each abs raisedTo: number) ]) raisedTo: 1/number
 ]
