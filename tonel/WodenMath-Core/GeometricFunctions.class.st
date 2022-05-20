@@ -357,7 +357,7 @@ GeometricFunctions class >> samplePenetrationDistanceAndNormalForSupport: firstS
 
 { #category : #'support function utilities' }
 GeometricFunctions class >> transformSupportFunction: supportFunction with: transform [
-	^ [ :d | transform transformPosition: (supportFunction value: (transform inverseTransformVector3: d)) ]
+	^ [ :d | transform transformPosition: (supportFunction value: (transform inverseTransformNormal: d)) ]
 ]
 
 { #category : #'see class side' }

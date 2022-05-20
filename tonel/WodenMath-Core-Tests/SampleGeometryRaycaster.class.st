@@ -136,6 +136,13 @@ SampleGeometryRaycaster class >> exampleRoundedBoxGJK [
 ]
 
 { #category : #examples }
+SampleGeometryRaycaster class >> exampleScaledSphereGJK [
+	^ self new
+		rayCastSupportFunction: (GeometricFunctions transformSupportFunction: (Sphere radius: 1.0) supportFunction with: (TRSTransform3D scale: (Vector3 x: 1.5 y: 0.5 z: 0.5)))
+		color: Color yellow darker asVector3
+]
+
+{ #category : #examples }
 SampleGeometryRaycaster class >> exampleSphere [
 	^ self new
 		rayCastShape: (Sphere radius: 1.0)
