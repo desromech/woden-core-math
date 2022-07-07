@@ -144,7 +144,7 @@ TRSTransform3D >> inverseScale [
 ]
 
 { #category : #transforming }
-TRSTransform3D >> inverseTransformNormal: vector3 [
+TRSTransform3D >> inverseTransformNormalVector: vector3 [
 	^ (rotation conjugated transformVector3: vector3) * scale
 ]
 

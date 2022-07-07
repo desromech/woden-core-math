@@ -99,6 +99,11 @@ RigidTransform3D >> inverseRotation [
 ]
 
 { #category : #transforming }
+RigidTransform3D >> inverseTransformNormalVector: vector3 [
+	^ rotation conjugated transformVector3: vector3
+]
+
+{ #category : #transforming }
 RigidTransform3D >> inverseTransformPosition: position [
 	^ rotation conjugated transformVector3: position - translation
 ]
