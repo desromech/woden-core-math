@@ -51,13 +51,13 @@ Vector2 >> = other [
 ]
 
 { #category : #converting }
-Vector2 >> asComplex [
-	^ Complex xy: self
+Vector2 >> asVector2 [
+	^ self
 ]
 
 { #category : #converting }
-Vector2 >> asVector2 [
-	^ self
+Vector2 >> asWMComplex [
+	^ WMComplex xy: self
 ]
 
 { #category : #comparing }
