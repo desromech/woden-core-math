@@ -14,5 +14,8 @@ BaselineOfWodenMath >> baseline: spec [
 				spec requires: #( #'WodenMath-Core' ).
 			]
 	].
-
+	spec for: #'squeak' do: [
+		spec
+			package: #'WodenMath-SqueakCompatibility'
+	]
 ]
