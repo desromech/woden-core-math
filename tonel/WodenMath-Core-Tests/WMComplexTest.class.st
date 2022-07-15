@@ -66,7 +66,6 @@ WMComplexTest >> testCloseTo [
 	self assert: a notCloseTo:  b.
 
 	self deny: (a closeTo: c).
-	self deny: a closeTo: c.
 
 ]
 

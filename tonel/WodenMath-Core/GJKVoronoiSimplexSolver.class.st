@@ -349,7 +349,10 @@ GJKVoronoiSimplexSolver >> reduce [
 		self computeClosest.
 	].
 
-	usedPointCount := usedPoints sum: [ :x | x asBit ].
+	usedPointCount := 0.
+	usedPoints do: [ :each |
+		each ifTrue: [ usedPointCount := usedPointCount + 1 ]
+	].
 	usedPointCount = points size ifTrue: [ ^ self ].
 	points size <= 1 ifTrue: [ ^ self ].
 	
