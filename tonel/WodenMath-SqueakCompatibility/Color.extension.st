@@ -1,6 +1,6 @@
 Extension { #name : #Color }
 
-{ #category : #'*WodenMath-SqueakCompatiblity' }
+{ #category : #'*WodenMath-SqueakCompatibility' }
 Color class >> fromHexString: aColorHex [
 	"Returns a color instance from HEX (6 element elements)."
 
@@ -19,7 +19,7 @@ Color class >> fromHexString: aColorHex [
 	^ self r: red g: green b: blue alpha: alpha
 ]
 
-{ #category : #'*WodenMath-SqueakCompatiblity' }
+{ #category : #'*WodenMath-SqueakCompatibility' }
 Color >> interpolateTo: anObject at: t [
 	| start stop |
 	anObject isColor ifFalse: [ ^ anObject interpolateTo: self at: 1 - t  ].

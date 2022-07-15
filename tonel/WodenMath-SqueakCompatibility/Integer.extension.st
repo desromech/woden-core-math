@@ -1,11 +1,11 @@
 Extension { #name : #Integer }
 
-{ #category : #'*WodenMath-SqueakCompatiblity' }
+{ #category : #'*WodenMath-SqueakCompatibility' }
 Integer >> & aNumber [
 	^ self bitAnd: aNumber
 ]
 
-{ #category : #'*WodenMath-SqueakCompatiblity' }
+{ #category : #'*WodenMath-SqueakCompatibility' }
 Integer >> | anInteger [
 	^self bitOr: anInteger
 ]
