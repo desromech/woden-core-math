@@ -157,13 +157,33 @@ AbstractPrimitiveVector >> randomNoise [
 ]
 
 { #category : #noise }
+AbstractPrimitiveVector >> randomNoiseFourthComponent [
+	self subclassResponsibility
+]
+
+{ #category : #noise }
 AbstractPrimitiveVector >> randomNoiseSecondComponent [
+	self subclassResponsibility
+]
+
+{ #category : #noise }
+AbstractPrimitiveVector >> randomNoiseThirdComponent [
 	self subclassResponsibility
 ]
 
 { #category : #noise }
 AbstractPrimitiveVector >> randomNoiseVector2 [
 	^ Vector2 x: self randomNoise y: self randomNoiseSecondComponent
+]
+
+{ #category : #noise }
+AbstractPrimitiveVector >> randomNoiseVector3 [
+	^ Vector3 x: self randomNoise y: self randomNoiseSecondComponent z: self randomNoiseThirdComponent
+]
+
+{ #category : #noise }
+AbstractPrimitiveVector >> randomNoiseVector4 [
+	^ Vector4 x: self randomNoise y: self randomNoiseSecondComponent z: self randomNoiseThirdComponent w: self randomNoiseFourthComponent
 ]
 
 { #category : #noise }
@@ -183,9 +203,36 @@ AbstractPrimitiveVector >> signedRandomNoise [
 ]
 
 { #category : #noise }
+AbstractPrimitiveVector >> signedRandomNoiseFourthComponent [
+	^ self randomNoiseFourthComponent * 2.0 - 1.0
+
+]
+
+{ #category : #noise }
 AbstractPrimitiveVector >> signedRandomNoiseSecondComponent [
 	^ self randomNoiseSecondComponent * 2.0 - 1.0
 
+]
+
+{ #category : #noise }
+AbstractPrimitiveVector >> signedRandomNoiseThirdComponent [
+	^ self randomNoiseThirdComponent * 2.0 - 1.0
+
+]
+
+{ #category : #noise }
+AbstractPrimitiveVector >> signedRandomNoiseVector2 [
+	^ Vector2 x: self signedRandomNoise y: self signedRandomNoiseSecondComponent
+]
+
+{ #category : #noise }
+AbstractPrimitiveVector >> signedRandomNoiseVector3 [
+	^ Vector3 x: self signedRandomNoise y: self signedRandomNoiseSecondComponent z: self signedRandomNoiseThirdComponent
+]
+
+{ #category : #noise }
+AbstractPrimitiveVector >> signedRandomNoiseVector4 [
+	^ Vector4 x: self signedRandomNoise y: self signedRandomNoiseSecondComponent z: self signedRandomNoiseThirdComponent w: self signedRandomNoiseFourthComponent
 ]
 
 { #category : #noise }

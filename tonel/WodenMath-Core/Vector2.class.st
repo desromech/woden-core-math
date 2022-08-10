@@ -153,7 +153,16 @@ Vector2 >> randomNoise [
 	fx := x floor.
 	fy := y floor.
 	
-	^ ((fx randomNoiseHash * 27972) + (fy randomNoiseHash * 8516)) randomNoiseHashNormalized
+	^ ((fx randomNoiseHash * 27901) + (fy randomNoiseHash * 8537)) randomNoiseHashNormalized
+]
+
+{ #category : #noise }
+Vector2 >> randomNoiseFourthComponent [
+	| fx fy |
+	fx := x floor.
+	fy := y floor.
+	
+	^ ((fx randomNoiseHash * 13339) + (fy randomNoiseHash * 61099)) randomNoiseHashNormalized
 ]
 
 { #category : #noise }
@@ -162,7 +171,16 @@ Vector2 >> randomNoiseSecondComponent [
 	fx := x floor.
 	fy := y floor.
 	
-	^ ((fx randomNoiseHash * 6591) + (fy randomNoiseHash * 21935)) randomNoiseHashNormalized
+	^ ((fx randomNoiseHash * 6581) + (fy randomNoiseHash * 21881)) randomNoiseHashNormalized
+]
+
+{ #category : #noise }
+Vector2 >> randomNoiseThirdComponent [
+	| fx fy |
+	fx := x floor.
+	fy := y floor.
+	
+	^ ((fx randomNoiseHash * 45587) + (fy randomNoiseHash * 13049)) randomNoiseHashNormalized
 ]
 
 { #category : #noise }

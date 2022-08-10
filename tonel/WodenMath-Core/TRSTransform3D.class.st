@@ -67,6 +67,11 @@ TRSTransform3D class >> scale: aScale rotation: aRotation translation: aTranslat
 ]
 
 { #category : #accessing }
+TRSTransform3D class >> scale: aScale translation: aTranslation [
+	^ self new scale: aScale; translation: aTranslation; yourself
+]
+
+{ #category : #accessing }
 TRSTransform3D class >> translation: aTranslation [
 	^ self new translation: aTranslation; yourself
 ]

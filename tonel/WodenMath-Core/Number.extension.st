@@ -89,6 +89,39 @@ Number >> randomNoise [
 ]
 
 { #category : #'*WodenMath-Core' }
+Number >> randomNoiseFourthComponent [
+	^ (self floor randomNoiseHash * 13339) randomNoiseHashNormalized
+	
+]
+
+{ #category : #'*WodenMath-Core' }
+Number >> randomNoiseSecondComponent [
+	^ (self floor randomNoiseHash * 6581) randomNoiseHashNormalized
+	
+]
+
+{ #category : #'*WodenMath-Core' }
+Number >> randomNoiseThirdComponent [
+	^ (self floor randomNoiseHash * 45587) randomNoiseHashNormalized
+	
+]
+
+{ #category : #'*WodenMath-Core' }
+Number >> randomNoiseVector2 [
+	^ Vector2 x: self randomNoise y: self randomNoiseSecondComponent
+]
+
+{ #category : #'*WodenMath-Core' }
+Number >> randomNoiseVector3 [
+	^ Vector3 x: self randomNoise y: self randomNoiseSecondComponent z: self randomNoiseThirdComponent
+]
+
+{ #category : #'*WodenMath-Core' }
+Number >> randomNoiseVector4 [
+	^ Vector4 x: self randomNoise y: self randomNoiseSecondComponent z: self randomNoiseThirdComponent w: self randomNoiseFourthComponent
+]
+
+{ #category : #'*WodenMath-Core' }
 Number >> roundFloorWithQuantum: quantum [
 	^ (self / quantum) floor * quantum
 ]
@@ -121,6 +154,39 @@ Number >> signedGradientNoise [
 Number >> signedRandomNoise [
 	^ self randomNoise * 2.0 - 1.0
 
+]
+
+{ #category : #'*WodenMath-Core' }
+Number >> signedRandomNoiseFourthComponent [
+	^ self randomNoiseFourthComponent * 2.0 - 1.0
+
+]
+
+{ #category : #'*WodenMath-Core' }
+Number >> signedRandomNoiseSecondComponent [
+	^ self randomNoiseSecondComponent * 2.0 - 1.0
+
+]
+
+{ #category : #'*WodenMath-Core' }
+Number >> signedRandomNoiseThirdComponent [
+	^ self randomNoiseThirdComponent * 2.0 - 1.0
+
+]
+
+{ #category : #'*WodenMath-Core' }
+Number >> signedRandomNoiseVector2 [
+	^ Vector2 x: self signedRandomNoise y: self signedRandomNoiseSecondComponent
+]
+
+{ #category : #'*WodenMath-Core' }
+Number >> signedRandomNoiseVector3 [
+	^ Vector3 x: self signedRandomNoise y: self signedRandomNoiseSecondComponent z: self signedRandomNoiseThirdComponent
+]
+
+{ #category : #'*WodenMath-Core' }
+Number >> signedRandomNoiseVector4 [
+	^ Vector4 x: self signedRandomNoise y: self signedRandomNoiseSecondComponent z: self signedRandomNoiseThirdComponent w: self signedRandomNoiseFourthComponent
 ]
 
 { #category : #'*WodenMath-Core' }
