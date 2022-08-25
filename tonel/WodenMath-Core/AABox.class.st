@@ -21,6 +21,11 @@ AABox class >> empty [
 	^ self min: Vector3 infinity max: Vector3 negativeInfinity
 ]
 
+{ #category : #requirements }
+AABox class >> fullSpace [
+	^ self min: Vector3 negativeInfinity max: Vector3 infinity
+]
+
 { #category : #accessing }
 AABox class >> halfExtent: halfExtent [
 	^ self min: halfExtent negated max: halfExtent
@@ -34,6 +39,11 @@ AABox class >> loadFromJson: jsonData [
 { #category : #accessing }
 AABox class >> min: min max: max [
 	^ self basicNew min: min; max: max; yourself
+]
+
+{ #category : #accessing }
+AABox class >> originPoint [
+	^ self new
 ]
 
 { #category : #accessing }
@@ -449,6 +459,11 @@ AABox >> rightPoint [
 { #category : #accessing }
 AABox >> rightTopPoint [
 	^ (self nearTopRight + self farTopRight) / 2
+]
+
+{ #category : #'as yet unclassified' }
+AABox >> scaledBy: scaleFactor [
+	^ AABox center: self center halfExtent: self halfExtent * scaleFactor
 ]
 
 { #category : #support }

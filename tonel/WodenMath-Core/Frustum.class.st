@@ -167,6 +167,13 @@ Frustum >> makePerspectiveFovY: fovy aspect: aspect near: near far: far [
 ]
 
 { #category : #computation }
+Frustum >> makeWithTangents: tangents near: nearDistance far: farDistance [
+	self  makeFrustumLeft: tangents left * nearDistance right: tangents right * nearDistance
+		bottom: tangents bottom * nearDistance top: tangents top * nearDistance
+		near: nearDistance far: farDistance
+]
+
+{ #category : #computation }
 Frustum >> normalizedPoint: aPosition linearDepth: aDepth [
 	^ (self normalizedPointInNearPlane: aPosition) interpolateTo: (self normalizedPointInFarPlane: aPosition) at: aDepth
 ]
