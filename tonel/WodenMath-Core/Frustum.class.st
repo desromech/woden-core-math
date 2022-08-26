@@ -74,7 +74,7 @@ Frustum >> intersectsOrContainsSphereWithCenter: sphereCenter radius: sphereRadi
 	| distance |
 	1 to: planes size do: [ :planeIndex |
 		distance := (planes at: planeIndex) signedDistanceToPoint: sphereCenter.
-		distance < sphereRadius negated ifTrue: [
+		distance > sphereRadius ifTrue: [
 			^ false
 		]
 	].
