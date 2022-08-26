@@ -70,6 +70,18 @@ Frustum >> intersectsOrContainsBox: box [
 ]
 
 { #category : #testing }
+Frustum >> intersectsOrContainsSphereWithCenter: sphereCenter radius: sphereRadius [
+	| distance |
+	1 to: planes size do: [ :planeIndex |
+		distance := (planes at: planeIndex) signedDistanceToPoint: sphereCenter.
+		distance < sphereRadius negated ifTrue: [
+			^ false
+		]
+	].
+	^ true
+]
+
+{ #category : #testing }
 Frustum >> isBoxOutside: box [
 	"This technique comes from this article: http://www.lighthouse3d.com/tutorials/view-frustum-culling/geometric-approach-testing-boxes-ii/"
 	^ planes anySatisfy: [ :each |
