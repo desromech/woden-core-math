@@ -905,9 +905,9 @@ Matrix4x4 >> transformPosition3: position [
 { #category : #arithmetic }
 Matrix4x4 >> transformVector3: vector [
 	^ Vector3
-		x: (m11 * vector x) + (m12 * vector y) + (m13 * vector x)
-		y: (m21 * vector x) + (m22 * vector y) + (m23 * vector x)
-		z: (m31 * vector x) + (m32 * vector y) + (m33 * vector x)
+		x: (m11 * vector x) + (m12 * vector y) + (m13 * vector z)
+		y: (m21 * vector x) + (m22 * vector y) + (m23 * vector z)
+		z: (m31 * vector x) + (m32 * vector y) + (m33 * vector z)
 ]
 
 { #category : #accessing }
