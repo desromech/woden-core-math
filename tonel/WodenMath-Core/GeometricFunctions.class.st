@@ -342,7 +342,7 @@ GeometricFunctions class >> samplePenetrationDistanceAndNormalForSupport: firstS
 	bestNormal := Vector3 zeros.
 	PenetrationDistanceSampleVectors do: [ :sampleVector |
 		| supportVector delta |
-		supportVector := (firstSupport value: sampleVector) - (secondSupport value: sampleVector negated).
+		supportVector := (secondSupport value: sampleVector) - (firstSupport value: sampleVector negated).
 		delta := supportVector dot: sampleVector.
 		delta < bestDistance ifTrue: [
 			bestDistance := delta.
