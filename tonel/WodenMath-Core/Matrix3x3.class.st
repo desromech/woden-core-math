@@ -51,13 +51,6 @@ Matrix3x3 class >> columns: columns [
 { #category : #'as yet unclassified' }
 Matrix3x3 class >> cubeMapFaceRotations [
 	^ {
-		"-X: self yRotation: Float halfPi."
-		self rows: #(
-			0.0 0.0 1.0
-			0.0 1.0 0.0
-			-1.0 0.0 0.0
-		).
-		
 		"+X: self yRotation: Float halfPi negated."		
 		self rows: #(
 			0.0 0.0 -1.0
@@ -65,29 +58,36 @@ Matrix3x3 class >> cubeMapFaceRotations [
 			1.0 0.0 0.0
 		).
 
-		"-Y: self xRotation: Float halfPi negated."
+		"-X: self yRotation: Float halfPi."
 		self rows: #(
-			1.0 0.0 0.0
 			0.0 0.0 1.0
-			0.0 -1.0 0.0
+			0.0 1.0 0.0
+			-1.0 0.0 0.0
 		).
-		
+
 		"+Y: self xRotation: Float halfPi."
 		self rows: #(
 			1.0 0.0 0.0
 			0.0 0.0 -1.0
 			0.0 1.0 0.0
 		).
-
-		"-Z:"
-		self identity.
 		
+		"-Y: self xRotation: Float halfPi negated."
+		self rows: #(
+			1.0 0.0 0.0
+			0.0 0.0 1.0
+			0.0 -1.0 0.0
+		).
+
 		"+Z: self yRotation: Float pi"
 		self rows: #(
 			-1.0 0.0 0.0
 			0.0 1.0 0.0
 			0.0 0.0 -1.0
 		).
+		
+		"-Z:"
+		self identity.
 	}
 ]
 
