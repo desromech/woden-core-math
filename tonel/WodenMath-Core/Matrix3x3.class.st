@@ -48,6 +48,49 @@ Matrix3x3 class >> columns: columns [
 	self error: 'Unsupported element count for matrix creation.'
 ]
 
+{ #category : #'as yet unclassified' }
+Matrix3x3 class >> cubeMapFaceRotations [
+	^ {
+		"-X: self yRotation: Float halfPi."
+		self rows: #(
+			0.0 0.0 1.0
+			0.0 1.0 0.0
+			-1.0 0.0 0.0
+		).
+		
+		"+X: self yRotation: Float halfPi negated."		
+		self rows: #(
+			0.0 0.0 -1.0
+			0.0 1.0 0.0
+			1.0 0.0 0.0
+		).
+
+		"-Y: self xRotation: Float halfPi negated."
+		self rows: #(
+			1.0 0.0 0.0
+			0.0 0.0 1.0
+			0.0 -1.0 0.0
+		).
+		
+		"+Y: self xRotation: Float halfPi."
+		self rows: #(
+			1.0 0.0 0.0
+			0.0 0.0 -1.0
+			0.0 1.0 0.0
+		).
+
+		"-Z:"
+		self identity.
+		
+		"+Z: self yRotation: Float pi"
+		self rows: #(
+			-1.0 0.0 0.0
+			0.0 1.0 0.0
+			0.0 0.0 -1.0
+		).
+	}
+]
+
 { #category : #'special matrices' }
 Matrix3x3 class >> lookAtBack [
 	^ self yRotation: Float pi
