@@ -21,6 +21,14 @@ AABox class >> empty [
 	^ self min: Vector3 infinity max: Vector3 negativeInfinity
 ]
 
+{ #category : #'instance creation' }
+AABox class >> encompassing: aCollectionOfPoints [
+	| result |
+	result := self empty.
+	aCollectionOfPoints do: [ :each | result insertPoint: each ].
+	^ result
+]
+
 { #category : #requirements }
 AABox class >> fullSpace [
 	^ self min: Vector3 negativeInfinity max: Vector3 infinity

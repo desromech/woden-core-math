@@ -112,6 +112,11 @@ ReversibleAffineTransform3D >> inverseMatrix4 [
 	^ Matrix4x4 mat3: inverseMatrix translation: inverseTranslation
 ]
 
+{ #category : #transforming }
+ReversibleAffineTransform3D >> inverseTransformPosition: aPosition [
+	^ (inverseMatrix*aPosition) + inverseTranslation
+]
+
 { #category : #accessing }
 ReversibleAffineTransform3D >> inverseTranslation [
 
