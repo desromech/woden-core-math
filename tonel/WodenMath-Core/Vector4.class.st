@@ -63,6 +63,11 @@ Vector4 >> asColor [
 ]
 
 { #category : #converting }
+Vector4 >> asQuaternion [
+	^ Quaternion xyzw: self
+]
+
+{ #category : #converting }
 Vector4 >> asVector4 [
 	^ self
 ]
