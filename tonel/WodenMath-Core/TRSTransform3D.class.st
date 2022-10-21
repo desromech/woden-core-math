@@ -276,6 +276,22 @@ TRSTransform3D >> setMatrix: matrix translation: aTranslation [
 	translation := aTranslation
 ]
 
+{ #category : #arithmetic }
+TRSTransform3D >> transformInverseTransform: otherTransform [
+	self assert: otherTransform class == self class.
+	(scale isIsotropic or: [otherTransform scale isIsotropic or: [otherTransform rotation isIdentity]]) ifTrue: [ 
+	^ self class basicNew
+		scale: scale * otherTransform inverseScale;
+		rotation: rotation * otherTransform inverseRotation;
+		translation: (self transformPosition: otherTransform inverseTranslation);
+		yourself		
+	] ifFalse: [
+		^ self class basicNew
+			setMatrix: self matrix * otherTransform inverseMatrix translation: (self transformPosition: otherTransform inverseTranslation);
+			yourself
+	].
+]
+
 { #category : #transforming }
 TRSTransform3D >> transformNormalVector: vector3 [
 	^ rotation transformVector3: vector3 / scale

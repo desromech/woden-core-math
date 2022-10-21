@@ -117,6 +117,15 @@ ReversibleAffineTransform3D >> inverseTransformPosition: aPosition [
 	^ (inverseMatrix*aPosition) + inverseTranslation
 ]
 
+{ #category : #arithmetic }
+ReversibleAffineTransform3D >> inverseTransformTransform: transform [
+	^ self class basicNew
+		setMatrix: inverseMatrix * transform matrix
+		inverseMatrix: transform inverseMatrix * matrix
+		translation: (inverseMatrix * transform translation) + inverseTranslation;
+		yourself.
+]
+
 { #category : #accessing }
 ReversibleAffineTransform3D >> inverseTranslation [
 
@@ -234,6 +243,11 @@ ReversibleAffineTransform3D >> transformTransform: transform [
 		inverseMatrix: transform inverseMatrix * inverseMatrix
 		translation: translation + (matrix * transform translation);
 		yourself.
+]
+
+{ #category : #transforming }
+ReversibleAffineTransform3D >> transformVector3: aVector3 [
+	^ matrix * aVector3
 ]
 
 { #category : #transforming }
