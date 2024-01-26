@@ -148,6 +148,11 @@ AABox >> encodeForJSON [
 ]
 
 { #category : #accessing }
+AABox >> extent [
+	^ max - min
+]
+
+{ #category : #accessing }
 AABox >> farBottomLeft [
 	^ Vector3 x: min x y: min y z: max z
 ]
