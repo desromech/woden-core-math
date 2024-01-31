@@ -167,7 +167,7 @@ GeometricFunctions class >> gjkConvexCast: firstSupportFunction from: firstStart
 		].
 
 		(simplex containsPoint: w) ifFalse: [ 
-			simplex insertPoint: w.
+			simplex insertPoint: w first: firstSupport second: secondSupport.
 		].
 
 		simplex containsOrigin ifTrue: [ 
@@ -202,16 +202,6 @@ GeometricFunctions class >> gjkRayCast: ray support: supportFunction [
 	"
 	Code for testing the convex cast.
 	"
-	"false ifTrue: [ 
-		| startPoint endPoint pair |
-		startPoint := ray pointAtDistance: ray tmin.
-		endPoint := ray pointAtDistance: (ray tmax min: 1000000).
-		pair := self gjkConvexCast: [:d | Vector3 zeros] from: startPoint to: endPoint
-			with: supportFunction from: Vector3 zeros to: Vector3 zeros.
-		pair ifNil: [ ^ pair ].
-		^ { ray tmin interpolateTo: (ray tmax min: 1000000) at: pair first . pair second }
-	]."
-
 	lambda := ray tmin.
 	lambdaMax := ray tmax.
 	s := ray origin.
@@ -262,16 +252,21 @@ GeometricFunctions class >> gjkRayCast: ray support: supportFunction [
 
 { #category : #'closest point computation' }
 GeometricFunctions class >> gjkSimplexFor: firstSupportFunction with: secondSupportFunction [
-	| lastPoint simplex nextDirection remainingIterations |
+	| lastPoint firstSupportPoint secondSupportPoint simplex nextDirection remainingIterations |
 	nextDirection := Vector3 x: 1.
-	lastPoint := (firstSupportFunction value: nextDirection) - (secondSupportFunction value: nextDirection negated).
-	simplex := GJKVoronoiSimplexSolver with: lastPoint.
+	firstSupportPoint := (firstSupportFunction value: nextDirection negated).
+	secondSupportPoint := (secondSupportFunction value: nextDirection).
+	lastPoint := secondSupportPoint - firstSupportPoint.
+	simplex := GJKVoronoiSimplexSolver with: lastPoint first: firstSupportPoint second: secondSupportPoint.
 	nextDirection := lastPoint negated.
 		
 	remainingIterations := MaxNumberOfIterations.
 	[ remainingIterations > 0 ] whileTrue: [ 	
 		| nextPoint delta |
-		nextPoint := (firstSupportFunction value: nextDirection) - (secondSupportFunction value: nextDirection negated).
+		firstSupportPoint := (firstSupportFunction value: nextDirection negated).
+		secondSupportPoint := (secondSupportFunction value: nextDirection).
+
+		nextPoint := secondSupportPoint - firstSupportPoint.
 
 		"Are we getting closer to the origin?"
 		delta := nextPoint - lastPoint.
@@ -279,7 +274,7 @@ GeometricFunctions class >> gjkSimplexFor: firstSupportFunction with: secondSupp
 			^ simplex
 		].
 	
-		simplex insertPoint: nextPoint.
+		simplex insertPoint: nextPoint first: firstSupportPoint second: secondSupportPoint.
 		lastPoint := nextPoint.
 		
 		"Do we contain the origin?"
@@ -337,22 +332,30 @@ GeometricFunctions class >> isPoint3DCoplanar: first with: second with: third wi
 
 { #category : #'closest point computation' }
 GeometricFunctions class >> samplePenetrationDistanceAndNormalForSupport: firstSupport with: secondSupport [
-	| bestDistance bestNormal |
+	| bestDistance bestNormal bestFirstPoint bestSecondPoint |
 	bestDistance := Float infinity.
 	bestNormal := Vector3 zeros.
+	bestFirstPoint := Vector3 zeros.
+	bestSecondPoint := Vector3 zeros.
+
 	PenetrationDistanceSampleVectors do: [ :sampleVector |
-		| supportVector delta |
-		supportVector := (secondSupport value: sampleVector) - (firstSupport value: sampleVector negated).
+		| secondPoint firstPoint supportVector delta |
+		firstPoint := firstSupport value: sampleVector.
+		secondPoint := secondSupport value: sampleVector negated.
+		
+		supportVector := firstPoint - secondPoint.
 		delta := supportVector dot: sampleVector.
 		delta < bestDistance ifTrue: [
 			bestDistance := delta.
-			bestNormal := sampleVector
+			bestNormal := sampleVector.
+			bestFirstPoint := firstPoint.
+			bestSecondPoint := secondPoint.
 		]
 	].
 
 	bestDistance < 0 ifTrue: [ ^ nil ].
 	
-	^ { bestDistance . bestNormal }
+	^ { bestDistance . bestNormal . bestFirstPoint . bestSecondPoint }
 ]
 
 { #category : #'support function utilities' }

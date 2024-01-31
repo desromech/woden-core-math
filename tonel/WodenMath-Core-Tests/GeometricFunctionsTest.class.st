@@ -16,7 +16,7 @@ GeometricFunctionsTest >> testBoxBoxPenetrationDistance [
 	distance := distanceAndNormal first.
 	normal := distanceAndNormal second.
 	self assert: (distance closeTo: 0.5).
-	self assert: (normal closeTo: (Vector3 x: 1)).			
+	self assert: (normal closeTo: (Vector3 x: -1)).			
 ]
 
 { #category : #tests }
@@ -28,7 +28,7 @@ GeometricFunctionsTest >> testBoxBoxPenetrationDistance2 [
 	distance := distanceAndNormal first.
 	normal := distanceAndNormal second.
 	self assert: (distance closeTo: 0.5).
-	self assert: (normal closeTo: (Vector3 x: -1)).
+	self assert: (normal closeTo: (Vector3 x: 1)).
 ]
 
 { #category : #tests }
@@ -41,7 +41,7 @@ GeometricFunctionsTest >> testBoxScaledBoxPenetrationDistance [
 	distance := distanceAndNormal first.
 	normal := distanceAndNormal second.
 	self assert: (distance closeTo: 0.5).
-	self assert: (normal closeTo: (Vector3 x: 1)).
+	self assert: (normal closeTo: (Vector3 x: -1)).
 ]
 
 { #category : #tests }
@@ -54,7 +54,7 @@ GeometricFunctionsTest >> testBoxScaledBoxPenetrationDistance2 [
 	distance := distanceAndNormal first.
 	normal := distanceAndNormal second.
 	self assert: (distance closeTo: 0.5).
-	self assert: (normal closeTo: (Vector3 x: -1)).
+	self assert: (normal closeTo: (Vector3 x: 1)).
 ]
 
 { #category : #tests }
@@ -66,7 +66,7 @@ GeometricFunctionsTest >> testCapsuleBoxPenetrationDistance [
 	distance := distanceAndNormal first.
 	normal := distanceAndNormal second.
 	self assert: (distance closeTo: 0.5).
-	self assert: (normal closeTo: (Vector3 x: 1 y: 0 z: 1) normalized).
+	self assert: (normal closeTo: (Vector3 x: -1 y: 0 z: -1) normalized).
 ]
 
 { #category : #tests }
@@ -168,7 +168,7 @@ GeometricFunctionsTest >> testSphereSpherePenetrationDistance [
 	distance := distanceAndNormal first.
 	normal := distanceAndNormal second.
 	self assert: (distance closeTo: 0).
-	self assert: (normal closeTo: (Vector3 x: -1)).
+	self assert: (normal closeTo: (Vector3 x: 1)).
 ]
 
 { #category : #tests }
@@ -180,5 +180,5 @@ GeometricFunctionsTest >> testSphereSpherePenetrationDistance2 [
 	distance := distanceAndNormal first.
 	normal := distanceAndNormal second.
 	self assert: (distance closeTo: 2).
-	self assert: (normal closeTo: (Vector3 x: -1)).
+	self assert: (normal closeTo: (Vector3 x: 1)).
 ]

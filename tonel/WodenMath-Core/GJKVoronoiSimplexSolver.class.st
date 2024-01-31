@@ -6,6 +6,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'points',
+		'firstPoints',
+		'secondPoints',
 		'barycentricCoordinates',
 		'usedPoints',
 		'hasComputedClosest',
@@ -28,6 +30,11 @@ GJKVoronoiSimplexSolver class >> with: aPoint [
 	^ self new insertPoint: aPoint; yourself
 ]
 
+{ #category : #'instance creation' }
+GJKVoronoiSimplexSolver class >> with: aPoint first: aFirstPoint second: aSecondPoint [
+	^ self new insertPoint: aPoint first: aFirstPoint second: aSecondPoint; yourself
+]
+
 { #category : #accessing }
 GJKVoronoiSimplexSolver >> barycentricCoordinates [
 	hasComputedClosest ifFalse: [ 
@@ -42,6 +49,40 @@ GJKVoronoiSimplexSolver >> closestPointToOrigin [
 		self computeClosest.
 	].
 	^ closestPointToOrigin
+]
+
+{ #category : #accessing }
+GJKVoronoiSimplexSolver >> closestPointToOriginInFirst [
+	| result barycentricSum |
+	hasComputedClosest ifFalse: [ 
+		self computeClosest.
+	].
+
+	result := Vector3 zeros.
+	barycentricSum := 0.0.
+	barycentricCoordinates doWithIndex: [ :coordinate :index |
+		result := result + ((firstPoints at: index) * coordinate).
+		barycentricSum := barycentricSum + coordinate
+	].
+
+	^ result / barycentricSum
+]
+
+{ #category : #accessing }
+GJKVoronoiSimplexSolver >> closestPointToOriginInSecond [
+	| result barycentricSum |
+	hasComputedClosest ifFalse: [ 
+		self computeClosest.
+	].
+
+	result := Vector3 zeros.
+	barycentricSum := 0.0.
+	barycentricCoordinates doWithIndex: [ :coordinate :index |
+		result := result + ((secondPoints at: index) * coordinate).
+		barycentricSum := barycentricSum + coordinate
+	].
+
+	^ result / barycentricSum
 ]
 
 { #category : #private }
@@ -287,6 +328,8 @@ GJKVoronoiSimplexSolver >> containsPoint: aPoint [
 { #category : #initialization }
 GJKVoronoiSimplexSolver >> initialize [
 	points := #().
+	firstPoints := #().
+	secondPoints := #().
 	barycentricCoordinates := #().
 	usedPoints := #().
 	hasComputedClosest := false
@@ -294,7 +337,15 @@ GJKVoronoiSimplexSolver >> initialize [
 
 { #category : #modifying }
 GJKVoronoiSimplexSolver >> insertPoint: aPoint [
+	self insertPoint: aPoint first: aPoint second: aPoint
+	
+]
+
+{ #category : #modifying }
+GJKVoronoiSimplexSolver >> insertPoint: aPoint first: aFirstPoint second: aSecondPoint [
 	points := points , { aPoint }.
+	firstPoints := firstPoints , { aFirstPoint }.
+	secondPoints := secondPoints , { aSecondPoint }.
 	self invalidateCache
 	
 ]
@@ -344,7 +395,7 @@ GJKVoronoiSimplexSolver >> points: newPoints [
 
 { #category : #accessing }
 GJKVoronoiSimplexSolver >> reduce [
-	| usedPointCount newPoints newBarycentricCoordinates destIndex |
+	| usedPointCount newPoints newBarycentricCoordinates destIndex newFirstPoints newSecondPoints |
 	hasComputedClosest ifFalse: [ 
 		self computeClosest.
 	].
@@ -357,17 +408,24 @@ GJKVoronoiSimplexSolver >> reduce [
 	points size <= 1 ifTrue: [ ^ self ].
 	
 	newPoints := Array new: usedPointCount.
+	newFirstPoints := Array new: usedPointCount.
+	newSecondPoints := Array new: usedPointCount.
 	newBarycentricCoordinates := Array new: usedPointCount.
 	destIndex := 1.
 	1 to: points size do: [ :i |
 		(usedPoints at: i) ifTrue: [ 
 			newPoints at: destIndex put: (points at: i).
+			newFirstPoints at: destIndex put: (firstPoints at: i).
+			newSecondPoints at: destIndex put: (secondPoints at: i).
+
 			newBarycentricCoordinates at: destIndex put: (barycentricCoordinates at: i).
 			destIndex := destIndex + 1
 		]
 	].
 
 	points := newPoints.
+	firstPoints := newFirstPoints.
+	secondPoints := newSecondPoints.
 	usedPoints := Array new: points size withAll: true.
 	barycentricCoordinates := newBarycentricCoordinates.
 ]
@@ -375,5 +433,7 @@ GJKVoronoiSimplexSolver >> reduce [
 { #category : #accessing }
 GJKVoronoiSimplexSolver >> transformPointsWith: aBlock [
 	points := points collect: aBlock.
+	firstPoints := firstPoints collect: aBlock.
+	secondPoints := secondPoints collect: aBlock.
 	self invalidateCache
 ]
