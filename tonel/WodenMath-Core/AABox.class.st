@@ -139,6 +139,16 @@ AABox >> depth [
 	^ max z - min z
 ]
 
+{ #category : #geometry }
+AABox >> distanceForPoint: point [
+	^ (self distanceSquaredForPoint: point) sqrt
+]
+
+{ #category : #geometry }
+AABox >> distanceSquaredForPoint: point [
+	^ ((point - self center) abs - self halfExtent max: Vector3 zeros) length2
+]
+
 { #category : #serialization }
 AABox >> encodeForJSON [
 	^ OrderedDictionary newFromPairs: { 
@@ -205,6 +215,16 @@ AABox >> halfExtent [
 { #category : #testing }
 AABox >> hasIntersectionWithBox: other [
 	^ (self isBoxOutside: other) not
+]
+
+{ #category : #testing }
+AABox >> hasIntersectionWithRay: ray [
+	^ (self intersectionWithRay: ray) isNotNil
+]
+
+{ #category : #testing }
+AABox >> hasIntersectionWithSphere: sphere [
+	^ (self distanceSquaredForPoint: sphere center) <= sphere radius squared
 ]
 
 { #category : #comparing }
@@ -526,6 +546,11 @@ AABox >> trsTransformToConvertToMe: sourceBox [
 { #category : #'as yet unclassified' }
 AABox >> trsTransformToConvertUnitBoxToMe [
 	^ self trsTransformToConvertToMe: self class unit
+]
+
+{ #category : #'set arithmetic' }
+AABox >> unionWithBox: aBox [
+	^ self shallowCopy insertBox: aBox; yourself
 ]
 
 { #category : #'set arithmetic' }
