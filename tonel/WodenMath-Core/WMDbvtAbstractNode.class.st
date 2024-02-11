@@ -17,6 +17,11 @@ WMDbvtAbstractNode >> height [
 	^ self subclassResponsibility
 ]
 
+{ #category : #testing }
+WMDbvtAbstractNode >> isInnerNode [
+	^ false
+]
+
 { #category : #iteration }
 WMDbvtAbstractNode >> leavesIntersectingBox: boxToTest do: aBlock [
 	self subclassResponsibility.

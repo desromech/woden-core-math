@@ -12,6 +12,11 @@ Class {
 	#category : #'WodenMath-Core-DataStructures'
 }
 
+{ #category : #updating }
+WMDbvtLeafNode >> balanceFactor [
+	^ 0
+]
+
 { #category : #accessing }
 WMDbvtLeafNode >> boundingBox [
 

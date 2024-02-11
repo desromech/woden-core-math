@@ -10,6 +10,13 @@ Class {
 	#category : #'WodenMath-Core-DataStructures'
 }
 
+{ #category : #updating }
+WMDbvt >> balanceFactor [
+	^ root
+		ifNil: [0]
+		ifNotNil: [root balanceFactor]
+]
+
 { #category : #initialization }
 WMDbvt >> initialize [
 	super initialize.
@@ -29,7 +36,7 @@ WMDbvt >> insertLeafNode: node [
 		left: root; 
 		right: node;
 		boundingBox: (root boundingBox unionWithBox: node boundingBox);
-		height: (root height max: node height);
+		height: (root height max: node height) + 1;
 		yourself.
 	root parent: newRoot.
 	node parent: newRoot.

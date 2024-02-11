@@ -8,6 +8,20 @@ Class {
 }
 
 { #category : #tests }
+WMDbvtTest >> testBalance [
+	| dbvt |
+	dbvt := WMDbvt new.
+	1 to: 100 do: [ :x | 
+		dbvt insertValue: x withBoundingBox: (AABox center: (Vector3 x: x * 2) halfExtent: 0.5).
+	].
+	
+	self deny: dbvt isEmpty.
+	self assert: dbvt isNotEmpty.
+
+	self assert: (dbvt balanceFactor between: -1 and: 1).
+]
+
+{ #category : #tests }
 WMDbvtTest >> testEmpty [
 	| dbvt |
 	dbvt := WMDbvt new.
