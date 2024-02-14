@@ -254,19 +254,19 @@ GeometricFunctions class >> gjkRayCast: ray support: supportFunction [
 GeometricFunctions class >> gjkSimplexFor: firstSupportFunction with: secondSupportFunction [
 	| lastPoint firstSupportPoint secondSupportPoint simplex nextDirection remainingIterations |
 	nextDirection := Vector3 x: 1.
-	firstSupportPoint := (firstSupportFunction value: nextDirection negated).
-	secondSupportPoint := (secondSupportFunction value: nextDirection).
-	lastPoint := secondSupportPoint - firstSupportPoint.
+	firstSupportPoint := (firstSupportFunction value: nextDirection).
+	secondSupportPoint := (secondSupportFunction value: nextDirection negated).
+	lastPoint := firstSupportPoint - secondSupportPoint.
 	simplex := GJKVoronoiSimplexSolver with: lastPoint first: firstSupportPoint second: secondSupportPoint.
 	nextDirection := lastPoint negated.
 		
 	remainingIterations := MaxNumberOfIterations.
 	[ remainingIterations > 0 ] whileTrue: [ 	
 		| nextPoint delta |
-		firstSupportPoint := (firstSupportFunction value: nextDirection negated).
-		secondSupportPoint := (secondSupportFunction value: nextDirection).
+		firstSupportPoint := (firstSupportFunction value: nextDirection).
+		secondSupportPoint := (secondSupportFunction value: nextDirection negated).
 
-		nextPoint := secondSupportPoint - firstSupportPoint.
+		nextPoint := firstSupportPoint - secondSupportPoint.
 
 		"Are we getting closer to the origin?"
 		delta := nextPoint - lastPoint.
@@ -340,10 +340,10 @@ GeometricFunctions class >> samplePenetrationDistanceAndNormalForSupport: firstS
 
 	PenetrationDistanceSampleVectors do: [ :sampleVector |
 		| secondPoint firstPoint supportVector delta |
-		firstPoint := firstSupport value: sampleVector.
-		secondPoint := secondSupport value: sampleVector negated.
+		firstPoint := firstSupport value: sampleVector negated.
+		secondPoint := secondSupport value: sampleVector.
 		
-		supportVector := firstPoint - secondPoint.
+		supportVector := secondPoint - firstPoint.
 		delta := supportVector dot: sampleVector.
 		delta < bestDistance ifTrue: [
 			bestDistance := delta.
