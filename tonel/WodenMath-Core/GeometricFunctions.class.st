@@ -252,8 +252,13 @@ GeometricFunctions class >> gjkRayCast: ray support: supportFunction [
 
 { #category : #'closest point computation' }
 GeometricFunctions class >> gjkSimplexFor: firstSupportFunction with: secondSupportFunction [
+	^ self gjkSimplexFor: firstSupportFunction with: secondSupportFunction separatingAxisHint: nil
+]
+
+{ #category : #'closest point computation' }
+GeometricFunctions class >> gjkSimplexFor: firstSupportFunction with: secondSupportFunction separatingAxisHint: startingDirectionHint [
 	| lastPoint firstSupportPoint secondSupportPoint simplex nextDirection remainingIterations |
-	nextDirection := Vector3 x: 1.
+	nextDirection := startingDirectionHint ifNil: [Vector3 x: 1].
 	firstSupportPoint := (firstSupportFunction value: nextDirection).
 	secondSupportPoint := (secondSupportFunction value: nextDirection negated).
 	lastPoint := firstSupportPoint - secondSupportPoint.
@@ -332,13 +337,18 @@ GeometricFunctions class >> isPoint3DCoplanar: first with: second with: third wi
 
 { #category : #'closest point computation' }
 GeometricFunctions class >> samplePenetrationDistanceAndNormalForSupport: firstSupport with: secondSupport [
-	| bestDistance bestNormal bestFirstPoint bestSecondPoint |
+	^ self samplePenetrationDistanceAndNormalForSupport: firstSupport with: secondSupport separatingAxisHint: nil
+]
+
+{ #category : #'closest point computation' }
+GeometricFunctions class >> samplePenetrationDistanceAndNormalForSupport: firstSupport with: secondSupport separatingAxisHint: separatingAxisHint [
+	| bestDistance bestNormal bestFirstPoint bestSecondPoint sampleBlock |
 	bestDistance := Float infinity.
 	bestNormal := Vector3 zeros.
 	bestFirstPoint := Vector3 zeros.
 	bestSecondPoint := Vector3 zeros.
 
-	PenetrationDistanceSampleVectors do: [ :sampleVector |
+	sampleBlock := [ :sampleVector |
 		| secondPoint firstPoint supportVector delta |
 		firstPoint := firstSupport value: sampleVector negated.
 		secondPoint := secondSupport value: sampleVector.
@@ -352,6 +362,12 @@ GeometricFunctions class >> samplePenetrationDistanceAndNormalForSupport: firstS
 			bestSecondPoint := secondPoint.
 		]
 	].
+
+	separatingAxisHint ifNotNil: [
+		sampleBlock value: separatingAxisHint.
+		sampleBlock value: separatingAxisHint negated
+	].
+	PenetrationDistanceSampleVectors do: sampleBlock.
 
 	bestDistance < 0 ifTrue: [ ^ nil ].
 	
