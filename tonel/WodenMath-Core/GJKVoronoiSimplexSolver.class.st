@@ -164,7 +164,8 @@ GJKVoronoiSimplexSolver >> computeClosestToTetrahedron [
 	"Is inside?"
 	(abcSide >= 0 and: [ abdSide >= 0 and: [acdSide >= 0 and: [bcdSide >= 0]]]) ifTrue: [ 
 		closestPointToOrigin := Origin.
-		barycentricCoordinates := #(0 0 0 0).
+		self flag: 'Compute this coordinate properly'.
+		barycentricCoordinates := #(1 1 1 1).
 		usedPoints := #(true true true true).
 		^ self
 	].
