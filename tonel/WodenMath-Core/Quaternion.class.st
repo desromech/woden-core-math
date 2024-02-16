@@ -323,6 +323,19 @@ Quaternion >> encodeForJSON [
 	^ { x . y . z . w }
 ]
 
+{ #category : #'mathematical functions' }
+Quaternion >> exp [
+	| v vl c s ew |
+	v := self xyz.
+	vl := v length.
+	ew := w exp.
+	(vl closeTo: 0.0) ifTrue: [ ^ self class r: ew ].
+	
+	c := vl cos.
+	s := vl sin.
+	^ self class xyz: v * (s / vl*ew) w: ew * c
+]
+
 { #category : #comparing }
 Quaternion >> hash [
 	^ ((x hash hashMultiply + y hash) hashMultiply + z hash) hashMultiply + w hash
