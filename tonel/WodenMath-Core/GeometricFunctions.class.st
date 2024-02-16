@@ -335,6 +335,38 @@ GeometricFunctions class >> isPoint3DCoplanar: first with: second with: third wi
 	^ (v1 dot: (v2 cross: v3)) closeTo: 0.0
 ]
 
+{ #category : #'as yet unclassified' }
+GeometricFunctions class >> samplePenetrationContactForSupport: firstSupport with: secondSupport margin: margin [
+	^ self samplePenetrationContactForSupport: firstSupport with: secondSupport margin: margin separatingAxisHint: nil
+]
+
+{ #category : #'as yet unclassified' }
+GeometricFunctions class >> samplePenetrationContactForSupport: firstSupport with: secondSupport margin: margin separatingAxisHint: separatingAxisHint [
+	| distanceAndNormal distance normal displacement displacedFirstSupport gjkSimplex firstClosestPoint secondClosestPoint distanceWithMargin extraSeparation separationVector separationVectorLenght correctedPenetrationDistance |
+	distanceAndNormal := self samplePenetrationDistanceAndNormalForSupport: firstSupport with: secondSupport separatingAxisHint: separatingAxisHint.
+	distanceAndNormal ifNil: [ ^ nil ].
+	
+	distance := distanceAndNormal first.
+	normal := distanceAndNormal second.
+	
+	extraSeparation := 0.5.
+	distanceWithMargin := extraSeparation + distance + margin.
+	displacement := normal * distanceWithMargin.
+	displacedFirstSupport := [ :d | (firstSupport value: d) + displacement ].
+	
+	gjkSimplex := self gjkSimplexFor: displacedFirstSupport with: secondSupport separatingAxisHint: normal negated.
+	separationVector := gjkSimplex closestPointToOrigin.
+	separationVectorLenght := separationVector length.
+	
+	correctedPenetrationDistance := distanceWithMargin - separationVectorLenght + margin.
+	
+	firstClosestPoint := gjkSimplex closestPointToOriginInFirst.
+	secondClosestPoint := gjkSimplex closestPointToOriginInSecond.
+
+	firstClosestPoint := firstClosestPoint - (normal * distanceWithMargin).
+	^ { correctedPenetrationDistance . normal . firstClosestPoint . secondClosestPoint }
+]
+
 { #category : #'closest point computation' }
 GeometricFunctions class >> samplePenetrationDistanceAndNormalForSupport: firstSupport with: secondSupport [
 	^ self samplePenetrationDistanceAndNormalForSupport: firstSupport with: secondSupport separatingAxisHint: nil

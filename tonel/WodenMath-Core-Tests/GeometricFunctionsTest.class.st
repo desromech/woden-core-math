@@ -8,6 +8,40 @@ Class {
 }
 
 { #category : #tests }
+GeometricFunctionsTest >> testBoxBoxPenetrationContactWithMargin [
+	| firstShape secondShape distance normal distanceNormalContacts firstContact secondContact |
+	firstShape := AABox center: Vector3 zeros halfExtent: (Vector3 x: 5 y: 0.5 z: 20).
+	secondShape := AABox center: (Vector3 x: 5 y: 0.0 z: -20) halfExtent: (Vector3 x: 0.5 y: 0.5 z: 0.5).
+	distanceNormalContacts := GeometricFunctions samplePenetrationContactForSupport: firstShape supportFunction with: secondShape supportFunction margin: 0.25.
+	distance := distanceNormalContacts first.
+	normal := distanceNormalContacts second.
+	firstContact := distanceNormalContacts third.
+	secondContact := distanceNormalContacts fourth.
+
+	self assert: (distance closeTo: 0.75).
+	self assert: (normal closeTo: (Vector3 x: -1)).
+	self assert: ((firstContact - secondContact dot: normal) - 0.25 closeTo: distance negated).
+	self assert: ((firstContact - secondContact) length + 0.25 closeTo: distance).
+]
+
+{ #category : #tests }
+GeometricFunctionsTest >> testBoxBoxPenetrationContactWithMargin2 [
+	| firstShape secondShape distance normal distanceNormalContacts firstContact secondContact |
+	firstShape := AABox center: Vector3 zeros halfExtent: (Vector3 x: 5 y: 0.5 z: 20).
+	secondShape := AABox center: (Vector3 x: -5 y: 0.0 z: -20) halfExtent: (Vector3 x: 0.5 y: 0.5 z: 0.5).
+	distanceNormalContacts := GeometricFunctions samplePenetrationContactForSupport: firstShape supportFunction with: secondShape supportFunction margin: 0.25.
+	distance := distanceNormalContacts first.
+	normal := distanceNormalContacts second.
+	firstContact := distanceNormalContacts third.
+	secondContact := distanceNormalContacts fourth.
+
+	self assert: (distance closeTo: 0.75).
+	self assert: (normal closeTo: (Vector3 x: 1)).
+	self assert: ((firstContact - secondContact dot: normal) - 0.25 closeTo: distance negated).
+	self assert: ((firstContact - secondContact) length + 0.25 closeTo: distance).
+]
+
+{ #category : #tests }
 GeometricFunctionsTest >> testBoxBoxPenetrationDistance [
 	| firstShape secondShape distanceAndNormal distance normal |
 	firstShape := AABox center: Vector3 zeros halfExtent: (Vector3 x: 5 y: 0.5 z: 20).
