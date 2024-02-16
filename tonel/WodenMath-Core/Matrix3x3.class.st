@@ -189,6 +189,15 @@ Matrix3x3 class >> scaleX: x y: y z: z [
 		m31: 0; m32: 0; m33: z
 ]
 
+{ #category : #'as yet unclassified' }
+Matrix3x3 class >> skewSymmetric: v [
+	^ self basicNew
+		m11: 0; m12: v z negated; m13: v y;
+		m21: v z; m22: 0; m23: v x negated;
+		m31: v y negated; m32: v x; m33: 0;
+		yourself
+]
+
 { #category : #'special matrices' }
 Matrix3x3 class >> texScale: scale offset: offset [
 	| coercedScale coercedOffset |
