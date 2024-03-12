@@ -211,7 +211,7 @@ Matrix2x2 >> initialize [
 Matrix2x2 >> inverse [
 	| det |
 	det := self determinant.
-	(det closeTo: 0) ifTrue: [ ^ self error: 'Matrix is not invertible.' ].
+	det = 0 ifTrue: [ ^ self error: 'Matrix is not invertible.' ].
 
 	^ self class basicNew
 		m11: m22 / det; m12: m12 negated / det;
