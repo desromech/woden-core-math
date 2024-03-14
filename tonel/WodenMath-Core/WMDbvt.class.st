@@ -110,6 +110,11 @@ WMDbvt >> leavesIntersectingSphere: sphereToTest do: aBlock [
 	
 ]
 
+{ #category : #removing }
+WMDbvt >> removeNode: aNode [
+	self shouldBeImplemented
+]
+
 { #category : #operations }
 WMDbvt >> updateLeafNode: leafNode boundingBox: newBoundingBox [
 	root := leafNode updateAndRebalanceBoundingBox: newBoundingBox
