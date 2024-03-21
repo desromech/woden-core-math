@@ -99,6 +99,15 @@ QuaternionTest >> testLength2 [
 ]
 
 { #category : #tests }
+QuaternionTest >> testLogarithm [
+	self assert: (Quaternion x: 0.1) exp ln closeTo: (Quaternion x: 0.1).
+	self assert: (Quaternion y: 0.1) exp ln closeTo: (Quaternion y: 0.1).
+	self assert: (Quaternion z: 0.1) exp ln closeTo: (Quaternion z: 0.1).
+	self assert: (Quaternion x: 0.1 y: 0.2 z: 0.3) exp ln closeTo: (Quaternion x: 0.1 y: 0.2 z: 0.3).
+
+]
+
+{ #category : #tests }
 QuaternionTest >> testMultiplication [
 	self assert: (Quaternion r: 1 i: 2 j: 3 k: 4) * (Quaternion r: 20 i: 31 j: 41 k: 51) equals: (Quaternion r: -369 i: 60 j: 123 k: 120).
 ]

@@ -22,6 +22,11 @@ Sphere class >> radius: radius [
 ]
 
 { #category : #accessing }
+Sphere >> boundingBox [
+	^ AABox center: center halfExtent: radius
+]
+
+{ #category : #accessing }
 Sphere >> center [
 
 	^ center

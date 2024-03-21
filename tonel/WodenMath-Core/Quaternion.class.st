@@ -79,6 +79,18 @@ Quaternion class >> r: r i: i j: j k: k [
 ]
 
 { #category : #'accessing structure variables' }
+Quaternion class >> x: x [
+	^ self basicNew
+		x: x; y: 0; z: 0; w: 0
+]
+
+{ #category : #'accessing structure variables' }
+Quaternion class >> x: x y: y z: z [
+	^ self basicNew
+		x: x; y: y; z: z; w: 0
+]
+
+{ #category : #'accessing structure variables' }
 Quaternion class >> x: x y: y z: z w: w [
 	^ self basicNew
 		x: x; y: y; z: z; w: w
@@ -116,6 +128,12 @@ Quaternion class >> xyzw: xyzw [
 		x: xyzw x; y: xyzw y; z: xyzw z; w: xyzw w
 ]
 
+{ #category : #'accessing structure variables' }
+Quaternion class >> y: y [
+	^ self basicNew
+		x: 0; y: y; z: 0; w: 0
+]
+
 { #category : #'special matrices' }
 Quaternion class >> yRotation: angle [
 	| halfAngle c s |
@@ -123,6 +141,12 @@ Quaternion class >> yRotation: angle [
 	c := halfAngle cos.
 	s := halfAngle sin.
 	^ self x: 0 y: s z: 0 w: c
+]
+
+{ #category : #'accessing structure variables' }
+Quaternion class >> z: z [
+	^ self basicNew
+		x: 0; y: 0; z: z; w: 0
 ]
 
 { #category : #'special matrices' }
@@ -396,6 +420,18 @@ Quaternion >> length [
 { #category : #arithmetic }
 Quaternion >> length2 [
 	^ self dot: self
+]
+
+{ #category : #'mathematical functions' }
+Quaternion >> ln [
+	| l xyz xyzl xyzln |
+	l := self length.
+	xyz := self xyz.
+	xyzl := xyz length.
+	xyzln := xyzl > 0
+		ifTrue: [xyz  * ((w / l) arcCos / xyzl)]
+		ifFalse: [ Vector3 zeros ].
+	^ self class xyz: xyzln w: l ln
 ]
 
 { #category : #arithmetic }
