@@ -192,6 +192,11 @@ Vector3 >> x: anObject [
 	x := anObject
 ]
 
+{ #category : #'accessing - structure variables' }
+Vector3 >> xy [
+	^ Vector2 x: x y: y
+]
+
 { #category : #accessing }
 Vector3 >> y [
 
