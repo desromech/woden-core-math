@@ -153,3 +153,8 @@ Ray3D >> transformedWith: aTransform [
 		origin: newOrigin
 		direction: newDirection tmin: newTMin tmax: newTMax
 ]
+
+{ #category : #transforming }
+Ray3D >> withMaxDistance: maxDistance [
+	^ self copy tmax: maxDistance / direction length; yourself
+]

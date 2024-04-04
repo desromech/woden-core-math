@@ -51,6 +51,11 @@ Vector2 >> = other [
 ]
 
 { #category : #converting }
+Vector2 >> asPoint [
+	^ x @ y
+]
+
+{ #category : #converting }
 Vector2 >> asVector2 [
 	^ self
 ]
