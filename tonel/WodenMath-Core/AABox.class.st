@@ -219,7 +219,7 @@ AABox >> hasIntersectionWithBox: other [
 
 { #category : #testing }
 AABox >> hasIntersectionWithRay: ray [
-	^ (self intersectionWithRay: ray) isNotNil
+	^ (self intersectionWithRay: ray) notNil
 ]
 
 { #category : #testing }

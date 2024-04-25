@@ -62,7 +62,7 @@ WMDbvt >> isEmpty [
 
 { #category : #testing }
 WMDbvt >> isNotEmpty [
-	^ root isNotNil
+	^ root notNil
 ]
 
 { #category : #iteration }
