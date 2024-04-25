@@ -136,6 +136,11 @@ ReversibleAffineTransform3D >> inverseTransformTransform: transform [
 		yourself.
 ]
 
+{ #category : #transforming }
+ReversibleAffineTransform3D >> inverseTransformVector3: aVector3 [
+	^ inverseMatrix*aVector3
+]
+
 { #category : #accessing }
 ReversibleAffineTransform3D >> inverseTranslation [
 
