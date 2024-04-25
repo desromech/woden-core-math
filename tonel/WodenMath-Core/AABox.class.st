@@ -316,6 +316,16 @@ AABox >> intersectionsWithRay: ray [
 	^ {maxTMin min: minTMax. maxTMin max: minTMax}
 ]
 
+{ #category : #transforming }
+AABox >> inverseTransformedWith: aTransform [
+	| result |
+	result := self class empty.
+	self cornersDo: [ :corner |
+		result insertPoint: (aTransform inverseTransformPosition: corner)
+	].
+	^ result
+]
+
 { #category : #testing }
 AABox >> isBoxOutside: other [
 	^ other max x < min x or: [ max x < other min x or: [

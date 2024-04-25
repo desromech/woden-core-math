@@ -76,6 +76,11 @@ ReversibleAffineTransform3D >> applyOrthonormalMatrix: orthonormal [
 ]
 
 { #category : #converting }
+ReversibleAffineTransform3D >> asReversibleAffineTransform [
+	^ self
+]
+
+{ #category : #converting }
 ReversibleAffineTransform3D >> asTRSTransform3D [
 	^ TRSTransform3D matrix: matrix translation: translation
 ]
@@ -110,6 +115,11 @@ ReversibleAffineTransform3D >> inverseMatrix [
 { #category : #accessing }
 ReversibleAffineTransform3D >> inverseMatrix4 [
 	^ Matrix4x4 mat3: inverseMatrix translation: inverseTranslation
+]
+
+{ #category : #transforming }
+ReversibleAffineTransform3D >> inverseTransformNormalVector: vector [
+	^ vector * matrix
 ]
 
 { #category : #transforming }
@@ -229,6 +239,11 @@ ReversibleAffineTransform3D >> setScale: aScale rotation: anOrientation translat
 	scaleMatrix := Matrix3x3 scale: aScale.
 	inverseScaleMatrix := Matrix3x3 scale: aScale safeReciprocal.
 	self setMatrix: orientationMatrix * scaleMatrix inverseMatrix: inverseScaleMatrix * orientationMatrix transpose translation: aTranslation
+]
+
+{ #category : #transforming }
+ReversibleAffineTransform3D >> transformNormalVector: vector [
+	^ vector * inverseMatrix
 ]
 
 { #category : #transforming }

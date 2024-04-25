@@ -48,6 +48,11 @@ RigidTransform3D >> = other [
 ]
 
 { #category : #converting }
+RigidTransform3D >> asReversibleAffineTransform [
+	^ ReversibleAffineTransform3D rotation: rotation translation: translation
+]
+
+{ #category : #converting }
 RigidTransform3D >> asTRSTransform3D [
 	^ TRSTransform3D new rotation: rotation; translation: translation; yourself
 ]
