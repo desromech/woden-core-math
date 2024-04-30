@@ -527,6 +527,8 @@ AABox >> topPoint [
 { #category : #transforming }
 AABox >> transformedWith: aTransform [
 	| result |
+	self isEmpty ifTrue: [ ^ self class empty ].
+
 	result := self class empty.
 	self cornersDo: [ :corner |
 		result insertPoint: (aTransform transformPosition: corner)
