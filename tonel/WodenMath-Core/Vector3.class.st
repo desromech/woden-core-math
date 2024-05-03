@@ -141,6 +141,11 @@ Vector3 >> hash [
 ]
 
 { #category : #testing }
+Vector3 >> isInfinite [
+	^ x isInfinite or: [ y isInfinite or: [ z isInfinite ] ]
+]
+
+{ #category : #testing }
 Vector3 >> isIsotropic [
 	^ x = y = z
 ]

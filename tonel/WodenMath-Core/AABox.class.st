@@ -339,6 +339,16 @@ AABox >> isEmpty [
 ]
 
 { #category : #testing }
+AABox >> isEmptyOrInfinite [
+	^ self isEmpty or: [ self isInfinite ]
+]
+
+{ #category : #testing }
+AABox >> isInfinite [
+	^ min isInfinite or: [ max isInfinite ]
+]
+
+{ #category : #testing }
 AABox >> isPoint [
 	^ min = max
 ]
@@ -527,7 +537,7 @@ AABox >> topPoint [
 { #category : #transforming }
 AABox >> transformedWith: aTransform [
 	| result |
-	self isEmpty ifTrue: [ ^ self class empty ].
+	self isEmptyOrInfinite ifTrue: [ ^ self class empty ].
 
 	result := self class empty.
 	self cornersDo: [ :corner |

@@ -122,6 +122,11 @@ Vector2 >> initialize [
 ]
 
 { #category : #testing }
+Vector2 >> isInfinite [
+	^ x isInfinite or: [ y isInfinite ]
+]
+
+{ #category : #testing }
 Vector2 >> isOnes [
 	^ x = 1 and: [ y = 1 ]
 ]

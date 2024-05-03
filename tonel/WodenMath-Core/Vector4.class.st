@@ -126,6 +126,11 @@ Vector4 >> hash [
 ]
 
 { #category : #testing }
+Vector4 >> isInfinite [
+	^ x isInfinite or: [ y isInfinite or: [ z isInfinite or: [ w isInfinite ] ] ]
+]
+
+{ #category : #testing }
 Vector4 >> isOnes [
 	^ x = 1 and: [ y = 1 and: [ z = 1 and: [ w = 1 ] ] ]
 ]
