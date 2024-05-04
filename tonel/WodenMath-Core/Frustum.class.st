@@ -66,6 +66,8 @@ Frustum >> cornersDo: aBlock [
 
 { #category : #testing }
 Frustum >> intersectsOrContainsBox: box [
+	box isEmpty ifTrue: [ ^ false ].
+	box isInfinite ifTrue: [ ^ true ].
 	^ (self isBoxOutside: box) not
 ]
 
