@@ -81,6 +81,21 @@ WMDbvt >> leavesIntersectingBox: boxToTest do: aBlock [
 ]
 
 { #category : #iteration }
+WMDbvt >> leavesIntersectingFrustum: frustumToTest [
+	| result |
+	result := OrderedCollection new.
+	self leavesIntersectingFrustum: frustumToTest do: [:leaf | result add: leaf ].
+	^ result
+	
+]
+
+{ #category : #iteration }
+WMDbvt >> leavesIntersectingFrustum: frustumToTest do: aBlock [
+	root ifNotNil: [root leavesIntersectingFrustum: frustumToTest do: aBlock]
+	
+]
+
+{ #category : #iteration }
 WMDbvt >> leavesIntersectingRay: rayToTest [
 	| result |
 	result := OrderedCollection new.
@@ -112,7 +127,13 @@ WMDbvt >> leavesIntersectingSphere: sphereToTest do: aBlock [
 
 { #category : #removing }
 WMDbvt >> removeNode: aNode [
-	self shouldBeImplemented
+	self assert: aNode isInnerNode not.
+	root := aNode removeFromTreeAndRebalance.
+]
+
+{ #category : #accessing }
+WMDbvt >> root [
+	^ root
 ]
 
 { #category : #operations }

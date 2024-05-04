@@ -33,6 +33,44 @@ WMDbvtTest >> testEmpty [
 ]
 
 { #category : #tests }
+WMDbvtTest >> testRemoveNode [
+	| dbvt firstNode secondNode thirdNode |
+	dbvt := WMDbvt new.
+	firstNode := dbvt insertValue: 1 withBoundingBox: (AABox unit).
+	secondNode := dbvt insertValue: 2 withBoundingBox: (AABox center: (Vector3 x: 10) halfExtent: 0.5).
+	thirdNode := dbvt insertValue: 3 withBoundingBox: (AABox center: (Vector3 y: 10) halfExtent: 0.5).
+	
+	self deny: dbvt isEmpty.
+	self assert: dbvt isNotEmpty.
+	
+	dbvt removeNode: secondNode.
+
+	self assert: (dbvt leavesIntersectingBox: AABox unit) size equals: 1.
+	self assert: (dbvt leavesIntersectingSphere: (Sphere radius: 1)) size equals: 1.
+	self assert: (dbvt leavesIntersectingRay: (Ray3D from: (Vector3 x: 0) to: (Vector3 x: 2))) size equals: 1.
+	
+	self assert: (dbvt leavesIntersectingBox: (AABox halfExtent: 10)) size equals: 2.
+	self assert: (dbvt leavesIntersectingSphere: (Sphere radius: 10)) size equals: 2.
+	self assert: (dbvt leavesIntersectingRay: (Ray3D from: (Vector3 x: 0) to: (Vector3 x: 10))) size equals: 1.
+	self assert: (dbvt leavesIntersectingRay: (Ray3D from: (Vector3 y: 0) to: (Vector3 y: 10))) size equals: 2.
+	
+	dbvt removeNode: thirdNode.
+	self assert: dbvt root equals: firstNode.
+	self assert: (dbvt leavesIntersectingBox: AABox unit) size equals: 1.
+	self assert: (dbvt leavesIntersectingSphere: (Sphere radius: 1)) size equals: 1.
+	self assert: (dbvt leavesIntersectingRay: (Ray3D from: (Vector3 x: 0) to: (Vector3 x: 2))) size equals: 1.
+	
+	self assert: (dbvt leavesIntersectingBox: (AABox halfExtent: 10)) size equals: 1.
+	self assert: (dbvt leavesIntersectingSphere: (Sphere radius: 10)) size equals: 1.
+	self assert: (dbvt leavesIntersectingRay: (Ray3D from: (Vector3 x: 0) to: (Vector3 x: 10))) size equals: 1.
+	self assert: (dbvt leavesIntersectingRay: (Ray3D from: (Vector3 y: 0) to: (Vector3 y: 10))) size equals: 1.
+	
+	dbvt removeNode: firstNode.
+	self assert: dbvt isEmpty.
+
+]
+
+{ #category : #tests }
 WMDbvtTest >> testSingleBox [
 	| dbvt |
 	dbvt := WMDbvt new.

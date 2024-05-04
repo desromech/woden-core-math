@@ -42,6 +42,13 @@ WMDbvtLeafNode >> leavesIntersectingBox: boxToTest do: aBlock [
 ]
 
 { #category : #iteration }
+WMDbvtLeafNode >> leavesIntersectingFrustum: frustumToTest do: aBlock [
+	(frustumToTest intersectsOrContainsBox: boundingBox) ifFalse: [ ^ self ].
+
+	aBlock value: self
+]
+
+{ #category : #iteration }
 WMDbvtLeafNode >> leavesIntersectingRay: rayToTest do: aBlock [
 	(boundingBox hasIntersectionWithRay: rayToTest) ifFalse: [ ^ self ].
 
@@ -65,6 +72,11 @@ WMDbvtLeafNode >> parent [
 WMDbvtLeafNode >> parent: anObject [
 
 	parent := anObject
+]
+
+{ #category : #removing }
+WMDbvtLeafNode >> removeFromTreeAndRebalance [
+	^ parent ifNotNil: [ parent removeChildAndRebalance: self ]
 ]
 
 { #category : #updating }

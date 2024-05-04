@@ -28,6 +28,11 @@ WMDbvtAbstractNode >> leavesIntersectingBox: boxToTest do: aBlock [
 ]
 
 { #category : #iteration }
+WMDbvtAbstractNode >> leavesIntersectingFrustum: frustumToTest do: aBlock [
+	self subclassResponsibility.
+]
+
+{ #category : #iteration }
 WMDbvtAbstractNode >> leavesIntersectingRay: rayToTest do: aBlock [
 	self subclassResponsibility.
 ]

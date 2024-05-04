@@ -62,6 +62,14 @@ WMDbvtInnerNode >> leavesIntersectingBox: boxToTest do: aBlock [
 ]
 
 { #category : #iteration }
+WMDbvtInnerNode >> leavesIntersectingFrustum: frustumToTest do: aBlock [
+	(frustumToTest intersectsOrContainsBox: boundingBox) ifFalse: [ ^ self ].
+
+	left leavesIntersectingFrustum: frustumToTest do: aBlock.
+	right leavesIntersectingFrustum: frustumToTest do: aBlock.
+]
+
+{ #category : #iteration }
 WMDbvtInnerNode >> leavesIntersectingRay: rayToTest do: aBlock [
 	(boundingBox hasIntersectionWithRay: rayToTest) ifFalse: [ ^ self ].
 
@@ -159,6 +167,28 @@ WMDbvtInnerNode >> recomputeNodeInternals [
 	height := (left height max: right height) + 1.
 	boundingBox := left boundingBox unionWithBox: right boundingBox.
 	
+]
+
+{ #category : #removing }
+WMDbvtInnerNode >> removeChildAndRebalance: aChild [
+	| remainingChild |
+	remainingChild := left == aChild
+		ifTrue: [ right]
+		ifFalse: [ left ].
+		
+	remainingChild parent: nil.
+	^ remainingChild ifNotNil: [ 
+		parent ifNil: [ 
+			remainingChild
+		] ifNotNil: [
+			parent
+				replaceChild: self with: remainingChild;
+				rebalanceBubblingUp
+		]
+	] ifNil: [ 
+		parent ifNotNil: [ parent removeChildAndRebalance: self ]
+	]
+
 ]
 
 { #category : #'as yet unclassified' }
