@@ -92,6 +92,44 @@ Matrix3x3 class >> cubeMapFaceRotations [
 ]
 
 { #category : #'special matrices' }
+Matrix3x3 class >> inertiaTensorForBoxWithExtent: extent [
+	| extentSquared |
+	extentSquared := extent * extent.
+	^ self basicNew
+		m11: (extentSquared y + extentSquared z) / 12; m12: 0; m13: 0;
+		m21: 0; m22: (extentSquared x + extentSquared z) / 12; m23: 0;
+		m31: 0; m32: 0; m33: (extentSquared x + extentSquared y) / 12;
+		yourself
+]
+
+{ #category : #'special matrices' }
+Matrix3x3 class >> inertiaTensorForBoxWithHalfExtent: halfExtent [
+	^ self inertiaTensorForBoxWithExtent: halfExtent * 2
+]
+
+{ #category : #'special matrices' }
+Matrix3x3 class >> inertiaTensorForSphereWithRadius: radius [
+	^ self scale: radius * radius * 2 * 5
+]
+
+{ #category : #'special matrices' }
+Matrix3x3 class >> inertiaTensorTransport: d [
+	"See https://en.wikipedia.org/wiki/Parallel_axis_theorem [May 2024"
+	| x2 y2 z2 xy xz yz |
+	x2 := d x * d x.
+	y2 := d y * d y.
+	z2 := d z * d z.
+	xy := d x * d y.
+	xz := d x * d z.
+	yz := d y * d z.
+	^ self basicNew
+		m11: y2 + z2; m12: xy negated; m13: xz negated;
+		m21: xy negated; m22: x2 + z2; m23: yz negated;
+		m31: xz negated; m32: yz negated; m33: x2 + y2;
+		yourself
+]
+
+{ #category : #'special matrices' }
 Matrix3x3 class >> lookAtBack [
 	^ self yRotation: Float pi
 ]
